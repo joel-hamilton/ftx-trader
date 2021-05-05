@@ -1,48 +1,62 @@
 require('dotenv').config()
 const fetch = require('node-fetch');
 
-async function getAccount(req, res, next) {
-    let method = 'GET';
-    let url = 'https://ftx.com/api';
-    let path = '/account';
-    let body = false;
-
+async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();
-    let payload = [
-        ts,
-        method,
-        path
-    ];
+    let headers = {
+        'content-type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+    };
 
-    if (body) payload.push(body);
+    if (authRoute) {
+        let payload = [
+            ts,
+            method,
+            `/api${path}`
+        ];
 
-    let hmac = require("crypto").createHmac("sha256", process.env.FTX_SECRET)
-        .update(payload.join(''))
-        .digest("hex");
+        if (body) payload.push(body);
 
+        console.log(payload.join(''))
+        console.log(process.env.FTX_SECRET)
+
+        let signature = require('crypto')
+            .createHmac('sha256', process.env.FTX_SECRET)
+            .update(payload.join(''))
+            .digest('hex');
+
+        headers['FTX-TS'] = ts;
+        headers['FTX-KEY'] = process.env.FTX_KEY;
+        headers['FTX-SIGN'] = signature;
+    }
 
     let options = {
         method,
-        headers: {
-            "FTX-KEY": process.env.FTX_KEY,
-            "FTX-TS": ts,
-            "FTX-SIGN": hmac
-        }
+        headers
     };
+
     console.log(options)
 
-    let acct = await fetch(`${url}${path}`, options);
+    let res = await fetch(`${url}${path}`, options);
+    return res.json();
+}
+
+async function getAccount(req, res, next) {
+
+
+    return query({ path: '/account', authRoute: true })
     console.log(acct)
     res.json(acct);
 
     // let order = {
-    //     "market": "XRP-PERP",
-    //     "side": "sell", //"buy" or "sell"
-    //     "triggerPrice": 0.306525,
-    //     "size": 31431.0,
-    //     "type": "stop", //stop	"stop", "trailingStop", "takeProfit"; default is stop
-    //     "reduceOnly": false, // boolean	false	
-    //     "retryUntilFilled": false // Whether or not to keep re-triggering until filled. optional, default true for market orders
+    //     'market': 'XRP-PERP',
+    //     'side': 'sell', //'buy' or 'sell'
+    //     'triggerPrice': 0.306525,
+    //     'size': 31431.0,
+    //     'type': 'stop', //stop	'stop', 'trailingStop', 'takeProfit'; default is stop
+    //     'reduceOnly': false, // boolean	false	
+    //     'retryUntilFilled': false // Whether or not to keep re-triggering until filled. optional, default true for market orders
     // };
 
     // FTX-KEY: Your API key
@@ -56,7 +70,7 @@ async function getAccount(req, res, next) {
 }
 
 async function test() {
-    return { hi: 'hi' }
+    return query({ path: '/time', url: 'https://otc.ftx.com/api' })
 }
 
 module.exports = {
