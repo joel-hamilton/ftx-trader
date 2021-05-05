@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 let ftx = require('./services/ftx');
+let twitter = require('./services/twitter')
 
 router.get('/', async (req, res, next) => {
     try{
-        let test = await ftx.test();
+        let test = await twitter.test();
         res.json(test);
     } catch (e) {
         next(e);
