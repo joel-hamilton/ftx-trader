@@ -5,8 +5,9 @@ let twitter = require('./services/twitter')
 
 router.get('/', async (req, res, next) => {
     try{
-        let test = await twitter.test();
-        res.json(test);
+        let test = await twitter.test(res);
+        // res.write(test);
+        // res.json(test);
     } catch (e) {
         next(e);
     }
