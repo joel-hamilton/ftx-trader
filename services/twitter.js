@@ -86,31 +86,9 @@ async function processTweet(tweet) {
     console.log(`MATCH ON ${tickers.join(', ')}`)
     console.log(data)
 
-    let riskPct = 0; // decimal, % of total wallet
-    let confidence = 0; // 1-5
-    if (riskPct) {
-        if(riskPct < 0.01) throw new Error('Too much risk');
-
-        // 5 minute minimum
-        let lastOrderTime = await ftx.getLastOrderTime();
-        if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
-            console.log('Order < 5 mins ago'); 
-            return;
-        }
-
-        // check total leverage, make sure this isn't running out of control
-        let account = await ftx.getAccount();
-        if (account.openMarginFraction > 0.5) { // TODO what does this mean?
-            console.log('Account leverage too high'); 
-            return;
-        }
-
-        // buy it!
-        let amount = account.collateral;
-        
-        await ftx.buy({ ticker: market.name, riskCapital, confidence });
-
-        // notify via SMS
+    let buy = false;
+    if (buy) {
+        await ftx.signalOrder({market: market.name})
     }
 }
 

@@ -5,7 +5,7 @@ let twitter = require('./services/twitter')
 
 router.get('/', async (req, res, next) => {
     try {
-        let test = await ftx.getLastOrderTime();
+        let test = await ftx.signalOrder({market: 'BTC-PERP'});
         res.json(test);
     } catch (e) {
         next(e);
