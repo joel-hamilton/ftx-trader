@@ -90,10 +90,11 @@ async function signalOrder({ market }) {
     let ask = orderBook.result.ask;
     console.log(`ASK: ${ask}`)
     // buy it!
-    let amount = account.result.freeCollateral;
+    let amount = account.result.freeCollateral / 1000;
     console.log(amount);
     console.log(typeof amount);
     let limit = ask * 1.005;
+    limit = limit - 2000; // TODO
     let size = amount / limit;
     let trailValue = -1 * limit / 100;
 
@@ -120,7 +121,8 @@ async function signalOrder({ market }) {
     console.log(initialOrder);
     console.log(triggerOrder);
     // 
-    // await query({ method: 'POST', path: '/orders', body: initialOrder, authRoute: true });
+    let res = await query({ method: 'POST', path: '/orders', body: initialOrder, authRoute: true });
+    console.log(res);
     // await query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authroute: true });
 
     // notify via SMS
