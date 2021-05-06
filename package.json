@@ -13,7 +13,9 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "query-string": "^7.0.0",
+    "sentiment": "^5.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

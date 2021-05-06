@@ -18,9 +18,6 @@ async function query({ path, url = 'https://ftx.com/api', method = 'GET', body =
 
         if (body) payload.push(body);
 
-        console.log(payload.join(''))
-        console.log(process.env.FTX_SECRET)
-
         let signature = require('crypto')
             .createHmac('sha256', process.env.FTX_SECRET)
             .update(payload.join(''))
@@ -36,37 +33,35 @@ async function query({ path, url = 'https://ftx.com/api', method = 'GET', body =
         headers
     };
 
+    if (body) options.body = JSON.stringify(body);
+
     console.log(options)
 
     let res = await fetch(`${url}${path}`, options);
     return res.json();
 }
 
-async function getAccount(req, res, next) {
-
-
+async function getAccount() {
     return query({ path: '/account', authRoute: true })
-    console.log(acct)
-    res.json(acct);
+}
 
-    // let order = {
-    //     'market': 'XRP-PERP',
-    //     'side': 'sell', //'buy' or 'sell'
-    //     'triggerPrice': 0.306525,
-    //     'size': 31431.0,
-    //     'type': 'stop', //stop	'stop', 'trailingStop', 'takeProfit'; default is stop
-    //     'reduceOnly': false, // boolean	false	
-    //     'retryUntilFilled': false // Whether or not to keep re-triggering until filled. optional, default true for market orders
-    // };
+async function getData(market) {
+    let resolution = 15;
+    let data = await query({ path: `/markets/${market}/candles?resolution=${resolution}&limit=35&start_time=${Date.now() / 1000 - (35 * resolution)}&end_time=${Date.now() / 1000}` })
 
-    // FTX-KEY: Your API key
-    // FTX-TS: Number of milliseconds since Unix epoch
-    // FTX-SIGN: SHA256 HMAC of the following four strings, using your API secret, as a hex string:
-    // Request timestamp (e.g. 1528394229375)
-    // HTTP method in uppercase (e.g. GET or POST)
-    // Request path, including leading slash and any URL parameters but not including the hostname (e.g. /account)
-    // (POST only) Request body (JSON-encoded)
+    // TODO calculate RoC on volume and price, see if market is moving from this tweet
 
+    return data;
+}
+
+async function getOrderHistory() {
+    return query({ path: '/orders/history', authRoute: true })
+}
+
+async function getLastOrderTime() {
+    let orders = await getOrderHistory();
+    let date = orders.result[0].createdAt;
+    return (new Date(date)).getTime();
 }
 
 async function test() {
@@ -75,5 +70,9 @@ async function test() {
 
 module.exports = {
     getAccount,
+    getData,
+    getOrderHistory,
+    getLastOrderTime,
+    query,
     test
 }

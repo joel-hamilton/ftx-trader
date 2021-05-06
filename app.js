@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
-const router = express.Router();
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -12,6 +12,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/favico.ico', (req, res) => {
+    res.sendStatus(404);
+});
 
 app.use(require('./routes'));
 
@@ -29,6 +33,9 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.json(err)
+    console.log(err);
 });
+
+// twitter.beginStream();
 
 module.exports = app;

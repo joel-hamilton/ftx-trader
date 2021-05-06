@@ -1,0 +1,48 @@
+module.exports = {
+    // positive
+    '🔥': 5,
+    '📈':5,
+    'ath': 5,
+    'all-time high': 5,
+    'all-time highs': 5,
+    'all time high': 5,
+    'all time highs': 5,
+    'boom': 3,
+    'breakout': 5,
+    'break out': 5,
+    'breaks out': 3,
+    'breaking out': 5,
+    'bull': 4,
+    'bullish': 4,
+    'buy': 5,
+    'chad': 3,
+    'crazy': 3,
+    'enter': 4,
+    'giga': 5,
+    'high': 5,
+    'highs': 5,
+    'inevitable': 2,
+    'long': 3,
+    'moon': 5,
+    'mooning': 5,
+    'prime': 3,
+    'primed': 3,
+    'ramp': 2,
+    'ramped': 2,
+    'ramping': 2,
+    'send': 5,
+    'sent': 3,
+    'sending': 5,
+    'trending': 3,
+    'up': 2,
+    'vertical': 4,
+
+    // erase
+    'hard': 0,
+
+
+    // negative
+    'sell': -4,
+    'short': -3,
+    'crash': -5,
+}
