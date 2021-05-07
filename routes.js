@@ -2,10 +2,15 @@ const express = require('express');
 const router = express.Router();
 let ftx = require('./services/ftx');
 let twitter = require('./services/twitter')
+let twilio = require ('./services/twilio');
+
 
 router.get('/', async (req, res, next) => {
     try {
-        let test = await ftx.signalOrder({market: 'BTC-PERP'});
+        // let test = await twilio.sendSms('testing!');
+        let test = await twitter.getTweetSample();
+        // let test = await ftx.getMarkets();
+        // let test = await ftx.signalOrder({market: 'BTC-PERP'})
         res.json(test);
     } catch (e) {
         next(e);

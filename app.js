@@ -1,4 +1,6 @@
 var createError = require('http-errors');
+const twitter = require('./services/twitter');
+
 var express = require('express');
 
 var path = require('path');
