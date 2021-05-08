@@ -11,8 +11,7 @@ async function sendSms(body) {
     });
 
     promise.then(function(message) {
-        console.log('Created message using promises');
-        console.log(message.sid);
+        console.log(`Sent message. SID: ${message.sid}`);
     });
 }
 

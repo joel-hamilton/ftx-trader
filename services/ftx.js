@@ -2,8 +2,6 @@ require('dotenv').config()
 const twilio = require('./twilio');
 const moment = require('moment');
 const fetch = require('node-fetch');
-let utils = require('./utils');
-
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();
@@ -82,26 +80,27 @@ async function getLastOrderTime() {
 
 async function signalOrder({ market, signalTweet }) {
     // 5 minute minimum
-    let lastOrderTime = await getLastOrderTime();
-    console.log(`LAST ORDER: ${lastOrderTime}`)
-    if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
+    // let lastOrderTime = await getLastOrderTime();
+    // console.log(`LAST ORDER: ${lastOrderTime}`)
+    // if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
         // console.log('Order < 5 mins ago'); // TODO
         // return;
-    }
+    // }
 
     // check total leverage, make sure this isn't running out of control
-    let account = await getAccount();
-    if (account.openMarginFraction > 0.5) { // TODO what does this mean?
-        console.log('Account leverage too high');
-        return;
-    }
+    // let account = await getAccount();
+    // if (account.openMarginFraction > 0.5) { // TODO what does this mean?
+        // console.log('Account leverage too high');
+        // return;
+    // }
 
     // get orderbook
     let orderBook = await getOrderBook(market);
     let ask = orderBook.result.ask;
 
     // buy it!
-    let amount = account.result.freeCollateral / 1000 / 10;
+    // let amount = account.result.freeCollateral / 10
+    let amount = 1000;
     let limit = ask * 1.005;
     let size = amount / limit;
     let trailValue = -1 * limit / 100;
@@ -133,23 +132,19 @@ async function signalOrder({ market, signalTweet }) {
         if (triggerRes && triggerRes.success) {
             let initial = initialRes.result;
             let trigger = triggerRes.result;
-            let summary = `Orders Placed.
-
-Buy ${initial.size}x${initial.market}@${initial.price} ($${Math.round(initial.size * initial.price)} total).
-
-Trailing stop of ${trigger.trailValue} (-$${-1 * Math.round(trigger.trailValue * trigger.size)}).`
+            let summary = `Orders Placed.\n\nBuy ${initial.size}x${initial.market}@${initial.price} ($${Math.round(initial.size * initial.price)} total).\n\nTrailing stop of ${trigger.trailValue} (-$${-1 * Math.round(trigger.trailValue * trigger.size)}).`
 
             if (signalTweet) {
-                summary += `
-    
-@${signalTweet.username} - ${signalTweet.text}`
+                summary += `\n\n@${signalTweet.username} - ${signalTweet.text}`
             }
 
             await twilio.sendSms(summary);
         } else {
+            console.log(triggerRes);
             await twilio.sendSms('Limit order placed, but there was an error placing trigger order.')
         }
     } else {
+        console.log(initialRes);
         await twilio.sendSms('There was an error placing an order');
     }
 }

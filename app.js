@@ -38,6 +38,6 @@ app.use(function(err, req, res, next) {
     console.log(err);
 });
 
-// twitter.beginStream();
+twitter.beginStream();
 
 module.exports = app;

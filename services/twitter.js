@@ -1,20 +1,12 @@
 require('dotenv').config()
-const csvStringify = require('csv-stringify/lib/sync');
-const { parse } = require('json2csv');
-
-const utils = require('./utils')
-
-
 const moment = require('moment');
 const fetch = require('node-fetch');
 const https = require('https');
-const queryString = require('query-string');
-const Sentiment = require('sentiment');
-const sentiment = new Sentiment();
-const sentimentList = require('./sentimentList');
-const marketsList = require('./marketsList');
-const searchParams = require('./searchParams');
+const marketsList = require('../data/marketsList');
+const sentimentList = require('../data/sentimentList');
+const searchParams = require('../data/searchParams');
 const ftx = require('./ftx')
+const twilio = require('./twilio');
 
 async function query({ path, url = 'https://api.twitter.com', method = 'GET', body = null, onChunk = null }) {
     let headers = {
@@ -42,10 +34,30 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
     let response = await fetch(`${url}${path}`, options);
 
     if (onChunk) {
+        let lastChunk = Date.now();
+        let interval = setInterval(() => {
+            if (Date.now() - lastChunk > 60000) {
+                console.log("NO HEARTBEAT");
+                twilio.sendSms('Twitter disconnected');
+                clearInterval(interval);
+            }
+        }, 60000);
+
         response.body.on('data', (chunk) => {
+            lastChunk = Date.now();
+            if (!chunk.toString().trim()) {
+                // console.log(new Date())
+                return; // heartbeat
+            }
+
             let json;
-            json = JSON.parse(chunk.toString());
-            onChunk(json)
+            try {
+                json = JSON.parse(chunk.toString());
+                onChunk(json)
+            } catch (e) {
+                console.log(chunk)
+                console.log(e);
+            }
         });
     } else {
         let json = await response.json();
@@ -58,29 +70,24 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
     }
 }
 
-async function getTweetSample(dataFilter = (data) => data.volumeUsd24h < 500 * 1000 * 1000) {
+async function getTweetSample() {
     let q = encodeURIComponent(searchParams.rules[0].value);
-    let res = await query({ path: `/2/tweets/search/recent?query=${q}&${searchParams.queryString}&max_results=100` });
     let tweets = [];
-    for (let tweet of res.data) {
-        tweet.username = res.includes.users.find(u => u.id === tweet.author_id).username;
-        let data = processTweet(tweet);
+    for (let i = 0; i < 160; i = i + 12) {
+        let start = moment().subtract(10, 'seconds').subtract(i + 1, 'hours').format();
+        let end = moment().subtract(10, 'seconds').subtract(i, 'hours').format();
 
-        if (data.market) {
-            let marketData = marketsList.find(m => m.name === data.market);
-            tweets.push({
-                ...tweet,
-                volumeUsd24h: marketData.volumeUsd24h,
-                underlying: marketData.underlying,
-                market: data.market,
-            })
-
+        let res = await query({ path: `/2/tweets/search/recent?query=${q}&${searchParams.queryString}&max_results=100&start_time=${start}&end_time=${end}` });
+        // console.log(res)
+        for (let tweet of res.data) {
+            let data = processTweet(tweet, res.includes);
+            tweets.push(data);
         }
     }
-    if (typeof dataFilter === 'function') {
-        tweets = tweets.filter(dataFilter)
-    }
 
+    tweets = tweets.filter(tweet => tweet.market)
+
+    console.log(tweets);
     return tweets;
 }
 
@@ -88,8 +95,7 @@ async function backTest() {
     let tweets = await getTweetSample();
     let historicalData = [];
 
-    for (let tweet of tweets) {
-        let data = processTweet(tweet);
+    for (let data of tweets) {
 
         if (data.market) {
             let now = moment();
@@ -104,8 +110,7 @@ async function backTest() {
                 times: priceData.result.map(r => r.startTime),
                 prices: priceData.result.map(r => r.close),
                 volume: priceData.result.map(r => r.volume),
-            })
-
+            });
         }
     }
 
@@ -116,32 +121,65 @@ async function beginStream() {
     await updateRules();
     await query({
         path: `/2/tweets/search/stream?${searchParams.queryString}`, onChunk: async (chunk) => {
-            console.log("CHUNK")
-            console.log(chunk)
-            let data = processTweet(chunk);
-            // if(data.market) {
-                console.log("TRIGGER")
-                console.log(data);
-            // }
-            // await ftx.signalOrder({ market: data.market });
+            if (!chunk.data) {
+                console.log("IRREGULAR CHUNK")
+                console.log(chunk)
+                return;
+            }
+
+            let data = processTweet(chunk.data, chunk.includes);
+            console.log(data);
+
+            if (data.market) {
+                let buy = false;
+                if (data.positiveWords.length && data.volumeUsd24h < 250 * 1000 * 1000) buy = true;
+                if (data.positiveWords.length && data.username === 'CryptoKaleo' && data.volumeUsd24h < 350 * 1000 * 1000) buy === true;
+                if (data.username === 'elonmusk' && data.text.includes('doge')) {
+                    data.market = 'DOGE-PERP';
+                    buy = true;
+                }
+
+                if (buy) {
+                    console.log("TRIGGER THE BUY")
+                    await ftx.signalOrder({ market: data.market, signalTweet: data });
+                }
+            }
         }
     });
 }
 
-function processTweet(tweet) {
-    let tickers = [];
+function processTweet(tweet, includes) {
+    let mentionedMarkets = [];
+    let positiveWords = [];
 
-    for (let market of marketsList) {
+    marketsListFiltered = marketsList.filter(m => {
+        // too big, and sometimes used as pairs comparison
+        return !['BTC', 'ETH'].includes(m.underlying);
+    });
+
+    for (let market of marketsListFiltered) {
         let text = tweet.text.toUpperCase();
-        if (text.includes(`$${market.underlying}`)) tickers.push(market.name);
+        if (text.includes(`$${market.underlying}`)) mentionedMarkets.push(market);
+
+        let exclamation = `${market.underlying}!`;
+        if (text.includes(exclamation)) positiveWords.push(exclamation);
+    }
+
+    for (let word in sentimentList) {
+        word = word.toUpperCase();
+        let text = tweet.text.toUpperCase();
+        if (text.includes(` ${word}`) || text.includes(`${word} `)) positiveWords.push(word);
     }
 
     return {
         text: tweet.text,
-        username: tweet.username,
+        username: includes.users.find(u => u.id === tweet.author_id).username,
         created_at: tweet.created_at,
         // ...sentiment.analyze(tweet.text, { extras: sentimentList }),
-        market: tickers.length === 1 ? tickers[0] : null
+        market: mentionedMarkets.length === 1 ? mentionedMarkets[0].name : null,
+        volumeUsd24h: mentionedMarkets.length === 1 ? mentionedMarkets[0].volumeUsd24h : null,
+        positiveWords
+
     }
 }
 
@@ -153,8 +191,8 @@ async function updateRules() {
         await query({ method: 'POST', path: '/2/tweets/search/stream/rules', body: { "delete": { ids } } })
     }
 
-    await query({ method: 'POST', path: '/2/tweets/search/stream/rules', body: { "add": searchParams.rules } });
-    return await query({ path: '/2/tweets/search/stream/rules' });;
+    let updatedRules = await query({ method: 'POST', path: '/2/tweets/search/stream/rules', body: { "add": searchParams.rules } });
+    return updatedRules;
 }
 
 module.exports = {
