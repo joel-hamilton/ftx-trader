@@ -34,6 +34,7 @@ module.exports = {
     'giga': 5,
     'high': 5,
     'highs': 5,
+    'holy shit': 3,
     'inevitable': 2,
     'long': 3,
     'massive': 3, 

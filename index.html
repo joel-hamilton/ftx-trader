@@ -1,0 +1,108 @@
+<html>
+<style>
+    [v-cloak] {
+        display: none
+    }
+</style>
+<div class="app" v-cloak>
+    <div class="search" @keypress.enter="doSearch">
+        <input placeholder="query" v-model="search.query">
+        <input placeholder="start" v-model="search.start">
+        <input placeholder="end" v-model="search.end">
+        <label>Only with markets
+            <input type="checkbox" v-model="search.onlyWithMarkets">
+        </label>
+        <button @click="doSearch">Search</button>
+    </div>
+    <div class="search-res" v-html="searchRes"></div>
+</div>
+
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous"></script>
+
+<script>
+    new Vue({
+        el: '.app',
+        data() {
+            return {
+                search: {
+                    query: '',
+                    start: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    end: '',
+                    onlyWithMarkets: true
+                },
+                searchRes: ''
+            }
+        },
+        computed: {
+
+        },
+        methods: {
+            async doSearch() {
+                let url = `http://localhost:3000/search/${encodeURIComponent(this.search.query)}/${this.search.onlyWithMarkets ? 1 : 0}/${this.search.start}`;
+                if (this.search.end) url += `/${this.search.end}`;
+                let res = await axios.get(url)
+                this.searchRes = this.syntaxHighlight(res.data);
+            },
+            syntaxHighlight(json) {
+                if (typeof json != 'string') {
+                    json = JSON.stringify(json, undefined, 2);
+                }
+                json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+                    var cls = 'number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'key';
+                        } else {
+                            cls = 'string';
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'boolean';
+                    } else if (/null/.test(match)) {
+                        cls = 'null';
+                    }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                });
+            }
+        }
+    })
+</script>
+<style>
+    html {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .search-res {
+        white-space: pre-wrap;
+        font-family: 'Courier New', Courier, monospace;
+        outline: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .string {
+        color: green;
+    }
+
+    .number {
+        color: darkorange;
+    }
+
+    .boolean {
+        color: blue;
+    }
+
+    .null {
+        color: magenta;
+    }
+
+    .key {
+        color: red;
+    }
+</style>

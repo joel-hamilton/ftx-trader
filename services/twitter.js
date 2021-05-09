@@ -7,6 +7,7 @@ const sentimentList = require('../data/sentimentList');
 const searchParams = require('../data/searchParams');
 const ftx = require('./ftx')
 const twilio = require('./twilio');
+const Sentimental = require('./Sentimental');
 
 async function query({ path, url = 'https://api.twitter.com', method = 'GET', body = null, onChunk = null }) {
     let headers = {
@@ -71,13 +72,14 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
 }
 
 async function getTweetSample() {
-    let q = encodeURIComponent(searchParams.rules[0].value);
+    let q = searchParams.rules[0].value;
     let tweets = [];
     for (let i = 0; i < 160; i = i + 12) {
-        let start = moment().subtract(10, 'seconds').subtract(i + 1, 'hours').format();
-        let end = moment().subtract(10, 'seconds').subtract(i, 'hours').format();
+        let start = moment().subtract(10, 'seconds').subtract(i + 1, 'hours');
+        let end = moment().subtract(10, 'seconds').subtract(i, 'hours');
 
-        let res = await query({ path: `/2/tweets/search/recent?query=${q}&${searchParams.queryString}&max_results=100&start_time=${start}&end_time=${end}` });
+        let res = await searchTweets({ q, start, end });
+
         // console.log(res)
         for (let tweet of res.data) {
             let data = processTweet(tweet, res.includes);
@@ -130,20 +132,20 @@ async function beginStream() {
             let data = processTweet(chunk.data, chunk.includes);
             console.log(data);
 
-            if (data.market) {
-                let buy = false;
-                if (data.positiveWords.length && data.volumeUsd24h < 250 * 1000 * 1000) buy = true;
-                if (data.positiveWords.length && data.username === 'CryptoKaleo' && data.volumeUsd24h < 350 * 1000 * 1000) buy === true;
-                if (data.username === 'elonmusk' && data.text.includes('doge')) {
-                    data.market = 'DOGE-PERP';
-                    buy = true;
-                }
+            if (data.market && data.sentiment >= 0.1) {
+                // let buy = false;
+                // if (data.positiveWords.length && data.volumeUsd24h < 250 * 1000 * 1000) buy = true;
+                // if (data.positiveWords.length && data.username === 'CryptoKaleo' && data.volumeUsd24h < 350 * 1000 * 1000) buy = true;
+                // if (data.username === 'elonmusk' && data.text.includes('doge')) {
+                //     data.market = 'DOGE-PERP';
+                //     buy = true;
+                // }
 
-                if (buy) {
+                // if (buy) {
                     console.log("TRIGGER THE BUY")
                     await ftx.signalOrder({ market: data.market, signalTweet: data });
                 }
-            }
+            // }
         }
     });
 }
@@ -151,36 +153,51 @@ async function beginStream() {
 function processTweet(tweet, includes) {
     let mentionedMarkets = [];
     let positiveWords = [];
+    let text = tweet.text.toUpperCase();
 
     marketsListFiltered = marketsList.filter(m => {
-        // too big, and sometimes used as pairs comparison
+        // we only match markets if there's a single ticker listed, but these are sometimes used as pairs comparison eg: CRV/BTC 
         return !['BTC', 'ETH'].includes(m.underlying);
     });
 
     for (let market of marketsListFiltered) {
-        let text = tweet.text.toUpperCase();
-        if (text.includes(`$${market.underlying}`)) mentionedMarkets.push(market);
+        let marketMatch;
 
-        let exclamation = `${market.underlying}!`;
-        if (text.includes(exclamation)) positiveWords.push(exclamation);
+        // match on symbol name
+        if (text.includes(`$${market.underlying}`)) marketMatch = market;
+
+        if (marketMatch) {
+
+            mentionedMarkets.push(marketMatch)
+        }
     }
 
-    for (let word in sentimentList) {
-        word = word.toUpperCase();
-        let text = tweet.text.toUpperCase();
-        if (text.includes(` ${word}`) || text.includes(`${word} `)) positiveWords.push(word);
-    }
+    let sentimental = new Sentimental(text, mentionedMarkets.length === 1 ? mentionedMarkets[0] : null);
 
     return {
         text: tweet.text,
         username: includes.users.find(u => u.id === tweet.author_id).username,
-        created_at: tweet.created_at,
+        created_at: moment(tweet.created_at).format('YYYY-MM-DD HH:mm:ss'),
         // ...sentiment.analyze(tweet.text, { extras: sentimentList }),
         market: mentionedMarkets.length === 1 ? mentionedMarkets[0].name : null,
         volumeUsd24h: mentionedMarkets.length === 1 ? mentionedMarkets[0].volumeUsd24h : null,
-        positiveWords
-
+        positiveWords: sentimental.getPositiveWords(),
+        positivePhrases: sentimental.getPositivePhrases(),
+        sentiment: sentimental.getScore(),
     }
+}
+
+// can search for tweet triggering a spike in vol like this:
+async function searchTweets({ q, onlyWithMarkets = false, start, end = moment(start).add(1, 'minute') }) {
+    q = encodeURIComponent(q);
+    let res = await query({ path: `/2/tweets/search/recent?query=${q}&${searchParams.queryString}&max_results=100&start_time=${moment(start).format()}&end_time=${moment(end).format()}` });
+    if (!res.data) return { results: 0 };
+
+    let promises = res.data.map(tweet => processTweet(tweet, res.includes))
+    let tweets = await Promise.all(promises);
+
+    if(onlyWithMarkets) tweets = tweets.filter(t => !!t.market);
+    return tweets;
 }
 
 async function updateRules() {
@@ -196,8 +213,9 @@ async function updateRules() {
 }
 
 module.exports = {
+    backTest,
     beginStream,
     getTweetSample,
-    backTest,
     updateRules,
+    searchTweets,
 }

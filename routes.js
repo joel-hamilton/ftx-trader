@@ -5,13 +5,22 @@ let twitter = require('./services/twitter')
 let twilio = require ('./services/twilio');
 
 
-router.get('/', async (req, res, next) => {
+// router.get('/', async (req, res, next) => {
+//     try {
+//         // let test = await twilio.sendSms('testing!');
+//         let test = await twitter.getTweetSample();
+//         // let test = await ftx.getMarkets();
+//         // let test = await ftx.signalOrder({market: 'BTC-PERP'})
+//         res.json(test);
+//     } catch (e) {
+//         next(e);
+//     }
+// });
+
+router.get('/search/:query/:onlyWithMarkets/:start/:end?', async (req, res, next) => {
     try {
-        // let test = await twilio.sendSms('testing!');
-        let test = await twitter.getTweetSample();
-        // let test = await ftx.getMarkets();
-        // let test = await ftx.signalOrder({market: 'BTC-PERP'})
-        res.json(test);
+        let data = await twitter.searchTweets({q: req.params.query, onlyWithMarkets: parseInt(req.params.onlyWithMarkets), start: req.params.start, end: req.params.end });
+        res.json(data);
     } catch (e) {
         next(e);
     }
