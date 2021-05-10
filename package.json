@@ -20,7 +20,8 @@
     "query-string": "^7.0.0",
     "twilio": "^3.62.0",
     "wink-eng-lite-model": "https://github.com/winkjs/wink-eng-lite-model/releases/download/1.1.0/wink-eng-lite-model-1.1.0.tgz",
-    "wink-nlp": "^1.2.0"
+    "wink-nlp": "^1.2.0",
+    "wink-porter2-stemmer": "^2.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
