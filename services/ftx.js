@@ -2,6 +2,8 @@ require('dotenv').config()
 const twilio = require('./twilio');
 const moment = require('moment');
 const fetch = require('node-fetch');
+const fs = require('fs')
+const path = require('path');
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();
@@ -48,12 +50,18 @@ async function getAccount() {
     return query({ path: '/account', authRoute: true })
 }
 
-async function getMarkets() {
+async function getMarkets(save = false) {
     let data = await query({ path: `/markets` });
-    return data.result.filter(m => {
+    let markets = data.result.filter(m => {
         let chunks = m.name.split('-');
         return chunks.length > 1 && chunks[1] === 'PERP';
     });
+
+    if (save) {
+        fs.writeFileSync(path.resolve(__dirname, '../data/marketsList.js'), `module.exports=${JSON.stringify(markets)}`);
+    }
+
+    return markets;
 }
 
 async function getData({ market, resolution = 15, start = moment().subtract(1, 'day').valueOf() }, end = moment().valueOf()) {
@@ -86,8 +94,8 @@ async function signalOrder({ market, tweetData, scale = 1 }) {
     let lastOrderTime = await getLastOrderTime();
     console.log(`LAST ORDER: ${lastOrderTime}`)
     if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
-    console.log('Order < 5 mins ago'); // TODO
-    return;
+        console.log('Order < 5 mins ago'); // TODO
+        return;
     }
 
     // check total leverage, make sure this isn't running out of control

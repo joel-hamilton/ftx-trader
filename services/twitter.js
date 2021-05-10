@@ -174,7 +174,7 @@ async function beginStream() {
 
             if (buy) {
                 console.log("TRIGGER THE BUY")
-                await ftx.signalOrder({ market: data.market, signalTweet: data, scale });
+                await ftx.signalOrder({ market: data.market, tweetData: data, scale });
             }
         }
     });

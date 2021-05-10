@@ -6,17 +6,23 @@ module.exports = class Marketer {
         this.mentionedMarkets = this._getMentionedMarkets()
     }
 
-    mentionedMarketsFiltered() {
+    get mentionedMarketsFiltered() {
         return this.mentionedMarkets.filter(mm => {
             // we only match markets if there's a single ticker listed, but these are sometimes used as pairs comparison eg: CRV/BTC 
-            return !['BTC', 'ETH'].includes(mm.underlying);
+            if(['BTC', 'ETH'].includes(mm.underlying)) return false;
+            
+            // only include xxx-PERP markets
+            let chunks = mm.name.split('-');
+            if(chunks.length !== 2 || chunks[1] !== 'PERP') return false;
+
+            return true
         });
     }
 
     getMarketInfo() {
         if(this.mentionedMarketsFiltered.length !== 1) return {};
 
-        let market = this.mentionedMarkets[0];
+        let market = this.mentionedMarketsFiltered[0];
         return {
             market: market.name,
             volumeUsd24h: market.volumeUsd24h,

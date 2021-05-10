@@ -1,11 +1,10 @@
 const sentimentList = require('../data/sentimentList')
 
-// TODO bug, `$XRPと$BTCの実需の違い。\n現状ではある意味、王者の貫禄にすら見える『買われることが実需』という＄BTCだけど世界が進むにつれ、いつまでも王の座に居続けられるのかな🤔\n#XRPtheStandard https://t.co/FJBLDO4Smo` generates like 50 positive words
-
 module.exports = class Sentimental {
     constructor(text, marketUnderlying = '') {
         this.text = text.trim().toLowerCase();
-        this.marketUnderlying = marketUnderlying;
+        this.splitText = this.text.split(/[\s-,]/).filter(chunk => !!chunk.trim()),
+            this.marketUnderlying = marketUnderlying;
         this.positiveWords = []; // 1 point each
         this.positivePhrases = []; // 10 points each
         this.score = 0;
@@ -35,8 +34,7 @@ module.exports = class Sentimental {
         this._addPhrases();
 
         // get positivity score
-        let words = this.text.split(' ').length;
-        this.score = (this.positiveWords.length * 1 + this.positivePhrases.length * 10) / words;
+        this.score = (this.positiveWords.length * 1 + this.positivePhrases.length * 10) / this.splitText.length;
     }
 
     // $CRV! eg, gets added to positive words
@@ -52,7 +50,7 @@ module.exports = class Sentimental {
     _addPhrases() {
         // match on 'I/just...bought/buying/entered/re-entered'
         // TODO this needs work
-        let match = this.text.match(/((?:\WI['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought|add)/gi);
+        let match = this.text.match(/((?:(?:^|\W)I['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought|add)/gi);
         if (match) {
             this.positivePhrases.push(match[0]);
         }
@@ -62,8 +60,7 @@ module.exports = class Sentimental {
         // add positive word matches
         for (let word in sentimentList) {
             word = word.toLowerCase();
-            let splitText = this.text.split(/[\s-,]/).filter(chunk => !!chunk.trim());
-            if(splitText.includes(word)) this.positiveWords.push(word);
+            if (this.splitText.includes(word)) this.positiveWords.push(word);
         }
     }
 
@@ -71,7 +68,7 @@ module.exports = class Sentimental {
     // add if very short tweet and market is mentioned
     _addMarketIfShortTweet() {
         if (this.marketUnderlying) {
-            if (this.text.split(/\s/).length <= 3) {
+            if (this.splitText.length <= 9) {
                 this.positiveWords.push(this.marketUnderlying);
             }
         }

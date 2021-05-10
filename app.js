@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 const twitter = require('./services/twitter');
+const ftx = require('./services/ftx');
 
 var express = require('express');
 var cors = require('cors')
@@ -39,6 +40,13 @@ app.use(function(err, req, res, next) {
     console.log(err);
 });
 
-twitter.beginStream();
+if (process.argv[2] === 'update') {
+    (async function() {
+        await ftx.getMarkets(true);
+        process.exit();
+    })()
+} else if (process.argv[2] === 'stream') {
+    twitter.beginStream();
+}
 
 module.exports = app;
