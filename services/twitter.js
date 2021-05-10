@@ -1,14 +1,12 @@
-require('dotenv').config()
-const moment = require('moment');
 const fetch = require('node-fetch');
 const https = require('https');
-const marketsList = require('../data/marketsList');
-const sentimentList = require('../data/sentimentList');
+const moment = require('moment');
+
+const Marketer = require('./Marketer');
+const Sentimental = require('./Sentimental');
 const searchParams = require('../data/searchParams');
 const ftx = require('./ftx')
 const twilio = require('./twilio');
-const Sentimental = require('./Sentimental');
-const Marketer = require('./Marketer');
 
 async function query({ path, url = 'https://api.twitter.com', method = 'GET', body = null, onChunk = null }) {
     let headers = {

@@ -1,9 +1,9 @@
-require('dotenv').config()
-const twilio = require('./twilio');
-const moment = require('moment');
-const fetch = require('node-fetch');
 const fs = require('fs')
 const path = require('path');
+const moment = require('moment');
+const fetch = require('node-fetch');
+
+const twilio = require('./twilio');
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();

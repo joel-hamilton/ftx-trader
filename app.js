@@ -1,7 +1,7 @@
+require('dotenv').config()
 var createError = require('http-errors');
 const twitter = require('./services/twitter');
 const ftx = require('./services/ftx');
-
 var express = require('express');
 var cors = require('cors')
 var path = require('path');
