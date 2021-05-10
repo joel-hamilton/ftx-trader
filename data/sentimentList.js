@@ -17,7 +17,7 @@ module.exports = {
     'booooom': 3,
     'boooooom': 3,
     'bought': 4,
-    'breakout': 5,
+    'breakout': 5, 
     'break out': 5,
     'breaks out': 3,
     'breaking out': 5,

@@ -152,7 +152,6 @@ async function beginStream() {
 
 function processTweet(tweet, includes) {
     let mentionedMarkets = [];
-    let positiveWords = [];
     let text = tweet.text.toUpperCase();
 
     marketsListFiltered = marketsList.filter(m => {
@@ -172,7 +171,7 @@ function processTweet(tweet, includes) {
         }
     }
 
-    let sentimental = new Sentimental(text, mentionedMarkets.length === 1 ? mentionedMarkets[0] : null);
+    let sentimental = new Sentimental(text, mentionedMarkets.length === 1 ? mentionedMarkets[0].underlying : null);
 
     return {
         text: tweet.text,

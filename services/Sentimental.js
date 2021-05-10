@@ -4,7 +4,8 @@ const sentimentList = require('../data/sentimentList')
 
 module.exports = class Sentimental {
     constructor(text, marketUnderlying = '') {
-        this.text = text.toUpperCase();
+        this.text = text.toLowerCase();
+        this.text = "$XRPと$BTCの実需の違い。\n現状ではある意味、王者の貫禄にすら見える『買われることが実需』という＄BTCだけど世界が進むにつれ、いつまでも王の座に居続けられるのかな🤔\n#XRPtheStandard https://t.co/FJBLDO4Smo";
         this.marketUnderlying = marketUnderlying;
         this.positiveWords = []; // 1 point each
         this.positivePhrases = []; // 10 points each
@@ -52,8 +53,8 @@ module.exports = class Sentimental {
     _addPhrases() {
         // match on 'I/just...bought/buying/entered/re-entered'
         // TODO this needs work
-        let match = this.text.match(/((?:I['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought)/gi);
-        if(match) {
+        let match = this.text.match(/((?:\WI['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought)/gi);
+        if (match) {
             this.positivePhrases.push(match[0]);
         }
     }
@@ -61,8 +62,15 @@ module.exports = class Sentimental {
     _addSentimentMatches() {
         // add positive word matches
         for (let word in sentimentList) {
-            word = word.toUpperCase();
-            if (this.text.match(`[\s-]${word}`) || this.text.match(`${word}[\s-]`)) this.positiveWords.push(word);
+            word = word.toLowerCase();
+            if (
+                this.text.includes(` ${word}`)
+                || this.text.includes(`${word} `)
+                || this.text.includes(`-${word}`)
+                || this.text.includes(`${word}-`)
+            ) {
+                this.positiveWords.push(word);
+            }
         }
     }
 
@@ -70,7 +78,7 @@ module.exports = class Sentimental {
     // add if very short tweet and market is mentioned
     _addMarketIfShortTweet() {
         if (this.marketUnderlying) {
-            if (this.text.split(' ').length <= 3) {
+            if (this.text.split(/\s/).length <= 3) {
                 this.positiveWords.push(this.marketUnderlying);
             }
         }
