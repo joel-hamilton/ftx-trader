@@ -57,10 +57,10 @@ router.get('/markets', async (req, res, next) => {
     try {
         let data = await ftx.query({ path: '/markets' });
         markets = data.result
-            .filter(m => {
-                let chunks = m.name.split('-');
-                return m.volumeUsd24h < 200 * 1000 * 1000 && chunks.length > 1 && chunks[1] === 'PERP'
-            })
+            // .filter(m => {
+                // let chunks = m.name.split('-');
+                // return m.volumeUsd24h < 200 * 1000 * 1000 && chunks.length > 1 && chunks[1] === 'PERP'
+            // })
             .map(m => {
                 return {
                     name: m.name,

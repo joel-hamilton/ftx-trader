@@ -8,6 +8,7 @@ const searchParams = require('../data/searchParams');
 const ftx = require('./ftx')
 const twilio = require('./twilio');
 const Sentimental = require('./Sentimental');
+const Marketer = require('./Marketer');
 
 async function query({ path, url = 'https://api.twitter.com', method = 'GET', body = null, onChunk = null }) {
     let headers = {
@@ -34,8 +35,11 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
     console.log(options);
     let response = await fetch(`${url}${path}`, options);
 
-    if (onChunk) {
+    if (onChunk) { // streaming connection
         let lastChunk = Date.now();
+
+        // check for heartbeat
+        // TODO restart connection if missing
         let interval = setInterval(() => {
             if (Date.now() - lastChunk > 60000) {
                 console.log("NO HEARTBEAT");
@@ -43,6 +47,12 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
                 clearInterval(interval);
             }
         }, 60000);
+
+        response.body.on('error', (err) => {
+            console.log("ERROR!")
+            console.log(err)
+            twilio.sendSms(err.message);
+        });
 
         response.body.on('data', (chunk) => {
             lastChunk = Date.now();
@@ -60,7 +70,7 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
                 console.log(e);
             }
         });
-    } else {
+    } else { // regular request
         let json = await response.json();
         if (!json) {
             console.log(response);
@@ -132,57 +142,57 @@ async function beginStream() {
             let data = processTweet(chunk.data, chunk.includes);
             console.log(data);
 
-            if (data.market && data.sentiment >= 0.1) {
-                // let buy = false;
-                // if (data.positiveWords.length && data.volumeUsd24h < 250 * 1000 * 1000) buy = true;
-                // if (data.positiveWords.length && data.username === 'CryptoKaleo' && data.volumeUsd24h < 350 * 1000 * 1000) buy = true;
-                // if (data.username === 'elonmusk' && data.text.includes('doge')) {
-                //     data.market = 'DOGE-PERP';
-                //     buy = true;
-                // }
+            let buy = false;
+            let scale = 1;
 
-                // if (buy) {
-                    console.log("TRIGGER THE BUY")
-                    await ftx.signalOrder({ market: data.market, signalTweet: data });
+            if (data.market && data.sentiment >= 0.1) {
+                // basic includes if market < $250m volume, or if influential user and <$350 volume
+                if (
+                    data.volumeUsd24h < 250 *   1000 * 1000 ||
+                    (['CryptoKaleo'].includes(data.username) && data.volumeUsd24h < 350 * 1000 * 1000)
+                ) {
+                    buy = true;
                 }
-            // }
+
+                // low volume market, potentially larger swings
+                if (data.volumeUsd24h < 100 * 1000 * 1000) {
+                    scale *= 2;
+                }
+
+                // clearly positive message
+                if (data.sentiment > 0.5) {
+                    scale *= 2;
+                }
+            }
+
+            // stupid Elon filter, go big on doge
+            if (data.username === 'elonmusk' && (data.text.toLowerCase().split(' ').includes('doge'))) {
+                data.market = 'DOGE-PERP';
+                buy = true;
+                scale = 4;
+            }
+
+            if (buy) {
+                console.log("TRIGGER THE BUY")
+                await ftx.signalOrder({ market: data.market, signalTweet: data, scale });
+            }
         }
     });
 }
 
 function processTweet(tweet, includes) {
-    let mentionedMarkets = [];
-    let text = tweet.text.toUpperCase();
-
-    marketsListFiltered = marketsList.filter(m => {
-        // we only match markets if there's a single ticker listed, but these are sometimes used as pairs comparison eg: CRV/BTC 
-        return !['BTC', 'ETH'].includes(m.underlying);
-    });
-
-    for (let market of marketsListFiltered) {
-        let marketMatch;
-
-        // match on symbol name
-        if (text.includes(`$${market.underlying}`)) marketMatch = market;
-
-        if (marketMatch) {
-
-            mentionedMarkets.push(marketMatch)
-        }
-    }
-
-    let sentimental = new Sentimental(text, mentionedMarkets.length === 1 ? mentionedMarkets[0].underlying : null);
+    let marketer = new Marketer(tweet.text);
+    let marketInfo = marketer.getMarketInfo();
+    let sentimental = new Sentimental(tweet.text, marketInfo.market);
 
     return {
         text: tweet.text,
         username: includes.users.find(u => u.id === tweet.author_id).username,
         created_at: moment(tweet.created_at).format('YYYY-MM-DD HH:mm:ss'),
-        // ...sentiment.analyze(tweet.text, { extras: sentimentList }),
-        market: mentionedMarkets.length === 1 ? mentionedMarkets[0].name : null,
-        volumeUsd24h: mentionedMarkets.length === 1 ? mentionedMarkets[0].volumeUsd24h : null,
         positiveWords: sentimental.getPositiveWords(),
         positivePhrases: sentimental.getPositivePhrases(),
         sentiment: sentimental.getScore(),
+        ...marketInfo,
     }
 }
 
@@ -195,7 +205,7 @@ async function searchTweets({ q, onlyWithMarkets = false, start, end = moment(st
     let promises = res.data.map(tweet => processTweet(tweet, res.includes))
     let tweets = await Promise.all(promises);
 
-    if(onlyWithMarkets) tweets = tweets.filter(t => !!t.market);
+    if (onlyWithMarkets) tweets = tweets.filter(t => !!t.market);
     return tweets;
 }
 

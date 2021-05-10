@@ -4,8 +4,7 @@ const sentimentList = require('../data/sentimentList')
 
 module.exports = class Sentimental {
     constructor(text, marketUnderlying = '') {
-        this.text = text.toLowerCase();
-        this.text = "$XRPと$BTCの実需の違い。\n現状ではある意味、王者の貫禄にすら見える『買われることが実需』という＄BTCだけど世界が進むにつれ、いつまでも王の座に居続けられるのかな🤔\n#XRPtheStandard https://t.co/FJBLDO4Smo";
+        this.text = text.trim().toLowerCase();
         this.marketUnderlying = marketUnderlying;
         this.positiveWords = []; // 1 point each
         this.positivePhrases = []; // 10 points each
@@ -40,7 +39,7 @@ module.exports = class Sentimental {
         this.score = (this.positiveWords.length * 1 + this.positivePhrases.length * 10) / words;
     }
 
-    // $CVX! eg, gets added to positive words
+    // $CRV! eg, gets added to positive words
     _addMarketIfExclamation() {
         if (this.marketUnderlying) {
             let exclamation = `${this.marketUnderlying}!`;
@@ -53,7 +52,7 @@ module.exports = class Sentimental {
     _addPhrases() {
         // match on 'I/just...bought/buying/entered/re-entered'
         // TODO this needs work
-        let match = this.text.match(/((?:\WI['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought)/gi);
+        let match = this.text.match(/((?:\WI['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought|add)/gi);
         if (match) {
             this.positivePhrases.push(match[0]);
         }
@@ -63,14 +62,8 @@ module.exports = class Sentimental {
         // add positive word matches
         for (let word in sentimentList) {
             word = word.toLowerCase();
-            if (
-                this.text.includes(` ${word}`)
-                || this.text.includes(`${word} `)
-                || this.text.includes(`-${word}`)
-                || this.text.includes(`${word}-`)
-            ) {
-                this.positiveWords.push(word);
-            }
+            let splitText = this.text.split(/[\s-,]/).filter(chunk => !!chunk.trim());
+            if(splitText.includes(word)) this.positiveWords.push(word);
         }
     }
 

@@ -78,20 +78,23 @@ async function getLastOrderTime() {
     return (new Date(date)).getTime();
 }
 
-async function signalOrder({ market, signalTweet }) {
+async function signalOrder({ market, tweetData, scale = 1 }) {
+    console.log(market);
+    console.log(scale);
+
     // 5 minute minimum
-    // let lastOrderTime = await getLastOrderTime();
-    // console.log(`LAST ORDER: ${lastOrderTime}`)
-    // if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
-        // console.log('Order < 5 mins ago'); // TODO
-        // return;
-    // }
+    let lastOrderTime = await getLastOrderTime();
+    console.log(`LAST ORDER: ${lastOrderTime}`)
+    if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
+    console.log('Order < 5 mins ago'); // TODO
+    return;
+    }
 
     // check total leverage, make sure this isn't running out of control
     // let account = await getAccount();
     // if (account.openMarginFraction > 0.5) { // TODO what does this mean?
-        // console.log('Account leverage too high');
-        // return;
+    // console.log('Account leverage too high');
+    // return;
     // }
 
     // get orderbook
@@ -100,10 +103,10 @@ async function signalOrder({ market, signalTweet }) {
 
     // buy it!
     // let amount = account.result.freeCollateral / 10
-    let amount = 1000;
+    let amount = 1000 * scale;
     let limit = ask * 1.005;
     let size = amount / limit;
-    let trailValue = -1 * limit / 100;
+    let trailValue = -1 * limit * 0.005;
 
     let initialOrder = {
         "market": market,
@@ -134,8 +137,8 @@ async function signalOrder({ market, signalTweet }) {
             let trigger = triggerRes.result;
             let summary = `Orders Placed.\n\nBuy ${initial.size}x${initial.market}@${initial.price} ($${Math.round(initial.size * initial.price)} total).\n\nTrailing stop of ${trigger.trailValue} (-$${-1 * Math.round(trigger.trailValue * trigger.size)}).`
 
-            if (signalTweet) {
-                summary += `\n\n@${signalTweet.username} - ${signalTweet.text}`
+            if (tweetData) {
+                summary += `\n\n@${tweetData.username} - ${tweetData.text}`
             }
 
             await twilio.sendSms(summary);
