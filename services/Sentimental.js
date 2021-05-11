@@ -5,7 +5,7 @@ const winkNLP = require('wink-nlp');
 // Load "its" helper to extract item properties.
 const its = require('wink-nlp/src/its.js');
 // Load "as" reducer helper to reduce a collection.
-const as = require('wink-nlp/src/as.js');
+// const as = require('wink-nlp/src/as.js');
 // Load english language model — light version.
 const model = require('wink-eng-lite-model');
 // Instantiate winkNLP.
@@ -16,40 +16,43 @@ const stem = require('wink-porter2-stemmer');
 module.exports = class Sentimental {
     constructor(text, marketUnderlying = '') {
         this.text = text.trim().toLowerCase();
-        this.tokens = this._tokenizeText();
+        this.tokens = this.tokenizeText();
         this.marketUnderlying = marketUnderlying;
-        this.positiveWords = []; // 1 point each
-        this.positivePhrases = []; // 10 points each
+
+        this.positiveWords = [];    // 1 point each
+        this.positivePhrases = [];  // 10 points each
+        this.stopPhrases = [];      // automatically zeroes the score
 
         // add from list of words/phrases
-        this._addSentimentWordMatches();
-        this._addSentimentPhraseMatches();
+        this.addPositiveWords();
+        this.addPositivePhrases();
 
         // amplify short, excited tweets
-        this._addMarketIfExclamation();
-        this._addMarketIfShortTweet();
+        this.addMarketIfExclamation();
+        this.addMarketIfShortTweet();
 
-        // add other positive phrases
-        this._addPhrases();
+        // add stop phrases
+        this.addStopPhraseMatches();
 
         // get positivity score
-        this.score = (this.positiveWords.length * 1 + this.positivePhrases.length * 10) / this.tokens.length;
+        if (this.stopPhrases.length) {
+            this.score = 0;
+        } else {
+            this.score = (this.positiveWords.length * 1 + this.positivePhrases.length * 10) / this.tokens.length;
+        }
     }
 
-    getPositivePhrases() {
-        return this.positivePhrases;
-    }
-
-    getPositiveWords() {
-        return this.positiveWords
-    }
-
-    getScore() {
-        return this.score;
+    get info() {
+        return {
+            positivePhrases: this.positivePhrases,
+            positiveWords: this.positiveWords,
+            stopPhrases: this.stopPhrases,
+            sentiment: this.score,
+        }
     }
 
     // $CRV! eg, gets added to positive words
-    _addMarketIfExclamation() {
+    addMarketIfExclamation() {
         if (this.marketUnderlying) {
             let exclamation = `${this.marketUnderlying}!`;
             if (this.text.includes(exclamation)) {
@@ -58,17 +61,8 @@ module.exports = class Sentimental {
         }
     }
 
-    _addPhrases() {
-        // match on 'I/just...bought/buying/entered/re-entered'
-        // TODO this needs work
-        let match = this.text.match(/((?:(?:^|\W)I['\s])|(?:Just))[^\.]+(?:enter|long|buy|bought|add)/gi);
-        if (match) {
-            this.positivePhrases.push(match[0]);
-        }
-    }
-
     // add positive word matches from list
-    _addSentimentWordMatches() {
+    addPositiveWords() {
         for (let word in sentimentList.words) {
             let stemmedWord = stem(word);
             if (this.tokens.includes(stemmedWord)) this.positiveWords.push(stemmedWord);
@@ -76,7 +70,7 @@ module.exports = class Sentimental {
     }
 
     // add poisitive phrase matches from list
-    _addSentimentPhraseMatches() {
+    addPositivePhrases() {
         for (let phrase of sentimentList.phrases) {
             let regex = new RegExp(phrase, 'g');
             let match = this.text.match(regex);
@@ -86,8 +80,19 @@ module.exports = class Sentimental {
         }
     }
 
+    // add negative phrase matches from list
+    addStopPhraseMatches() {
+        for (let phrase of sentimentList.stopPhrases) {
+            let regex = new RegExp(phrase, 'g');
+            let match = this.text.match(regex);
+            if (match) {
+                this.stopPhrases.push(match[0])
+            };
+        }
+    }
+
     // add if very short tweet and market is mentioned
-    _addMarketIfShortTweet() {
+    addMarketIfShortTweet() {
         if (this.marketUnderlying) {
             if (this.tokens.length <= 6) {
                 this.positiveWords.push(this.marketUnderlying);
@@ -95,7 +100,7 @@ module.exports = class Sentimental {
         }
     }
 
-    _tokenizeText() {
+    tokenizeText() {
         return nlp.readDoc(this.text)
             .tokens()
             .filter(

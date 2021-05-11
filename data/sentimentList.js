@@ -2,6 +2,7 @@ module.exports = {
     words: {
         '🔥': 5,
         '📈': 5,
+        '🌙': 5,
         '🌋': 5,
         'alright': 2,
         'ath': 5,
@@ -24,6 +25,7 @@ module.exports = {
         'enter': 4,
         'explode': 4,
         'giga': 5,
+        'gigasend': 3,
         'high': 5,
         'inevitable': 2,
         'lfg': 3,
@@ -38,10 +40,20 @@ module.exports = {
         'up': 2,
         'vertical': 4,
     },
+
     phrases: [
+        /add(ing)?\smore/,
         /all[\s-]time high[s]?/,
         /break(s|(ing))?\sout/,
+        /((here)|(away))\s((it\s)|(we\s))?go(es)?/,
+        /(((^|\s)I('m|\s))|(Just))[\w\s]+(enter|long|buy|bought|add)/,
+        /lift\s?off/,
+        /on\sfire/,
         /holy\sshit/,
+        /(took|taking)[\w\s]+(shot|off)/, // some crossover here between eg: 'Taking it off the table' and 'Taking off', but stop phrases will always have precedence
     ],
 
+    stopPhrases: [
+        /tak(e|ing)[\w\s]+(profit|table)/,
+    ]
 }

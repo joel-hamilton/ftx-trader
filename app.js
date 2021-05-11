@@ -43,6 +43,8 @@ app.use(function(err, req, res, next) {
 if (process.argv[2] === 'update') {
     (async function() {
         await ftx.getMarkets(true);
+        await twitter.updateRules();
+
         process.exit();
     })()
 } else if (process.argv[2] === 'stream') {

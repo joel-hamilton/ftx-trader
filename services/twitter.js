@@ -7,6 +7,10 @@ const Sentimental = require('./Sentimental');
 const searchParams = require('../data/searchParams');
 const ftx = require('./ftx')
 const twilio = require('./twilio');
+const utils = require('./utils.js');
+
+let reconnectWait = 1000;
+
 
 async function query({ path, url = 'https://api.twitter.com', method = 'GET', body = null, onChunk = null }) {
     let headers = {
@@ -30,7 +34,7 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
     }
 
     console.log(`${url}${path}`);
-    console.log(options);
+    // console.log(options);
     let response = await fetch(`${url}${path}`, options);
 
     if (onChunk) { // streaming connection
@@ -38,13 +42,23 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
 
         // check for heartbeat
         // TODO restart connection if missing
-        let interval = setInterval(() => {
-            if (Date.now() - lastChunk > 60000) {
+        let interval = setInterval(async () => {
+            if (Date.now() - lastChunk > 30000) {
                 console.log("NO HEARTBEAT");
-                twilio.sendSms('Twitter disconnected');
                 clearInterval(interval);
+
+                reconnectWait *= 2;
+
+                if (reconnectWait > 60 * 1000) {
+                    console.log('Connection dropped');
+                    twilio.sendSms('Twitter disconnected');
+                }
+
+                await utils.wait(reconnectWait);
+                console.log('reconnecting...' + reconnectWait + 'ms');
+                return query({ path, url, method, body, onChunk });
             }
-        }, 60000);
+        }, 30000);
 
         response.body.on('error', (err) => {
             console.log("ERROR!")
@@ -54,18 +68,16 @@ async function query({ path, url = 'https://api.twitter.com', method = 'GET', bo
 
         response.body.on('data', (chunk) => {
             lastChunk = Date.now();
-            if (!chunk.toString().trim()) {
-                // console.log(new Date())
-                return; // heartbeat
-            }
 
-            let json;
             try {
-                json = JSON.parse(chunk.toString());
+                let json = JSON.parse(chunk.toString());
+                if (json.data) {
+                    reconnectWait = 1000;
+                }
+
                 onChunk(json)
             } catch (e) {
-                console.log(chunk)
-                console.log(e);
+                // heartbeat
             }
         });
     } else { // regular request
@@ -128,9 +140,9 @@ async function backTest() {
 }
 
 async function beginStream() {
-    await updateRules();
+    console.log('Beginning Stream')
     await query({
-        path: `/2/tweets/search/stream?${searchParams.queryString}`, onChunk: async (chunk) => {
+        path: `/2/tweets/search/stream?${searchParams.fieldsQueryString}`, onChunk: async (chunk) => {
             if (!chunk.data) {
                 console.log("IRREGULAR CHUNK")
                 console.log(chunk)
@@ -146,7 +158,7 @@ async function beginStream() {
             if (data.market && data.sentiment >= 0.1) {
                 // basic includes if market < $250m volume, or if influential user and <$350 volume
                 if (
-                    data.volumeUsd24h < 250 *   1000 * 1000 ||
+                    data.volumeUsd24h < 250 * 1000 * 1000 ||
                     (['CryptoKaleo'].includes(data.username) && data.volumeUsd24h < 350 * 1000 * 1000)
                 ) {
                     buy = true;
@@ -160,6 +172,12 @@ async function beginStream() {
                 // clearly positive message
                 if (data.sentiment > 0.5) {
                     scale *= 2;
+                }
+
+                // penalize RTs and replies
+                let text = data.text.toLowerCase();
+                if (text.substr(0, 1) === '@' || text.substr(0, 1) === 'RT') {
+                    scale /= 2;
                 }
             }
 
@@ -180,25 +198,26 @@ async function beginStream() {
 
 function processTweet(tweet, includes) {
     let marketer = new Marketer(tweet.text);
-    let marketInfo = marketer.getMarketInfo();
-    let sentimental = new Sentimental(tweet.text, marketInfo.market);
+    let sentimental = new Sentimental(tweet.text, marketer.market);
 
     return {
         text: tweet.text,
         username: includes.users.find(u => u.id === tweet.author_id).username,
         created_at: moment(tweet.created_at).format('YYYY-MM-DD HH:mm:ss'),
-        positiveWords: sentimental.getPositiveWords(),
-        positivePhrases: sentimental.getPositivePhrases(),
-        sentiment: sentimental.getScore(),
-        ...marketInfo,
+        ...sentimental.info,
+        ...marketer.info,
     }
 }
 
 // can search for tweet triggering a spike in vol like this:
-async function searchTweets({ q, onlyWithMarkets = false, start, end = moment(start).add(1, 'minute') }) {
+async function searchTweets({ q, onlyWithMarkets = false, useRules = false, start, end = moment(start).add(1, 'minute') }) {
+    // if(useRules) q += ` ${searchParams.rulesQueryString}`; // works, but makes the query too long, will need to split into several queries, probably not worth the effort
     q = encodeURIComponent(q);
-    let res = await query({ path: `/2/tweets/search/recent?query=${q}&${searchParams.queryString}&max_results=100&start_time=${moment(start).format()}&end_time=${moment(end).format()}` });
-    if (!res.data) return { results: 0 };
+    let res = await query({ path: `/2/tweets/search/recent?query=${q}&${searchParams.fieldsQueryString}&max_results=100&start_time=${moment(start).format()}&end_time=${moment(end).format()}` });
+    if (!res.data) {
+        console.log(res);
+        return { results: 0 };
+    }
 
     let promises = res.data.map(tweet => processTweet(tweet, res.includes))
     let tweets = await Promise.all(promises);

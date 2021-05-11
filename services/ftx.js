@@ -112,9 +112,9 @@ async function signalOrder({ market, tweetData, scale = 1 }) {
     // buy it!
     // let amount = account.result.freeCollateral / 10
     let amount = 1000 * scale;
-    let limit = ask * 1.005;
+    let limit = ask * 1.001;             // bid 0.1% over ask
     let size = amount / limit;
-    let trailValue = -1 * limit * 0.005;
+    let trailValue = limit * -0.01;  // 1% trailing stop
 
     let initialOrder = {
         "market": market,

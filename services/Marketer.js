@@ -3,7 +3,7 @@ let marketsList = require('../data/marketsList');
 module.exports = class Marketer {
     constructor(text) {
         this.text = text.trim().toUpperCase();
-        this.mentionedMarkets = this._getMentionedMarkets()
+        this.mentionedMarkets = this.getMentionedMarkets()
     }
 
     get mentionedMarketsFiltered() {
@@ -19,7 +19,11 @@ module.exports = class Marketer {
         });
     }
 
-    getMarketInfo() {
+    get market() {
+        return this.info.market ? this.info.market : '';
+    }
+
+    get info() {
         if(this.mentionedMarketsFiltered.length !== 1) return {};
 
         let market = this.mentionedMarketsFiltered[0];
@@ -29,10 +33,11 @@ module.exports = class Marketer {
         }
     }
 
-    _getMentionedMarkets() {
+    getMentionedMarkets() {
         let mentionedMarkets = [];
         for (let market of marketsList) {
-            if (this.text.includes(`$${market.underlying}`)) mentionedMarkets.push(market);
+            let match = new RegExp(String.raw`\$${market.underlying}(?:$|\W)`, 'gi');
+            if (this.text.toUpperCase().match(match)) mentionedMarkets.push(market);
         }
 
         return mentionedMarkets;

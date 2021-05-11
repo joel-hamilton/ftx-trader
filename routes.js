@@ -17,9 +17,15 @@ let twilio = require ('./services/twilio');
 //     }
 // });
 
-router.get('/search/:query/:onlyWithMarkets/:start/:end?', async (req, res, next) => {
+router.get('/search/:query/:onlyWithMarkets/:useRules/:start/:end?', async (req, res, next) => {
     try {
-        let data = await twitter.searchTweets({q: req.params.query, onlyWithMarkets: parseInt(req.params.onlyWithMarkets), start: req.params.start, end: req.params.end });
+        let data = await twitter.searchTweets({
+            q: req.params.query, 
+            onlyWithMarkets: parseInt(req.params.onlyWithMarkets), 
+            useRules: parseInt(req.params.useRules), 
+            start: req.params.start, 
+            end: req.params.end 
+        });
         res.json(data);
     } catch (e) {
         next(e);

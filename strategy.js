@@ -18,6 +18,12 @@ Long-term:
         High conviction bets:
         KALEO + small markets + 'send'
 
+    - have stop words/phrases that knock sentiment to 0
+        - I'm selling/just sold "I'm taking a bit of profit here to buy back lower if we get it."
+        - 
+
+    - move weird regex to sentimentList, and break up into smaller chunks/simplify
+
 Thought: Even if a tweet doesn't move the market per se, it's likely to be excited about the right things at approximately the right times...
 
 Words:
