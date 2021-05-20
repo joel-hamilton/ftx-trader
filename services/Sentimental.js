@@ -14,91 +14,89 @@ const nlp = winkNLP(model);
 const stem = require('wink-porter2-stemmer');
 
 module.exports = class Sentimental {
-    constructor(text, marketUnderlying = '') {
+    constructor(text, username = '', marketUnderlying = '') {
         this.text = text.trim().toLowerCase();
         this.tokens = this.tokenizeText();
         this.marketUnderlying = marketUnderlying;
 
-        this.positiveWords = [];    // 1 point each
-        this.positivePhrases = [];  // 10 points each
-        this.stopPhrases = [];      // automatically zeroes the score
-
-        // add from list of words/phrases
-        this.addPositiveWords();
-        this.addPositivePhrases();
-
-        // amplify short, excited tweets
-        this.addMarketIfExclamation();
-        this.addMarketIfShortTweet();
-
-        // add stop phrases
-        this.addStopPhraseMatches();
+        this.positiveWords = [...this.getPositiveWords(), ...this.getMarketIfExclamation()];
+        this.positivePhrases = this.getRegexMatches(sentimentList.positivePhrases);
+        this.powerPhrases = this.getRegexMatches(sentimentList.powerPhrases);      
+        this.stopPhrases = this.getRegexMatches(sentimentList.stopPhrases);
 
         // get positivity score
         if (this.stopPhrases.length) {
             this.score = 0;
         } else {
-            this.score = (this.positiveWords.length * 1 + this.positivePhrases.length * 10) / this.tokens.length;
+            this.score = this.positiveWords.length;
+            this.score += this.positivePhrases.length * 5;
+            this.score += this.powerPhrases.length * 100;
+
+            // weird hack, bump up RookieXBT mentions, if there's anything at all positive
+            if(username === 'RookieXBT' && marketUnderlying) this.score *= 5;
+
+            this.score /= this.tokens.length / 2;
+
+            if (this.isRetweet) this.score /= 2;
         }
     }
 
     get info() {
         return {
-            positivePhrases: this.positivePhrases,
             positiveWords: this.positiveWords,
+            positivePhrases: this.positivePhrases,
+            powerPhrases: this.powerPhrases,
             stopPhrases: this.stopPhrases,
             sentiment: this.score,
         }
     }
 
+    get isRetweet() {
+        return this.text.substr(0, 1) === '@' || this.text.substr(0, 2) === 'rt';
+    }
+
     // $CRV! eg, gets added to positive words
-    addMarketIfExclamation() {
+    getMarketIfExclamation() {
         if (this.marketUnderlying) {
             let exclamation = `${this.marketUnderlying}!`;
-            if (this.text.includes(exclamation)) {
-                this.positiveWords.push(exclamation);
-            }
+            if (this.text.includes(exclamation)) return [this.marketUnderlying]
         }
+
+        return [];
     }
 
     // add positive word matches from list
-    addPositiveWords() {
-        for (let word in sentimentList.words) {
+    getPositiveWords() {
+        let words = []
+        for (let word in sentimentList.positiveWords) {
             let stemmedWord = stem(word);
-            if (this.tokens.includes(stemmedWord)) this.positiveWords.push(stemmedWord);
+            if (this.tokens.includes(stemmedWord)) words.push(stemmedWord);
         }
+
+        return words;
     }
 
-    // add poisitive phrase matches from list
-    addPositivePhrases() {
-        for (let phrase of sentimentList.phrases) {
-            let regex = new RegExp(phrase, 'g');
+    getRegexMatches(regexes) {
+        let matches = [];
+        for (let r of regexes) {
+            let regex = new RegExp(r, 'g');
             let match = this.text.match(regex);
             if (match) {
-                this.positivePhrases.push(match[0])
+                matches.push(match[0])
             };
         }
-    }
 
-    // add negative phrase matches from list
-    addStopPhraseMatches() {
-        for (let phrase of sentimentList.stopPhrases) {
-            let regex = new RegExp(phrase, 'g');
-            let match = this.text.match(regex);
-            if (match) {
-                this.stopPhrases.push(match[0])
-            };
-        }
+        return matches;
     }
 
     // add if very short tweet and market is mentioned
-    addMarketIfShortTweet() {
-        if (this.marketUnderlying) {
-            if (this.tokens.length <= 6) {
-                this.positiveWords.push(this.marketUnderlying);
-            }
-        }
-    }
+    // addMarketIfShortTweet() {
+    //     if (this.marketUnderlying) {
+    //         if (this.tokens.length <= 3) {
+    //             this.positiveWords.push(this.marketUnderlying);
+    //         }
+    //     }
+    // }
 
     tokenizeText() {
         return nlp.readDoc(this.text)
@@ -107,6 +105,7 @@ module.exports = class Sentimental {
                 (t) => t.out(its.type) === 'word' || t.out(its.type) === 'emoji'
             )
             .out()
-            .map(t => stem(t));
+            .map(t => stem(t))
+            .filter((t, i, arr) => arr.indexOf(t) === i); // de-duplicate
     }
 }

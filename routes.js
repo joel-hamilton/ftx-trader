@@ -3,6 +3,7 @@ const router = express.Router();
 let ftx = require('./services/ftx');
 let twitter = require('./services/twitter')
 let twilio = require ('./services/twilio');
+let { Analyzer } = require('./services/Analyzer');
 
 
 // router.get('/', async (req, res, next) => {
@@ -17,11 +18,12 @@ let twilio = require ('./services/twilio');
 //     }
 // });
 
-router.get('/search/:query/:onlyWithMarkets/:useRules/:start/:end?', async (req, res, next) => {
+router.get('/search/:query/:onlyWithMarkets/:onlyBuys/:useRules/:start/:end?', async (req, res, next) => {
     try {
         let data = await twitter.searchTweets({
             q: req.params.query, 
             onlyWithMarkets: parseInt(req.params.onlyWithMarkets), 
+            onlyBuys: parseInt(req.params.onlyBuys), 
             useRules: parseInt(req.params.useRules), 
             start: req.params.start, 
             end: req.params.end 
@@ -36,6 +38,16 @@ router.get('/twitter/get/:path/:isAuth', async (req, res, next) => {
     try {
         let result = await twitter.query({ path, authRoute: isAuth });
         res.json(result);
+    } catch (e) {
+        next(e);
+    }
+})
+
+router.post('/analyze', async(req, res, next) => {
+    try {
+        let analyzer = new Analyzer(req.body);
+        let results = await analyzer.analyze();
+        res.json(results);
     } catch (e) {
         next(e);
     }

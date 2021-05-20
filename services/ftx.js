@@ -1,7 +1,9 @@
+require('dotenv').config()
 const fs = require('fs')
 const path = require('path');
 const moment = require('moment');
 const fetch = require('node-fetch');
+const constants = require('../data/constants');
 
 const twilio = require('./twilio');
 
@@ -40,7 +42,7 @@ async function query({ path, url = 'https://ftx.com/api', method = 'GET', body =
     if (body) options.body = JSON.stringify(body);
 
     console.log(`${url}${path}`)
-    console.log(options)
+    // console.log(options)
 
     let res = await fetch(`${url}${path}`, options);
     return res.json();
@@ -64,7 +66,7 @@ async function getMarkets(save = false) {
     return markets;
 }
 
-async function getData({ market, resolution = 15, start = moment().subtract(1, 'day').valueOf() }, end = moment().valueOf()) {
+async function getData({ market, resolution = 15, start, end }) {
     let data = await query({ path: `/markets/${market}/candles?resolution=${resolution}&start_time=${start / 1000}&end_time=${end / 1000}` })
 
     // TODO calculate RoC on volume and price, see if market is moving from this tweet
@@ -86,35 +88,82 @@ async function getLastOrderTime() {
     return (new Date(date)).getTime();
 }
 
-async function signalOrder({ market, tweetData, scale = 1 }) {
+async function getChangesInMarketPrice(market, from, to) {
+    let minuteChunks = 4;
+    let priceData = await getData({ market, resolution: 60 / minuteChunks, start: from.valueOf(), end: to.valueOf() });
+    let changesFromMinZero = [];
+
+    // going up one nimute at a time, get percentage change from 0th min
+    let startPrice = priceData.result[0].close;
+    // // console.log('start ' + startPrice);
+    // for (let i = 0; i < priceData.result.length; i += minuteChunks) {
+    //     let iPrice= priceData.result[i].close;
+    //     // console.log(`i = ${iPrice}`)
+    //     let change = 100 * ((iPrice - startPrice) / startPrice);
+    //     changesFromMinZero.push({[moment(priceData.result[i].startTime).format("HH:mm:ss")]: change})
+    // }    
+
+    for (let i = 0; i < priceData.result.length; i++) {
+        let iPrice = priceData.result[i].close;
+        // console.log(`i = ${iPrice}`)
+        let change = 100 * ((iPrice - startPrice) / startPrice);
+        changesFromMinZero.push(Math.round(change * 100) / 100)
+    }
+
+    return changesFromMinZero;
+}
+
+async function signalOrder({ market, text, username, scale, test = false }) {
     console.log(market);
     console.log(scale);
 
     // 5 minute minimum
-    let lastOrderTime = await getLastOrderTime();
-    console.log(`LAST ORDER: ${lastOrderTime}`)
-    if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
-        console.log('Order < 5 mins ago'); // TODO
-        return;
-    }
+    // let lastOrderTime = await getLastOrderTime();
+    // console.log(`LAST ORDER: ${lastOrderTime}`)
+    // if (Date.now() - lastOrderTime < 5 * 60 * 1000) {
+    //     console.log('Order < 5 mins ago'); // TODO
+    //     return;
+    // }
 
     // check total leverage, make sure this isn't running out of control
     // let account = await getAccount();
+    // console.log(account); return;
+    // let maxAmount = account.result.freeCollateral * 15;
     // if (account.openMarginFraction > 0.5) { // TODO what does this mean?
     // console.log('Account leverage too high');
     // return;
     // }
 
     // get orderbook
-    let orderBook = await getOrderBook(market);
-    let ask = orderBook.result.ask;
+    let ask;
+    let limit;
+    let trailValue;
+
+    if(test) {
+        limit = constants.TEST_MOCK_LIMIT;
+        trailValue = constants.TEST_TRAIL_VALUE;
+    } else {
+        let orderBook = await getOrderBook(market);
+        ask = orderBook.result.ask;
+        limit = ask * 1.01;
+        trailValue = 0.01;
+    }
+    
+    let actualRisk = Math.min(constants.MAX_RISK_DOLLARS, constants.RISK_UNIT_DOLLARS * scale);
+    let size = Math.round((actualRisk / trailValue / limit) * 1000) / 1000;
+    
+    // enforce max $ position size
+    if(size * limit > constants.MAX_DOLLAR_AMOUNT) {
+        size = constants.MAX_DOLLAR_AMOUNT / limit;
+    }
 
     // buy it!
-    // let amount = account.result.freeCollateral / 10
-    let amount = 1000 * scale;
-    let limit = ask * 1.001;             // bid 0.1% over ask
-    let size = amount / limit;
-    let trailValue = limit * -0.01;  // 1% trailing stop
+    // let maxAmount = 25000;
+    // let basicAmount = 10000; // scale 0-10 based on this amount TODO grab on update, save in file
+    // let amount = Math.min(maxAmount, basicAmount * (scale / 10));
+    // let limit = ask * 1.001;             // bid 0.1% over ask
+    // let size = amount / limit;
+    // let trailValue = limit * -0.02;  // 2% trailing stop
 
     let initialOrder = {
         "market": market,
@@ -137,16 +186,18 @@ async function signalOrder({ market, tweetData, scale = 1 }) {
     console.log(initialOrder);
     console.log(triggerOrder);
 
+    if (test) return { initialOrder, triggerOrder }
+
     let initialRes = await query({ method: 'POST', path: '/orders', body: initialOrder, authRoute: true });
     if (initialRes && initialRes.success) {
         let triggerRes = await query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authRoute: true });
         if (triggerRes && triggerRes.success) {
             let initial = initialRes.result;
             let trigger = triggerRes.result;
-            let summary = `Orders Placed.\n\nBuy ${initial.size}x${initial.market}@${initial.price} ($${Math.round(initial.size * initial.price)} total).\n\nTrailing stop of ${trigger.trailValue} (-$${-1 * Math.round(trigger.trailValue * trigger.size)}).`
+            let summary = `${initial.market} order, scale (${scale}).\n\nBuy ${initial.size}x${initial.market}@${initial.price} ($${Math.round(initial.size * initial.price)} total).\n\nTrailing stop of ${trigger.trailValue} (-$${-1 * Math.round(trigger.trailValue * trigger.size)}).`
 
-            if (tweetData) {
-                summary += `\n\n@${tweetData.username} - ${tweetData.text}`
+            if (username && text) {
+                summary += `\n\n@${username} - ${text}`
             }
 
             await twilio.sendSms(summary);
@@ -164,8 +215,19 @@ async function test() {
     return query({ path: '/time', url: 'https://otc.ftx.com/api' })
 }
 
+if (require.main === module) { // called from cli
+    let args = process.argv.slice(2);
+    if (args.includes('update')) {
+        (async function() {
+            await getMarkets(true);
+            console.log('Markets updated');
+        })()
+    }
+}
+
 module.exports = {
     getAccount,
+    getChangesInMarketPrice,
     getData,
     getMarkets,
     getOrderBook,

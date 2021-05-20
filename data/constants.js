@@ -1,0 +1,7 @@
+module.exports = {
+    MAX_DOLLAR_AMOUNT: 25000,
+    MAX_RISK_DOLLARS: 500,
+    RISK_UNIT_DOLLARS: 20,
+    TEST_MOCK_LIMIT: 8,
+    TEST_TRAIL_VALUE: 0.01,
+}

@@ -1,37 +1,56 @@
 /**
 STRATEGY
 
-1st order a market order
-2nd order
-    - stop a tiny bit below the buy (if it's not pumping, don't bother) 
-    - trailing stop 1%
+- get order book and figure out how much I can buy without moving market too much. Some of these coins only trade single-digit millions in 24h
+    - not a big deal on the buy, as limit means it will get only partially filled, but on the sell it could get ugly
+- size position and stop according to 24h volatility
+    - probably too slow to calculate this on the fly, would have to have a recurring task, storage solution
+- size position according to reliability of signal
+    - based on twitter account, market size (need to get more data/a feel for this)
 
-Long-term: 
-    - get order book and figure out how much I can buy without moving market too much. Some of these coins only trade single-digit millions in 24h
-        - not a big deal on the buy, as limit means it will get only partially filled, but on the sell it could get ugly
-    - size position and stop according to 24h volatility
-        - probably too slow to calculate this on the fly, would have to have a recurring task, storage solution
-    - size position according to reliability of signal
-        - based on twitter account, market size (need to get more data/a feel for this)
-        - based on sentiment ('BUYING $OXY!!!' should rank higher than 'decent chart setup for OXY', and 'OXY isn't nearly as good as some others' shouldn't coun't at all)
-
-        High conviction bets:
-        KALEO + small markets + 'send'
-
-    - have stop words/phrases that knock sentiment to 0
-        - I'm selling/just sold "I'm taking a bit of profit here to buy back lower if we get it."
-        - 
-
-    - move weird regex to sentimentList, and break up into smaller chunks/simplify
+    High conviction bets:
+    KALEO + small markets + 'send'
 
 Thought: Even if a tweet doesn't move the market per se, it's likely to be excited about the right things at approximately the right times...
 
-Words:
-the market name followed by '!'
+TODO
+- when updating tweets, only add tweets older than an hour, so we have complete +-60 min data for it
+- make 0th min round up (so after the tweet). Perhaps round up +1 interval if in last 10 seconds of period (so the range of buys would be 10s-25s after)?
+- use OHLC to estimate P/L
+- on update, save most recent account info, etc to database?
+- save marketslist to DB
+- make package.json scripts for updating tweet data, etc.
+- "if the tik tokers can send literal dog sh*t, we can send $zec" caught the phrase send lit, but not send $zec
+
+STRATEGY INVERSION
+start with amt to risk (based on scale)
+    - let riskAmt = 100
+get ask
+    - let bid = ask + 0.0001
+calculate recent volatility (eg: last hour, in 1 min intervals)
+    - let mean = (float) mean of the 60 intervals
+    - let sqDeviations = ([floats]) square(mean - deviation)
+    - let variance = (float) sum(sqDeviations) / 60
+    - let periodVol = sqrt(variance)  IE: assuming std distribution, 2/3 of returns in 1 period will fall +/- periodVol/2
+    - let 5periodVol = sqrt(5) * periodVol
+set % trailing stop based on volatility
+    - let trlStop = periodVol / 2 (or something like that)
+quantity = bid * riskAmt / trlStop
+
+THINGS TO ACTUALLY BUY
+$RUNE, $ALPHA - RookieXBT
+Other than $RUNE which is by far my biggest holding (I buy more everyday regardless of price) — I’ve been holding onto a sizeable amount of $ALPHA for some time And with that being said, I’ve never felt more comfy than I do now. This summer is gonna be good.
+
  */
 
 // relVolChange 0-5
 // plp P/L Percent, as a decimal
+
+/**
+ * TESTING
+ * 
+ * make MAX_DOLLAR_VALUE, MAX_RISK into constants so I can import them into tests, too
+ */
 let trades = [
     {
         tweet: "I am pretty irresponsibly long $CRV here, this long term chart.. ooh...",

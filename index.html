@@ -6,38 +6,79 @@
 </style>
 <div class="app" v-cloak>
     <div class="search" @keypress.enter="doSearch">
+        <h3>Search</h3>
         <input placeholder="query" v-model="search.query">
         <input placeholder="start" v-model="search.start">
         <input placeholder="end" v-model="search.end">
         <label>Only with markets
             <input type="checkbox" v-model="search.onlyWithMarkets">
         </label>
+        <label>Only Buys
+            <input type="checkbox" v-model="search.onlyBuys">
+        </label>
         <!-- <label>Use Twitter Rules
             <input type="checkbox" v-model="search.useRules">
         </label> -->
         <button @click="doSearch">Search</button>
     </div>
-    <div class="search-res" v-html="searchRes"></div>
+    <div @keypress.enter="doAnalyze">
+        <h3>Analyze</h3>
+        <input placeholder="from" v-model="analyze.from">
+        <input placeholder="to" v-model="analyze.to">
+        <label>
+            Show Charts
+            <input type='checkbox' v-model="analyze.showCharts">
+        </label>
+        <select v-model="analyze.sortBy">
+            <option value="latest">Latest</option>
+            <option value="price">Price</option>
+            <option value="volume">Volume</option>
+        </select>
+        <button @click="doAnalyze">Analyze</button>
+    </div>
+    <div class="search-res" v-html="searchRes" v-if="searchRes"></div>
+    <div class="analyze-res" v-if="analyzeRes">
+        <div v-for="item in analyzeRes" :key="item.id" class="analyze-result">
+            <div class="info">
+                <div>{{ moment(item.date).format('MMM DD HH:mm:ss') }}</div>
+                <div>{{ item.username }} - {{item.text}}</div>
+                <div class='diff' v-html="item.diffs"></div>
+            </div>
+            <div :id="`chart${item.id}`"></div>
+        </div>
+    </div>
 </div>
 
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="frontend/highcharts-3d.js"></script>
+<script src="frontend/highstock.js"></script>
+<script src="frontend/highcharts-more.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
     integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
     crossorigin="anonymous"></script>
 
+
 <script>
-    new Vue({
+    window.app = new Vue({
         el: '.app',
         data() {
             return {
+                analyze: {
+                    from: '',
+                    to: '',
+                    showCharts: true,
+                    sortBy: 'latest',
+                },
+                analyzeRes: [],
                 search: {
                     query: '',
                     start: moment().format('YYYY-MM-DD HH:mm:ss'),
                     end: '',
                     onlyWithMarkets: false,
+                    onlyBuys: false,
                     useRules: false,
                 },
                 searchRes: ''
@@ -47,8 +88,107 @@
 
         },
         methods: {
+            moment: moment,
+            async doAnalyze() {
+                let url = "http://localhost:3000/analyze";
+                let res = (await axios.post(url, this.analyze)).data;
+                this.analyzeRes = res.map(r => {
+                    r.diffs = this.syntaxHighlight(r.diffs);
+                    return r;
+                })
+
+                if (!this.analyze.showCharts) return;
+                await this.$nextTick();
+
+                // init charts
+
+                let groupingUnits = [[
+                    'week',                         // unit name
+                    [1]                             // allowed multiples
+                ], [
+                    'month',
+                    [1, 2, 3, 4, 6]
+                ]];
+
+                for (let item of this.analyzeRes) {
+                    const chart = Highcharts.chart(`chart${item.id}`, {
+
+                        title: {
+                            text: `${item.market.name} - ($${Math.round(item.market.volumeUsd24h / 1000 / 1000)}m)`
+                        },
+                        rangeSelector: {
+                            selected: 1
+                        },
+                        xAxis: {
+                            crosshair: true
+                        },
+                        yAxis: [{
+                            crosshair: true,
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Price'
+                            },
+                            height: '60%',
+                            lineWidth: 2,
+                            resize: {
+                                enabled: true
+                            }
+                        }, {
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Volume'
+                            },
+                            top: '65%',
+                            height: '35%',
+                            offset: 0,
+                            lineWidth: 2
+                        }],
+                        tooltip: {
+                            enabled: false
+                        },
+                        series: [{
+                            // specific options for this series instance
+                            type: 'candlestick',
+                            name: 'Price',
+                            data: item.market_history.map(mh => {
+                                return [
+                                    moment(mh.startTime).diff(item.date, 'minutes', true),
+                                    mh.open,
+                                    mh.high,
+                                    mh.low,
+                                    mh.close
+                                ]
+                            }),
+                            dataGrouping: {
+                                units: groupingUnits
+                            }
+                        },
+                        {
+                            type: 'column',
+                            name: 'Volume',
+                            data: item.market_history.map(mh => {
+                                return [
+                                    moment(mh.startTime).diff(item.date, 'minutes', true),
+                                    mh.volume
+                                ]
+                            }),
+                            yAxis: 1,
+                            dataGrouping: {
+                                units: groupingUnits
+                            }
+                        }]
+
+                    });
+                }
+            },
             async doSearch() {
-                let url = `http://localhost:3000/search/${encodeURIComponent(this.search.query) || '*'}/${this.search.onlyWithMarkets ? 1 : 0}/${this.search.useRules ? 1 : 0}/${this.search.start}`;
+                let url = `http://localhost:3000/search/${encodeURIComponent(this.search.query) || '*'}/${this.search.onlyWithMarkets ? 1 : 0}/${this.search.onlyBuys ? 1 : 0}/${this.search.useRules ? 1 : 0}/${this.search.start}`;
                 if (this.search.end) url += `/${this.search.end}`;
                 let res = await axios.get(url)
                 this.searchRes = this.syntaxHighlight(res.data);
@@ -82,12 +222,24 @@
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     }
 
-    .search-res {
+    .search-res,
+    .diff {
         white-space: pre-wrap;
         font-family: 'Courier New', Courier, monospace;
         outline: 1px solid #ccc;
         padding: 5px;
         margin: 5px;
+    }
+
+    .analyze-res {
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+
+    .analyze-result {
+        margin-top: 2em;
+        padding: 2em;
+        box-sizing: border-box;
     }
 
     .string {

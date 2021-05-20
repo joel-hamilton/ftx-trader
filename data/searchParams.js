@@ -1,14 +1,13 @@
 const marketsList = require('./marketsList');
+const usersList = require('./usersList');
 const queryString = require('query-string');
 
+let fromUsersString = Object.keys(usersList).filter(u => usersList[u].enabled).map(u => `from:${u}`).join(' OR ');
+console.log(fromUsersString)
 let rules = [
     {
-        "value": "from:CryptoKaleo OR from:ShardiB2 OR from:AltcoinPsycho OR from:SmartContracter OR from:CryptoCobain OR from:RookieXBT OR from:LomahCrypto OR from:Tradermayne",
+        "value": fromUsersString,
         "tag": "CryptoTwitter"
-    },
-    {
-        "value": "from:elonmusk",
-        "tag": "elon"
     },
     // { "value": marketsList.slice(0, 10).map(m => m.underlying).join(" OR "), "tag": "keywords" },
 ];

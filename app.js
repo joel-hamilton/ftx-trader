@@ -40,14 +40,17 @@ app.use(function(err, req, res, next) {
     console.log(err);
 });
 
-if (process.argv[2] === 'update') {
+
+let args = process.argv.slice(2);
+
+if (args.includes('update')) {
     (async function() {
         await ftx.getMarkets(true);
         await twitter.updateRules();
-
-        process.exit();
     })()
-} else if (process.argv[2] === 'stream') {
+}
+
+if (args.includes('stream')) {
     twitter.beginStream();
 }
 
