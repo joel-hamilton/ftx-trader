@@ -5,6 +5,11 @@
     }
 </style>
 <div class="app" v-cloak>
+    <div>
+        <input type="text" v-model="getParams" placeholder="get params" @keypress.enter="ftxGet">
+        <button @click="ftxGet">FTX GET</button>
+    </div>
+    <button @click='loadOrderBook'>Load Orderbook</button>
     <div class="search" @keypress.enter="doSearch">
         <h3>Search</h3>
         <input placeholder="query" v-model="search.query">
@@ -73,6 +78,7 @@
                     sortBy: 'latest',
                 },
                 analyzeRes: [],
+                getParams: '',
                 search: {
                     query: '',
                     start: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -89,6 +95,29 @@
         },
         methods: {
             moment: moment,
+            async ftxGet() {
+                let url = `http://localhost:3000/ftx/get/${encodeURIComponent(this.getParams)}`;
+                let res = await axios.get(url);
+                this.searchRes = this.syntaxHighlight(res.data); 
+            },
+            async loadOrderBook() {
+                let url = "http://localhost:3000/analyze";
+                let res = await axios.post(url, { orderBook: true });
+                let data = res.data.map(r => {
+                    let mkt = r.result;
+                    console.log(mkt)
+                    return {
+                        name: mkt.name,
+                        bid: mkt.bid,
+                        ask: mkt.ask,
+                        spread: (mkt.ask - mkt.bid) / mkt.ask,
+                        volumeUsd24h: mkt.volumeUsd24h
+                    }
+                });
+
+                data.sort((a, b) => a.spread > b.spread ? 1 : -1);
+                this.searchRes = this.syntaxHighlight(data);
+            },
             async doAnalyze() {
                 let url = "http://localhost:3000/analyze";
                 let res = (await axios.post(url, this.analyze)).data;

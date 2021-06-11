@@ -213,15 +213,20 @@ function getBuyInfo(data) {
     // doge doesn't need to be a cash tag, Marketer will pick up just the word
     // no need for sentiment
     if (data.username === 'elonmusk') {
-        scale = 100;
+        scale = 5;
         scaleAdjustments.push('Elon tweet')
     }
 
-    // TEMP
-    if(data.username === 'stoolpresidente') {
-        scale = 10;
-        scaleAdjustments.push('stoolpresidente tweet')
+    if (data.username === 'jack') {
+        scale = 5;
+        scaleAdjustments.push('Jack tweet')
     }
+
+    // TEMP
+    // if(data.username === 'stoolpresidente') {
+    //     scale = 10;
+    //     scaleAdjustments.push('stoolpresidente tweet')
+    // }
 
     return { buy: scale > 0, scale, scaleAdjustments };
 }
@@ -295,6 +300,7 @@ module.exports = {
     backTest,
     beginStream,
     getTweetSample,
-    updateRules,
+    processTweet,
     searchTweets,
+    updateRules,
 }

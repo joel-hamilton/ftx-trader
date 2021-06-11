@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 let ftx = require('./services/ftx');
 let twitter = require('./services/twitter')
-let twilio = require ('./services/twilio');
+let twilio = require('./services/twilio');
 let { Analyzer } = require('./services/Analyzer');
 
 
@@ -21,12 +21,12 @@ let { Analyzer } = require('./services/Analyzer');
 router.get('/search/:query/:onlyWithMarkets/:onlyBuys/:useRules/:start/:end?', async (req, res, next) => {
     try {
         let data = await twitter.searchTweets({
-            q: req.params.query, 
-            onlyWithMarkets: parseInt(req.params.onlyWithMarkets), 
-            onlyBuys: parseInt(req.params.onlyBuys), 
-            useRules: parseInt(req.params.useRules), 
-            start: req.params.start, 
-            end: req.params.end 
+            q: req.params.query,
+            onlyWithMarkets: parseInt(req.params.onlyWithMarkets),
+            onlyBuys: parseInt(req.params.onlyBuys),
+            useRules: parseInt(req.params.useRules),
+            start: req.params.start,
+            end: req.params.end
         });
         res.json(data);
     } catch (e) {
@@ -43,10 +43,26 @@ router.get('/twitter/get/:path/:isAuth', async (req, res, next) => {
     }
 })
 
-router.post('/analyze', async(req, res, next) => {
+// eg 'lt/BULL' in frontend
+router.get('/ftx/get/:path', async (req, res, next) => {
+    try {
+        console.log(req.params.path)
+        let result = await ftx.query({path: '/' + req.params.path});
+        res.json(result);
+    } catch (e) {
+        next(e);
+    }
+})
+
+router.post('/analyze', async (req, res, next) => {
     try {
         let analyzer = new Analyzer(req.body);
-        let results = await analyzer.analyze();
+        let results;
+        if (req.body.orderBook) {
+            results = await analyzer.getOrderBooks();
+        } else {
+            results = await analyzer.analyze();
+        }
         res.json(results);
     } catch (e) {
         next(e);
@@ -76,8 +92,8 @@ router.get('/markets', async (req, res, next) => {
         let data = await ftx.query({ path: '/markets' });
         markets = data.result
             // .filter(m => {
-                // let chunks = m.name.split('-');
-                // return m.volumeUsd24h < 200 * 1000 * 1000 && chunks.length > 1 && chunks[1] === 'PERP'
+            // let chunks = m.name.split('-');
+            // return m.volumeUsd24h < 200 * 1000 * 1000 && chunks.length > 1 && chunks[1] === 'PERP'
             // })
             .map(m => {
                 return {

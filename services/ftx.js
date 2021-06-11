@@ -113,10 +113,7 @@ async function getChangesInMarketPrice(market, from, to) {
     return changesFromMinZero;
 }
 
-async function signalOrder({ market, text, username, scale, test = false }) {
-    console.log(market);
-    console.log(scale);
-
+async function signalOrder({ market, text, username, scale }) {
     // 5 minute minimum
     // let lastOrderTime = await getLastOrderTime();
     // console.log(`LAST ORDER: ${lastOrderTime}`)
@@ -137,23 +134,33 @@ async function signalOrder({ market, text, username, scale, test = false }) {
     // get orderbook
     let ask;
     let limit;
-    let trailValue;
+    let trailPercent;
 
-    if(test) {
+    if (process.env.NODE_ENV === 'test') {
         limit = constants.TEST_MOCK_LIMIT;
-        trailValue = constants.TEST_TRAIL_VALUE;
+        trailPercent = constants.TEST_TRAIL_PERCENT
     } else {
+        console.log(market);
+        console.log(scale);    
         let orderBook = await getOrderBook(market);
         ask = orderBook.result.ask;
-        limit = ask * 1.01;
-        trailValue = 0.01;
+        let spread = (ask - orderBook.result.bid) / ask;
+        if(spread > 0.002) {
+            console.log(`No buy: bid/ask too wide`)
+            console.log(orderBook.result);
+            return;
+        }
+
+        limit = ask * 1.001;
+        trailPercent = -0.01;
     }
-    
+
+    let trailValue = limit * trailPercent;  // 1% trailing stop
     let actualRisk = Math.min(constants.MAX_RISK_DOLLARS, constants.RISK_UNIT_DOLLARS * scale);
-    let size = Math.round((actualRisk / trailValue / limit) * 1000) / 1000;
-    
+    let size = -1 * Math.round((actualRisk / trailPercent / limit) * 1000) / 1000;
+
     // enforce max $ position size
-    if(size * limit > constants.MAX_DOLLAR_AMOUNT) {
+    if (size * limit > constants.MAX_DOLLAR_AMOUNT) {
         size = constants.MAX_DOLLAR_AMOUNT / limit;
     }
 
@@ -182,11 +189,11 @@ async function signalOrder({ market, text, username, scale, test = false }) {
         "reduceOnly": true,
     }
 
+    if (process.env.NODE_ENV === 'test') return { initialOrder, triggerOrder }
+
     console.log('placing orders:');
     console.log(initialOrder);
     console.log(triggerOrder);
-
-    if (test) return { initialOrder, triggerOrder }
 
     let initialRes = await query({ method: 'POST', path: '/orders', body: initialOrder, authRoute: true });
     if (initialRes && initialRes.success) {

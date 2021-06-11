@@ -41,6 +41,9 @@ THINGS TO ACTUALLY BUY
 $RUNE, $ALPHA - RookieXBT
 Other than $RUNE which is by far my biggest holding (I buy more everyday regardless of price) — I’ve been holding onto a sizeable amount of $ALPHA for some time And with that being said, I’ve never felt more comfy than I do now. This summer is gonna be good.
 
+
+IMPORTANT:
+Check bid/ask spread, don't play the game if greater than...0.05%?
  */
 
 // relVolChange 0-5
@@ -48,8 +51,9 @@ Other than $RUNE which is by far my biggest holding (I buy more everyday regardl
 
 /**
  * TESTING
- * 
- * make MAX_DOLLAR_VALUE, MAX_RISK into constants so I can import them into tests, too
+ * ensure markets still being picked up correctly
+ * elon/jack tweets (10s probably too slow to pick up the big moves)
+ *      - can fetch up to every 3 seconds, but that's still 850k/month, over the total project cap of 500k
  */
 let trades = [
     {

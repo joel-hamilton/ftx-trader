@@ -3,7 +3,7 @@ const usersList = require('./usersList');
 const queryString = require('query-string');
 
 let fromUsersString = Object.keys(usersList).filter(u => usersList[u].enabled).map(u => `from:${u}`).join(' OR ');
-console.log(fromUsersString)
+
 let rules = [
     {
         "value": fromUsersString,

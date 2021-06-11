@@ -1,16 +1,20 @@
 let marketsList = require('../data/marketsList');
+let usersList = require('../data/usersList');
 
 module.exports = class Marketer {
     constructor(text, username) {
         this.text = text.trim().toUpperCase();
         this.username = username;
+        this.user = this.username ? usersList[this.username] : {};
         this.mentionedMarkets = this.getMentionedMarkets()
     }
 
     get mentionedMarketsFiltered() {
         return this.mentionedMarkets.filter(mm => {
             // we only match markets if there's a single ticker listed, but these are sometimes used as pairs comparison eg: CRV/BTC 
-            if (['BTC', 'ETH'].includes(mm.underlying)) return false;
+            // DEFI-PERP is a thing
+            // OXY = Occidental Petroleum, and these guys love bankrupt stonks
+            if (['BTC', 'ETH', 'DEFI', 'OXY'].includes(mm.underlying) && !mm.forceOverride) return false;
 
             // only include xxx-PERP markets
             let chunks = mm.name.split('-');
@@ -45,11 +49,22 @@ module.exports = class Marketer {
             }
         }
 
-        if (this.username === 'elonmusk' && this.text.split(' ').includes('DOGE')) {
+        // overrides
+        let splitText = this.text.split(' ');
+        if (this.username === 'elonmusk' && (splitText.includes('DOGE') || splitText.includes('$DOGE'))) {
             if (!mentionedMarkets.includes['DOGE-PERP']) {
                 // get the DOGE market
                 let doge = marketsList.find(m => m.name === 'DOGE-PERP');
                 mentionedMarkets.push(doge);
+            }
+        }
+
+        if (this.username === 'jack' && (splitText.includes('#BITCOIN') || splitText.includes('$BTC'))) {
+            if (!mentionedMarkets.includes['BTC-PERP']) {
+                // get the BTC market
+                let btc = marketsList.find(m => m.name === 'BTC-PERP');
+                btc.forceOverride = true;
+                mentionedMarkets.push(btc);
             }
         }
 

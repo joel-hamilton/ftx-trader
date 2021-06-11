@@ -1,7 +1,6 @@
 const ftx = require('../services/ftx');
 const constants = require('../data/constants');
 const MARKET = 'FAKE-PERP';
-const STOP_VALUE = 0.01;
 
 test('order placed correctly', async () => {
     let SCALE = 4;
@@ -10,7 +9,6 @@ test('order placed correctly', async () => {
         text: 'buy this',
         username: 'joel',
         scale: SCALE,
-        test: true
     });
 
     expect(res.initialOrder).toMatchObject({
@@ -18,14 +16,14 @@ test('order placed correctly', async () => {
         "side": "buy",
         "price": constants.TEST_MOCK_LIMIT,
         "type": "limit",
-        "size": (constants.RISK_UNIT_DOLLARS * SCALE) / constants.TEST_MOCK_LIMIT / constants.TEST_TRAIL_VALUE
+        "size": -1 * (constants.RISK_UNIT_DOLLARS * SCALE) / constants.TEST_MOCK_LIMIT / constants.TEST_TRAIL_PERCENT
     });
 
     expect(res.triggerOrder).toMatchObject({
         "market": MARKET,
         "side": "sell",
-        "trailValue": constants.TEST_TRAIL_VALUE,
-        "size": (constants.RISK_UNIT_DOLLARS * SCALE) / constants.TEST_MOCK_LIMIT / constants.TEST_TRAIL_VALUE,
+        "trailValue": constants.TEST_MOCK_LIMIT * constants.TEST_TRAIL_PERCENT,
+        "size": -1 * (constants.RISK_UNIT_DOLLARS * SCALE) / constants.TEST_MOCK_LIMIT / constants.TEST_TRAIL_PERCENT,
         "type": "trailingStop",
         "reduceOnly": true,
     });
@@ -36,7 +34,6 @@ test('test buy maxes at MAX_DOLLAR_AMOUNT', async () => {
         "market": MARKET,
         "buy": true,
         "scale": 100000,
-        test: true
     });
 
     expect(res.initialOrder).toMatchObject({
@@ -50,7 +47,7 @@ test('test buy maxes at MAX_DOLLAR_AMOUNT', async () => {
     expect(res.triggerOrder).toMatchObject({
         "market": MARKET,
         "side": "sell",
-        "trailValue": constants.TEST_TRAIL_VALUE,
+        "trailValue": constants.TEST_MOCK_LIMIT * constants.TEST_TRAIL_PERCENT,
         "size": constants.MAX_DOLLAR_AMOUNT / constants.TEST_MOCK_LIMIT,
         "type": "trailingStop",
         "reduceOnly": true,

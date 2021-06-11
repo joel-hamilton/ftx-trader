@@ -1,11 +1,11 @@
 module.exports = {
     AltcoinPsycho: {},
     AngeloBTC: {},
-    APompliano:{},
+    APompliano: {},
     barrysilbert: {},
     bitcoin_dad: {},
     brian_armstrong: {},
-    cz_binance:{},
+    cz_binance: {},
     CryptoBull: {},
     CryptoCobain: {},
     CryptoCred: {},
@@ -16,6 +16,10 @@ module.exports = {
     cryptoSqueeze: {},
     elonmusk: {
         enabled: true,
+        influence: 3, // keep 1-3
+    },
+    jack: {
+        influence: 3,
     },
     justinsuntron: {},
     LomahCrypto: {},
@@ -34,7 +38,7 @@ module.exports = {
         enabled: true,
     },
     stoolpresidente: {},
-    TheCryptoDog:{}, 
+    TheCryptoDog: {},
     ThinkingUSD: {},
     ThisIsNuse: {},
     Tradermayne: {},

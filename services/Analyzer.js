@@ -1,5 +1,6 @@
 const db = require('./db');
 const twitter = require('./twitter');
+const ftx = require('./ftx');
 const marketsList = require('../data/marketsList');
 const moment = require('moment');
 require('moment-round');
@@ -41,6 +42,14 @@ class Analyzer {
 
 
         return this.tweets;
+    }
+
+    async getOrderBooks() {
+        let promises = marketsList.filter(mkt => mkt.name.includes("PERP")).map(mkt => ftx.getOrderBook(mkt.name));
+        let res = await Promise.all(promises);
+        return res;
+        // let orderbook = await ftx.getOrderBook('HNT-PERP');
+        // return [orderbook];
     }
 
     getPriceVolChanges(tweetTime, marketHistory) {
