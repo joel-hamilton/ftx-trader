@@ -4,8 +4,9 @@ const fs = require("fs");
 
 module.exports = class RebalanceTrader {
   // will fetch all token info if no tokenNames array passed in
-  constructor(requestedMarkets = [], minVolume24 = 0) {
+  constructor(requestedMarkets = [], minVolume24 = 500 * 1000, minRebalanceSizeUsd = 50 * 1000) {
     this.minVolume24 = minVolume24;
+    this.minRebalanceSizeUsd = minRebalanceSizeUsd;
     this.requestedMarkets = requestedMarkets;
     this.rebalanceInfo;
     this.initiated = false;
@@ -102,18 +103,17 @@ module.exports = class RebalanceTrader {
   getAggData(sortProp = "rebalanceRatio") {
     let data = Object.values(this.aggOrderAmounts)
       .filter(aggData => {
-        // console.log(aggData.underlying)
-        // console.log(this.marketStats[aggData.underlying]);
         return this.marketStats[aggData.underlying] &&
-        this.marketStats[aggData.underlying].volumeUsd24h >= this.minVolume24
+          this.marketStats[aggData.underlying].volumeUsd24h >= this.minVolume24 &&
+          aggData.rebalanceAmountUsd >= this.minRebalanceSizeUsd
       })
       .sort((a, b) => {
         return a[sortProp] > b[sortProp] ? 1 : -1;
       });
 
-      console.log(data);
-      // fs.writeFileSync('rebalanceAmounts.json', JSON.stringify(data));
-      return data;
+    // console.log(data);
+    // fs.writeFileSync('rebalanceAmounts.json', JSON.stringify(data));
+    return data;
   }
 };
 

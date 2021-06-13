@@ -24,6 +24,7 @@
         "moment": "^2.29.1",
         "moment-round": "^1.0.1",
         "morgan": "~1.9.1",
+        "node-cron": "^3.0.0",
         "node-fetch": "^2.6.1",
         "pg": "^8.6.0",
         "query-string": "^7.0.0",
