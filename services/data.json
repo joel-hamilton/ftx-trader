@@ -1,0 +1,1014 @@
+{
+  "BNBBEAR": {
+    "orderSizeList": ["290.20000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:28.121117"
+  },
+  "DOGEBEAR2021": {
+    "orderSizeList": ["5651884.00000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:31.391912"
+  },
+  "DOGEBEAR": {
+    "orderSizeList": ["3844.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:33.147673"
+  },
+  "SXPBEAR": {
+    "orderSizeList": ["5721.60000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:42.111390"
+  },
+  "TOMOBEAR": {
+    "orderSizeList": ["978.90000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:37.750998"
+  },
+  "TOMOBEAR2021": {
+    "orderSizeList": ["8384.70000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:44.707718"
+  },
+  "TOMOHEDGE": {
+    "orderSizeList": ["134.50000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:29.775742"
+  },
+  "OKBBULL": {
+    "orderSizeList": ["501.37000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:50.265267"
+  },
+  "LTCBEAR": {
+    "orderSizeList": ["1781.58000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:26.666900"
+  },
+  "BALBEAR": {
+    "orderSizeList": ["448.85000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:42.805088"
+  },
+  "BALHEDGE": {
+    "orderSizeList": ["115.35000000"],
+    "side": "buy",
+    "time": "2021-05-24 12:29:18.752643"
+  },
+  "ALTBEAR": {
+    "orderSizeList": ["169.51000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:29.302553"
+  },
+  "LINKBEAR": {
+    "orderSizeList": ["102839.60000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:35.700638"
+  },
+  "MKRBEAR": {
+    "orderSizeList": ["15.29100000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:48.034124"
+  },
+  "DOGEHEDGE": {
+    "orderSizeList": ["15845.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:39.110208"
+  },
+  "ETHBEAR": {
+    "orderSizeList": ["922.75800000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:21.764309"
+  },
+  "ETHHEDGE": {
+    "orderSizeList": ["85.22200000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:37.902426"
+  },
+  "ETCBEAR": {
+    "orderSizeList": ["115.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:41.543649"
+  },
+  "ETCHEDGE": {
+    "orderSizeList": ["4.70000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:43.495325"
+  },
+  "DEFIBEAR": {
+    "orderSizeList": ["5.68300000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:47.760102"
+  },
+  "MKRHALF": {
+    "orderSizeList": ["0.02400000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:21.533647"
+  },
+  "CUSDTHEDGE": {
+    "orderSizeList": ["127.00000000"],
+    "side": "buy",
+    "time": "2021-06-11 00:02:23.494084"
+  },
+  "KNCHEDGE": {
+    "orderSizeList": ["453.40000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:40.193949"
+  },
+  "UNISWAPHEDGE": {
+    "orderSizeList": ["0.00570000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:23.980130"
+  },
+  "KNCHALF": {
+    "orderSizeList": ["73.80000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:41.886427"
+  },
+  "DMGBULL": {
+    "orderSizeList": ["1.00000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:26.614603"
+  },
+  "THETABEAR": {
+    "orderSizeList": ["2601.50000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:40.903312"
+  },
+  "HALFSHIT": {
+    "orderSizeList": ["0.02200000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:42.247986"
+  },
+  "XRPHEDGE": {
+    "orderSizeList": ["367297.00000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:42.427573"
+  },
+  "BTMXHALF": {
+    "orderSizeList": ["414.40000000"],
+    "side": "buy",
+    "time": "2021-05-24 00:02:25.880642"
+  },
+  "XAUTBEAR": {
+    "orderSizeList": ["0.02000000"],
+    "side": "buy",
+    "time": "2021-06-11 00:02:34.697002"
+  },
+  "HTBEAR": {
+    "orderSizeList": ["1830.08000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:36.963676"
+  },
+  "ADAHEDGE": {
+    "orderSizeList": ["3678.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:43.738476"
+  },
+  "ALGOHEDGE": {
+    "orderSizeList": ["1468.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:49.667065"
+  },
+  "OKBBEAR": {
+    "orderSizeList": ["230.06000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:49.849259"
+  },
+  "BALHALF": {
+    "orderSizeList": ["4.77000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:38.942516"
+  },
+  "EXCHHEDGE": {
+    "orderSizeList": ["0.02300000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:31.135509"
+  },
+  "PRIVBULL": {
+    "orderSizeList": ["1.96000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:46.176134"
+  },
+  "BULL": {
+    "orderSizeList": ["109.51700000", "37.39290000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:24.164470"
+  },
+  "DRGNBEAR": {
+    "orderSizeList": ["1.47600000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:43.558229"
+  },
+  "LEOBEAR": {
+    "orderSizeList": ["3521.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:32.992780"
+  },
+  "ATOMBEAR": {
+    "orderSizeList": ["73114.15000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:36.194977"
+  },
+  "SXPHEDGE": {
+    "orderSizeList": ["294.00000000"],
+    "side": "buy",
+    "time": "2021-06-07 00:02:12.724638"
+  },
+  "EOSHEDGE": {
+    "orderSizeList": ["42440.20000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:45.076579"
+  },
+  "VETBULL": {
+    "orderSizeList": ["1163850.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:47.422231"
+  },
+  "ALGOBULL": {
+    "orderSizeList": [
+      "504795.00000000",
+      "504795.00000000",
+      "504795.00000000",
+      "91544.00000000"
+    ],
+    "side": "sell",
+    "time": "2021-06-04 07:17:35.060717"
+  },
+  "LTCHALF": {
+    "orderSizeList": ["0.37000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:40.506107"
+  },
+  "PAXGBULL": {
+    "orderSizeList": ["2.57000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:48.129299"
+  },
+  "EXCHHALF": {
+    "orderSizeList": ["0.00400000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:27.492778"
+  },
+  "ALTHALF": {
+    "orderSizeList": ["0.05100000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:40.702175"
+  },
+  "BTMXBEAR": {
+    "orderSizeList": ["93930.40000000"],
+    "side": "buy",
+    "time": "2021-05-25 03:17:37.694551"
+  },
+  "LTCHEDGE": {
+    "orderSizeList": ["2.80000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:40.847799"
+  },
+  "BULLSHIT": {
+    "orderSizeList": ["70.62800000"],
+    "side": "sell",
+    "time": "2021-06-08 15:17:46.236254"
+  },
+  "MATICHALF": {
+    "orderSizeList": ["308.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:49.062624"
+  },
+  "LINKHEDGE": {
+    "orderSizeList": ["68.60000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:45.824103"
+  },
+  "HTHALF": {
+    "orderSizeList": ["5.91000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:37.402985"
+  },
+  "ETCHALF": {
+    "orderSizeList": ["1.40000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:29.241191"
+  },
+  "VETHALF": {
+    "orderSizeList": ["708.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:28.751343"
+  },
+  "XTZHALF": {
+    "orderSizeList": ["14.73200000"],
+    "side": "sell",
+    "time": "2021-06-10 00:02:38.322960"
+  },
+  "TRXHALF": {
+    "orderSizeList": ["1226.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:47.844654"
+  },
+  "HEDGESHIT": {
+    "orderSizeList": ["0.38900000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:31.565685"
+  },
+  "ZECBULL": {
+    "orderSizeList": ["4369.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:44.059487"
+  },
+  "BSVBULL": {
+    "orderSizeList": ["3555.99000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:53.494537"
+  },
+  "EOSBEAR": {
+    "orderSizeList": ["604654.40000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:30.918815"
+  },
+  "DRGNHALF": {
+    "orderSizeList": ["0.02300000"],
+    "side": "buy",
+    "time": "2021-06-11 00:02:32.590436"
+  },
+  "ATOMHALF": {
+    "orderSizeList": ["16.96000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:36.220060"
+  },
+  "ZECBEAR": {
+    "orderSizeList": ["3547.60000000", "2753.55000000"],
+    "side": "buy",
+    "time": "2021-06-09 15:23:05.677966"
+  },
+  "HTHEDGE": {
+    "orderSizeList": ["48.48000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:47.773583"
+  },
+  "TRXBEAR": {
+    "orderSizeList": ["6969472.00000000"],
+    "side": "buy",
+    "time": "2021-06-04 00:02:24.086427"
+  },
+  "DOGEHALF": {
+    "orderSizeList": ["369.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:39.971963"
+  },
+  "HEDGE": {
+    "orderSizeList": ["5.16840000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:42.104303"
+  },
+  "MATICHEDGE": {
+    "orderSizeList": ["121.00000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:37.206777"
+  },
+  "ADAHALF": {
+    "orderSizeList": ["204.00000000"],
+    "side": "buy",
+    "time": "2021-06-11 00:02:45.514392"
+  },
+  "HALF": {
+    "orderSizeList": ["0.01130000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:45.683776"
+  },
+  "ADABEAR": {
+    "orderSizeList": ["230038.00000000"],
+    "side": "buy",
+    "time": "2021-06-09 00:02:19.896822"
+  },
+  "BEAR": {
+    "orderSizeList": ["73.30010000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:28.395550"
+  },
+  "LINKBULL": {
+    "orderSizeList": ["65933.60000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:32.201977"
+  },
+  "EXCHBEAR": {
+    "orderSizeList": ["55.17300000", "30.44800000"],
+    "side": "buy",
+    "time": "2021-06-05 07:08:39.744804"
+  },
+  "XTZBULL": {
+    "orderSizeList": ["8415.32900000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:33.418557"
+  },
+  "LEOBULL": {
+    "orderSizeList": ["3359.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:31.152346"
+  },
+  "BALBULL": {
+    "orderSizeList": ["345.91000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:43.941366"
+  },
+  "BCHBEAR": {
+    "orderSizeList": ["2120.27400000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:33.020025"
+  },
+  "BVOL": {
+    "orderSizeList": [
+      "3.24580000",
+      "1.16260000",
+      "1.00210000",
+      "0.88830000",
+      "0.75520000",
+      "0.50570000",
+      "0.10260000"
+    ],
+    "side": "buy",
+    "time": "2021-06-12 00:02:44.217111"
+  },
+  "XRPBEAR": {
+    "orderSizeList": ["576829.00000000"],
+    "side": "buy",
+    "time": "2021-06-09 00:02:20.046518"
+  },
+  "VETBEAR": {
+    "orderSizeList": ["171759.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:49.262463"
+  },
+  "TOMOBULL": {
+    "orderSizeList": ["6021.80000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:49.077410"
+  },
+  "DRGNBULL": {
+    "orderSizeList": ["4.45500000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:40.186713"
+  },
+  "ATOMBULL": {
+    "orderSizeList": ["36961.74000000", "36961.74000000", "25763.20000000"],
+    "side": "sell",
+    "time": "2021-06-07 23:25:06.847220"
+  },
+  "MATICBEAR": {
+    "orderSizeList": ["2.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:33.296582"
+  },
+  "DEFIBULL": {
+    "orderSizeList": ["33.49300000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:34.660321"
+  },
+  "HTBULL": {
+    "orderSizeList": ["1002.22000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:36.337617"
+  },
+  "BSVBEAR": {
+    "orderSizeList": ["2875.21000000", "1692.90000000"],
+    "side": "buy",
+    "time": "2021-06-11 06:14:08.295869"
+  },
+  "KNCBULL": {
+    "orderSizeList": ["12847.60000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:45.421766"
+  },
+  "XLMBULL": {
+    "orderSizeList": ["1751844.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:47.438440"
+  },
+  "MIDBULL": {
+    "orderSizeList": ["3.64000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:45.432056"
+  },
+  "EXCHBULL": {
+    "orderSizeList": ["14.08000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:30.809851"
+  },
+  "ETCBULL": {
+    "orderSizeList": ["2504.60000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:34.497013"
+  },
+  "BEARSHIT": {
+    "orderSizeList": ["9.64700000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:32.959691"
+  },
+  "ETHBULL": {
+    "orderSizeList": [
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "647.64000000",
+      "278.48700000"
+    ],
+    "side": "sell",
+    "time": "2021-06-08 15:24:36.101476"
+  },
+  "GRTBULL": {
+    "orderSizeList": ["258275.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:49.451316"
+  },
+  "MATICBULL": {
+    "orderSizeList": ["778198.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:29.401694"
+  },
+  "XRPBULL": {
+    "orderSizeList": [
+      "1766784.00000000",
+      "1766784.00000000",
+      "1766784.00000000",
+      "1766784.00000000",
+      "1766784.00000000",
+      "1766784.00000000",
+      "1766784.00000000",
+      "1766784.00000000",
+      "248015.00000000"
+    ],
+    "side": "sell",
+    "time": "2021-06-07 21:15:45.326217"
+  },
+  "XTZHEDGE": {
+    "orderSizeList": ["539.14600000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:40.161904"
+  },
+  "BTMXBULL": {
+    "orderSizeList": ["79823.60000000"],
+    "side": "buy",
+    "time": "2021-05-25 00:02:52.865505"
+  },
+  "SUSHIBEAR": {
+    "orderSizeList": ["3028.50000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:35.736228"
+  },
+  "MIDBEAR": {
+    "orderSizeList": ["1.75500000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:37.150635"
+  },
+  "TOMOHALF": {
+    "orderSizeList": ["13.40000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:37.025829"
+  },
+  "XRPHALF": {
+    "orderSizeList": ["91.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:40.242189"
+  },
+  "ETHHALF": {
+    "orderSizeList": ["0.09100000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:48.456606"
+  },
+  "GRTBEAR": {
+    "orderSizeList": ["22711.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:37.989009"
+  },
+  "UNISWAPBULL": {
+    "orderSizeList": ["0.45910000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:35.037718"
+  },
+  "LEOHALF": {
+    "orderSizeList": ["8.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:38.421154"
+  },
+  "TRYBHALF": {
+    "orderSizeList": ["81.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:38.320821"
+  },
+  "MKRBULL": {
+    "orderSizeList": ["9.69000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:40.940727"
+  },
+  "COMPBEAR": {
+    "orderSizeList": ["115.66100000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:43.115331"
+  },
+  "XTZBEAR": {
+    "orderSizeList": ["2520.28700000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:41.332150"
+  },
+  "PAXGHALF": {
+    "orderSizeList": ["0.01000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:39.078989"
+  },
+  "BCHBULL": {
+    "orderSizeList": ["1728.87400000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:51.679788"
+  },
+  "XAUTHALF": {
+    "orderSizeList": ["0.01000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:39.947204"
+  },
+  "DOGEBULL": {
+    "orderSizeList": [
+      "1681590.00000000",
+      "1681590.00000000",
+      "1681590.00000000",
+      "1681590.00000000",
+      "1681590.00000000",
+      "1681590.00000000",
+      "198163.00000000"
+    ],
+    "side": "sell",
+    "time": "2021-06-08 15:21:43.888123"
+  },
+  "SXPBULL": {
+    "orderSizeList": ["16661.10000000"],
+    "side": "buy",
+    "time": "2021-06-08 00:02:40.996645"
+  },
+  "THETABULL": {
+    "orderSizeList": ["14795.70000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:32.116907"
+  },
+  "SUSHIBULL": {
+    "orderSizeList": ["6648.50000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:21.708073"
+  },
+  "COMPBULL": {
+    "orderSizeList": ["496.85300000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:30.019309"
+  },
+  "PAXGHEDGE": {
+    "orderSizeList": ["0.01000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:26.326934"
+  },
+  "USDTBEAR": {
+    "orderSizeList": ["44.00000000"],
+    "side": "buy",
+    "time": "2021-05-30 00:02:19.919701"
+  },
+  "ATOMHEDGE": {
+    "orderSizeList": ["120.98000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:46.402739"
+  },
+  "OKBHALF": {
+    "orderSizeList": ["9.68000000"],
+    "side": "sell",
+    "time": "2021-05-21 00:02:23.658846"
+  },
+  "MKRHEDGE": {
+    "orderSizeList": ["0.20900000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:30.958388"
+  },
+  "THETAHALF": {
+    "orderSizeList": ["27.30000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:50.246948"
+  },
+  "OKBHEDGE": {
+    "orderSizeList": ["28.83000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:35.690960"
+  },
+  "PRIVHALF": {
+    "orderSizeList": ["0.03000000"],
+    "side": "buy",
+    "time": "2021-06-11 00:02:24.059419"
+  },
+  "UNISWAPBEAR": {
+    "orderSizeList": ["0.05140000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:41.959140"
+  },
+  "MATICBEAR2021": {
+    "orderSizeList": ["250237.00000000"],
+    "side": "buy",
+    "time": "2021-06-07 03:02:18.753004"
+  },
+  "TRXBULL": {
+    "orderSizeList": ["6575834.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:50.495602"
+  },
+  "XAUTBULL": {
+    "orderSizeList": ["0.94000000"],
+    "side": "buy",
+    "time": "2021-05-21 00:02:23.740944"
+  },
+  "CUSDTBULL": {
+    "orderSizeList": ["1099.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:21.819180"
+  },
+  "MIDHALF": {
+    "orderSizeList": ["0.01900000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:28.132194"
+  },
+  "XLMBEAR": {
+    "orderSizeList": ["5813737.00000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:32.981219"
+  },
+  "EOSBULL": {
+    "orderSizeList": ["408729.80000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:51.602573"
+  },
+  "ALTBULL": {
+    "orderSizeList": ["76.47600000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:28.203988"
+  },
+  "ALGOBEAR": {
+    "orderSizeList": ["459432.00000000", "248863.00000000"],
+    "side": "buy",
+    "time": "2021-06-09 10:04:34.350574"
+  },
+  "LTCBULL": {
+    "orderSizeList": ["5712.62000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:34.777587"
+  },
+  "BNBHEDGE": {
+    "orderSizeList": ["1.10000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:35.562839"
+  },
+  "BCHHEDGE": {
+    "orderSizeList": ["395.45300000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:32.230864"
+  },
+  "KNCBEAR": {
+    "orderSizeList": ["4991.20000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:33.211613"
+  },
+  "BSVHEDGE": {
+    "orderSizeList": ["2.34000000"],
+    "side": "buy",
+    "time": "2021-05-25 00:02:30.854062"
+  },
+  "MIDHEDGE": {
+    "orderSizeList": ["0.14000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:30.085292"
+  },
+  "TRXHEDGE": {
+    "orderSizeList": ["12992.00000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:49.719552"
+  },
+  "LEOHEDGE": {
+    "orderSizeList": ["180.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:33.458258"
+  },
+  "ALTHEDGE": {
+    "orderSizeList": ["0.34500000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:31.930024"
+  },
+  "DRGNHEDGE": {
+    "orderSizeList": ["0.23700000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:40.214569"
+  },
+  "SUSHIHEDGE": {
+    "orderSizeList": ["51.50000000"],
+    "side": "buy",
+    "time": "2021-06-10 00:02:26.817227"
+  },
+  "PRIVHEDGE": {
+    "orderSizeList": ["0.15900000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:23.424193"
+  },
+  "BTMXHEDGE": {
+    "orderSizeList": ["394.20000000"],
+    "side": "buy",
+    "time": "2021-05-21 00:02:23.546355"
+  },
+  "BCHHALF": {
+    "orderSizeList": ["0.19800000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:43.481165"
+  },
+  "ADABULL": {
+    "orderSizeList": ["1582642.00000000"],
+    "side": "sell",
+    "time": "2021-06-08 00:02:30.782736"
+  },
+  "IBVOL": {
+    "orderSizeList": [
+      "26.78280000",
+      "26.78280000",
+      "26.78280000",
+      "26.78280000",
+      "26.78280000",
+      "26.78280000",
+      "26.78280000",
+      "14.22250000",
+      "11.78700000",
+      "11.02670000",
+      "2.47030000",
+      "2.24180000",
+      "1.98650000",
+      "1.53960000",
+      "1.51540000"
+    ],
+    "side": "buy",
+    "time": "2021-06-01 00:02:31.765674"
+  },
+  "USDTHALF": {
+    "orderSizeList": ["3.00000000"],
+    "side": "sell",
+    "time": "2021-06-09 00:02:29.709395"
+  },
+  "THETAHEDGE": {
+    "orderSizeList": ["566.40000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:41.869322"
+  },
+  "CUSDTBEAR": {
+    "orderSizeList": ["1329.00000000"],
+    "side": "buy",
+    "time": "2021-05-20 00:02:32.019573"
+  },
+  "SXPHALF": {
+    "orderSizeList": ["34.60000000"],
+    "side": "sell",
+    "time": "2021-05-26 00:02:25.519485"
+  },
+  "EOSHALF": {
+    "orderSizeList": ["24.10000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:49.014287"
+  },
+  "TRYBBULL": {
+    "orderSizeList": ["12843.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:29.699031"
+  },
+  "BNBBULL": {
+    "orderSizeList": ["646.30000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:28.074889"
+  },
+  "USDTBULL": {
+    "orderSizeList": ["439.00000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:42.972951"
+  },
+  "VETHEDGE": {
+    "orderSizeList": ["20327.00000000"],
+    "side": "sell",
+    "time": "2021-06-11 00:02:51.506056"
+  },
+  "TRYBHEDGE": {
+    "orderSizeList": ["1345.00000000"],
+    "side": "buy",
+    "time": "2021-06-11 00:02:23.606314"
+  },
+  "DMGBEAR": {
+    "orderSizeList": ["3.30000000"],
+    "side": "buy",
+    "time": "2021-06-02 15:38:02.661789"
+  },
+  "UNISWAPHALF": {
+    "orderSizeList": ["0.00130000"],
+    "side": "sell",
+    "time": "2021-05-09 00:02:14.862089"
+  },
+  "COMPHEDGE": {
+    "orderSizeList": ["1.64960000"],
+    "side": "buy",
+    "time": "2021-06-09 00:02:44.843697"
+  },
+  "USDTHEDGE": {
+    "orderSizeList": ["5.00000000"],
+    "side": "buy",
+    "time": "2021-06-07 00:02:12.647933"
+  },
+  "ALGOHALF": {
+    "orderSizeList": ["206.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:49.414103"
+  },
+  "COMPHALF": {
+    "orderSizeList": ["0.94610000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:35.511795"
+  },
+  "LINKHALF": {
+    "orderSizeList": ["6.30000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:50.239520"
+  },
+  "CUSDTHALF": {
+    "orderSizeList": ["24.00000000"],
+    "side": "buy",
+    "time": "2021-05-31 00:02:20.315360"
+  },
+  "BNBHALF": {
+    "orderSizeList": ["0.10000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:49.759543"
+  },
+  "DEFIHEDGE": {
+    "orderSizeList": ["0.12900000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:31.983737"
+  },
+  "DMGHEDGE": {
+    "orderSizeList": ["140.60000000"],
+    "side": "buy",
+    "time": "2021-06-04 00:02:23.845969"
+  },
+  "TRYBBEAR": {
+    "orderSizeList": ["216.00000000"],
+    "side": "buy",
+    "time": "2021-05-30 00:02:19.682368"
+  },
+  "DMGHALF": {
+    "orderSizeList": ["978.10000000"],
+    "side": "sell",
+    "time": "2021-05-19 00:02:22.876868"
+  },
+  "DEFIHALF": {
+    "orderSizeList": ["0.00700000"],
+    "side": "buy",
+    "time": "2021-06-02 00:02:22.675859"
+  },
+  "SUSHIHALF": {
+    "orderSizeList": ["13.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:38.433206"
+  },
+  "ASDHEDGE": {
+    "orderSizeList": ["316.20000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:32.317977"
+  },
+  "ASDHALF": {
+    "orderSizeList": ["44.60000000"],
+    "side": "sell",
+    "time": "2021-06-10 00:02:37.529050"
+  },
+  "ASDBEAR": {
+    "orderSizeList": ["17091.40000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:41.179271"
+  },
+  "ASDBULL": {
+    "orderSizeList": ["14652.00000000"],
+    "side": "buy",
+    "time": "2021-06-12 00:02:45.061797"
+  },
+  "PAXGBEAR": {
+    "orderSizeList": ["0.02000000"],
+    "side": "sell",
+    "time": "2021-05-28 00:02:20.445082"
+  },
+  "XAUTHEDGE": {
+    "orderSizeList": ["0.06000000"],
+    "side": "buy",
+    "time": "2021-06-08 00:02:30.606805"
+  },
+  "BSVHALF": {
+    "orderSizeList": ["0.01000000"],
+    "side": "sell",
+    "time": "2021-06-12 00:02:21.623773"
+  }
+}
