@@ -59,7 +59,7 @@ if (args.includes('stream')) {
 
 // CRONS
 // message Joel and Christopher a list of high-ratio rebalances
-cron.schedule("58 8 * * *", async() => {
+cron.schedule("55 19 * * *", async() => {
     console.log('cron running...');
     await sendRebalanceInfo(['15197772459', '12269798530']);
     console.log('cron done');
@@ -70,7 +70,6 @@ async function sendRebalanceInfo(numbers = []) {
     let rt = new RebalanceTrader();
     await rt.init();
     let rebalances = await rt.getAggData();
-    console.log(rebalances);
     let bestIdeas = rebalances
         .reverse()
         .slice(0, 10)
@@ -80,6 +79,5 @@ async function sendRebalanceInfo(numbers = []) {
 
     twilio.sendSms(numbers, bestIdeas)
 };
-
 
 module.exports = app;
