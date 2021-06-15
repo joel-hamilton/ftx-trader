@@ -113,6 +113,8 @@ async function getChangesInMarketPrice(market, from, to) {
     return changesFromMinZero;
 }
 
+
+// kind of twitter specific
 async function signalOrder({ market, text, username, scale }) {
     // 5 minute minimum
     // let lastOrderTime = await getLastOrderTime();

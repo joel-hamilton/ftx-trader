@@ -3,7 +3,7 @@ var twilio = new Twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH);
 
 async function sendSms(to = ['15197772459'], body) {
     for (number of to) {
-        console.log(`SENDING: ${body}`)
+        console.log(`SENDING SMS:\n\n ${body}`)
         // Send message using promise
         var promise = twilio.messages.create({
             from: '12267818520',
