@@ -1,11 +1,12 @@
 require("dotenv").config({ path: "../.env" });
 const ftx = require("./ftx");
 const twilio = require('./twilio');
+const moment = require('moment');
 const fs = require("fs");
 
 module.exports = class RebalanceTrader {
     // will fetch all token info if no tokenNames array passed in
-    constructor(requestedMarkets = [], minVolume24 = 500 * 1000, minRebalanceSizeUsd = 50 * 1000) {
+    constructor({ requestedMarkets = [], minVolume24 = 500 * 1000, minRebalanceSizeUsd = 50 * 1000 } = {}) {
         this.minVolume24 = minVolume24;
         this.minRebalanceSizeUsd = minRebalanceSizeUsd;
         this.requestedMarkets = requestedMarkets;
@@ -100,8 +101,8 @@ module.exports = class RebalanceTrader {
         let data = Object.values(this.aggOrderAmounts)
             .filter(aggData => {
                 return this.marketStats[aggData.underlying] &&
-                    this.marketStats[aggData.underlying].volumeUsd24h >= this.minVolume24 &&
-                    aggData.rebalanceAmountUsd >= this.minRebalanceSizeUsd
+                    Math.abs(this.marketStats[aggData.underlying].volumeUsd24h) >= this.minVolume24 &&
+                    Math.abs(aggData.rebalanceAmountUsd) >= this.minRebalanceSizeUsd
             })
             .sort((a, b) => {
                 return a[sortProp] > b[sortProp] ? 1 : -1;
@@ -110,6 +111,10 @@ module.exports = class RebalanceTrader {
         // console.log(data);
         // fs.writeFileSync('rebalanceAmounts.json', JSON.stringify(data));
         return data.reverse();
+    }
+
+    getAggDataByMarket(market) {
+        return this.getAggData().find(ad => ad.underlying === market);
     }
 
     async sendRebalanceInfo(numbers = []) {
@@ -124,7 +129,7 @@ module.exports = class RebalanceTrader {
         console.log(`Sent\n\n${bestIdeas}`);
     };
 
-    async placeMidOrders({ leverage = 1, positions = 10 }) {
+    async placeMidOrders({ leverage = 1, positions = 10, trailPct = 0.01 }) {
         let account = await ftx.getAccount();
         let collateral = account.result.freeCollateral;
         let orderPromises = this.getAggData()
@@ -136,7 +141,6 @@ module.exports = class RebalanceTrader {
                 let size = amountUsd / limit;
                 let side = data.rebalanceAmountUsd > 0 ? "buy" : "sell";
                 let otherSide = side === "buy" ? "sell" : "buy";
-                let trailPct = 0.01;
 
                 let order = {
                     "market": data.underlying,
@@ -146,21 +150,51 @@ module.exports = class RebalanceTrader {
                     "size": size,
                 };
 
-                let triggerOrder = {
-                    "market": data.underlying,
-                    "side": otherSide,
-                    "trailValue": side === "buy" ? -1 * limit * trailPct : limit * trailPct,
-                    "size": size,
-                    "type": "trailingStop",
-                    "reduceOnly": true,
-                };
-
                 let res = await ftx.query({ method: 'POST', path: '/orders', body: order, authRoute: true });
-                let triggerRes = await ftx.query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authRoute: true });
-                console.log(res);
                 return res.result;
             });
 
         this.orders = await Promise.all(orderPromises);
+    }
+
+    async test() {
+        await this.loadRebalanceInfo();
+        this.rebalanceInfo = JSON.parse(this.rebalanceInfo);
+        for (let key of Object.keys(this.rebalanceInfo)) {
+            let rebalanceInfo = this.rebalanceInfo[key];
+            let startTime = moment().hour(20).minute(2).seconds(0).add(4, 'hours');
+            if (startTime.format("YYYY-MM-DD HH-mm") !== moment(rebalanceInfo.time).format("YYYY-MM-DD HH-mm")) continue;
+
+            let tokenInfo = this.tokenData[key];
+            let marketInfo = this.marketStats[tokenInfo.underlying];
+            // console.log(rebalanceInfo);
+            // console.log(tokenInfo);
+            // console.log(marketInfo);
+
+            if (!marketInfo) continue;
+
+            let orderSize = rebalanceInfo.orderSizeList.reduce((size, sl) => sl + size, 0);
+            let rebalanceUsd = orderSize * marketInfo.last;
+            if (rebalanceUsd < 100000) continue;
+
+            let usdPerSecond = 4 * 1000 * 1000 / 60;
+            let expectedSeconds = rebalanceUsd / usdPerSecond;
+            let expectedFinishMoment = moment(startTime).add(expectedSeconds, 'seconds');
+            let actualFinishMoment = moment(rebalanceInfo.time);
+            let secondsDifference = actualFinishMoment.diff(expectedFinishMoment, 'seconds');
+            let data = {
+                token: tokenInfo.name,
+                market: marketInfo.name,
+                side: rebalanceInfo.side,
+                rebalanceUsd,
+                sellingSpeed: rebalanceUsd / (secondsDifference + expectedSeconds),
+                secondsDifference,
+                ecpectedFinish: expectedFinishMoment.format('HH:mm:ss'),
+                actualFinish: actualFinishMoment.format('HH:mm:ss'),
+            };
+
+            // if(data.market === 'ETH-PERP') 
+            console.log(data);
+        }
     }
 };

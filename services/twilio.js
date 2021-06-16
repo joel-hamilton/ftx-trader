@@ -1,3 +1,4 @@
+require('dotenv').config()
 let Twilio = require('twilio')
 var twilio = new Twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH);
 

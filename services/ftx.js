@@ -74,8 +74,13 @@ async function getData({ market, resolution = 15, start, end }) {
     return data;
 }
 
-async function getOrderBook(market) {
+async function getOrderBook(market) { // this just gets the market, rename this and `getOrderbookFixed`
     return query({ path: `/markets/${market}` });
+}
+
+async function getOrderbookFixed(market) {
+    let res = query({ path: `/markets/${market}/orderbook` });
+    return res.result;
 }
 
 async function getOrderHistory() {
@@ -240,6 +245,7 @@ module.exports = {
     getData,
     getMarkets,
     getOrderBook,
+    getOrderbookFixed,
     getOrderHistory,
     getLastOrderTime,
     query,
