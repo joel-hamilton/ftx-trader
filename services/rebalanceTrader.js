@@ -6,7 +6,7 @@ const fs = require("fs");
 
 module.exports = class RebalanceTrader {
     // will fetch all token info if no tokenNames array passed in
-    constructor({ requestedMarkets = [], minVolume24 = 500 * 1000, minRebalanceSizeUsd = 50 * 1000 } = {}) {
+    constructor({ requestedMarkets = [], minVolume24 = 1000 * 1000, minRebalanceSizeUsd = 200 * 1000 } = {}) {
         this.minVolume24 = minVolume24;
         this.minRebalanceSizeUsd = minRebalanceSizeUsd;
         this.requestedMarkets = requestedMarkets;
@@ -22,7 +22,6 @@ module.exports = class RebalanceTrader {
         this.initiated = true;
         await this.loadTokenData();
         await this.loadMarketStats();
-
         this.addRebalanceCalcsToTokenData();
         this.loadAggOrderAmounts();
 
@@ -58,6 +57,9 @@ module.exports = class RebalanceTrader {
     }
 
     async loadMarketStats() {
+        // let data = await ftx.query({ path: `/markets` });
+        // console.log(data);
+        // let marketsList = data.result;
         let marketsList = await ftx.getMarkets();
         this.marketStats = marketsList.reduce((acc, market) => {
             if (
@@ -125,7 +127,7 @@ module.exports = class RebalanceTrader {
                 return `${rebal.underlying} - ${rebal.rebalanceAmountUsd > 0 ? 'BUY' : 'SELL'} $${Math.round(rebal.rebalanceAmountUsd)} (${Math.round(rebal.rebalanceRatio * 1000) / 10}%)`
             }).join('\n');
 
-        // twilio.sendSms(numbers, bestIdeas)
+        twilio.sendSms(numbers, bestIdeas)
         console.log(`Sent\n\n${bestIdeas}`);
     };
 
@@ -151,6 +153,7 @@ module.exports = class RebalanceTrader {
                 };
 
                 let res = await ftx.query({ method: 'POST', path: '/orders', body: order, authRoute: true });
+                console.log(res);
                 return res.result;
             });
 

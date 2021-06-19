@@ -37,12 +37,13 @@ module.exports = class TimedClose {
         // console.log(`setting trailing stop`)
         console.log(triggerOrder);
         let res = await ftx.query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authRoute: true });
+        console.log(res);
         this.trailingStop = res.result;
         // console.log(this.trailingStop);
     }
 
     async setCronOrder() {
-        // TODO check original order for fill, too, might not need to do this
+        // TODO check original order for fill, too; might not need to do this
         console.log(`Setting cron for ${this.closeTime.format("HH:mm:ss")}`);
         this.cron = cron.schedule(this.closeTime.format("s m H D M *"), async () => {
             console.log(`Cron order for ${this.order.market} firing`);
@@ -65,7 +66,6 @@ module.exports = class TimedClose {
             let res = await ftx.query({ method: 'POST', path: '/orders', body: order, authRoute: true });
             console.log(res);
             this.closeOrder = res.result;
-            console.log(this.closeOrder);
         });
     }
 

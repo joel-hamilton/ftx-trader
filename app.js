@@ -78,25 +78,28 @@ cron.schedule("55 19 * * *", async () => {
 cron.schedule("58 19 * * *", async () => {
     await rt.init();
     await rt.placeMidOrders({
-        // leverage: 20,
-        leverage: 0.01, // TESTING
-        // positions: 5,
-        positions: 1, //TESTING
+        leverage: 20,
+        // leverage: 0.02, // TESTING
+        positions: 5,
+        // positions: 2, //TESTING
     });
 
+    let offset = 0;
     for (let order of rt.orders) {
         console.log(order);
-        let rebalanceAmt = Math.abs(rt.getAggDataByMarket(order.market).rebalanceAmountUsd);
-        let usdPerSecond = (4 * 1000 * 1000 / 60); // 4 million/min FTX-stated max
-        let closeTime = moment().add((rebalanceAmt / usdPerSecond) + 15, 'seconds'); // TESTING
-        // let closeTime = moment().hour(20).minute(2).seconds(0).add(rebalanceAmt / usdPerSecond, 'seconds');
-        console.log({ rebalanceAmt })
+
+        // let rebalanceAmt = Math.abs(rt.getAggDataByMarket(order.market).rebalanceAmountUsd);
+        // let usdPerSecond = (4 * 1000 * 1000 / 60); // 4 million/min FTX-stated max
+        // let closeTime = moment().add((rebalanceAmt / usdPerSecond) + 15, 'seconds'); // TESTING
+        let closeTime = moment().hour(20).minute(2).seconds(25 + (offset++));//.seconds(0).add(rebalanceAmt / usdPerSecond, 'seconds');
+        // console.log({ rebalanceAmt })
         console.log(`close time: ${closeTime.format("YYYY-MM-DD HH:mm:ss")}`)
-        let tc = new TimedClose({ orderId: order.id, closeTime });
+        let tc = new TimedClose({ orderId: order.id, trailPct: 0.005, closeTime });
         await tc.initClose();
     }
 });
 // })(); // TESTING
+
 
 // save predicted rebalances
 let rt2 = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
