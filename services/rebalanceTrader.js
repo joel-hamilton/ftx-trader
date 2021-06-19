@@ -2,6 +2,7 @@ require("dotenv").config({ path: "../.env" });
 const ftx = require("./ftx");
 const twilio = require('./twilio');
 const moment = require('moment');
+const utils = require('./utils');
 const fs = require("fs");
 
 module.exports = class RebalanceTrader {
@@ -134,30 +135,28 @@ module.exports = class RebalanceTrader {
     async placeMidOrders({ leverage = 1, positions = 10, trailPct = 0.01 }) {
         let account = await ftx.getAccount();
         let collateral = account.result.freeCollateral;
-        let orderPromises = this.getAggData()
-            .slice(0, positions)
-            .map(async data => {
-                let orderbook = await ftx.getOrderBook(data.underlying);
-                let limit = (orderbook.result.bid + orderbook.result.ask) / 2;
-                let amountUsd = leverage * collateral / positions;
-                let size = amountUsd / limit;
-                let side = data.rebalanceAmountUsd > 0 ? "buy" : "sell";
-                let otherSide = side === "buy" ? "sell" : "buy";
 
-                let order = {
-                    "market": data.underlying,
-                    "side": side,
-                    "price": limit,
-                    "type": "limit",
-                    "size": size,
-                };
+        let rebalanceData = this.getAggData().slice(0, positions);
+        for (let data of rebalanceData) {
+            let orderbook = await ftx.getOrderBook(data.underlying);
+            let limit = orderbook.result.bid * 0.9; //~~ (orderbook.result.bid + orderbook.result.ask) / 2;
+            let amountUsd = leverage * collateral / positions;
+            let size = amountUsd / limit;
+            let side = data.rebalanceAmountUsd > 0 ? "buy" : "sell";
 
-                let res = await ftx.query({ method: 'POST', path: '/orders', body: order, authRoute: true });
-                console.log(res);
-                return res.result;
-            });
+            let order = {
+                "market": data.underlying,
+                "side": side,
+                "price": limit,
+                "type": "limit",
+                "size": size,
+            };
 
-        this.orders = await Promise.all(orderPromises);
+            let res = await ftx.query({ method: 'POST', path: '/orders', body: order, authRoute: true });
+            console.log(res);
+            this.orders.push(res.result);
+            await utils.wait(100);
+        }
     }
 
     async test() {
