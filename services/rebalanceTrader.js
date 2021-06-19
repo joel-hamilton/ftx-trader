@@ -139,7 +139,7 @@ module.exports = class RebalanceTrader {
         let rebalanceData = this.getAggData().slice(0, positions);
         for (let data of rebalanceData) {
             let orderbook = await ftx.getOrderBook(data.underlying);
-            let limit = orderbook.result.bid * 0.9; //~~ (orderbook.result.bid + orderbook.result.ask) / 2;
+            let limit = (orderbook.result.bid + orderbook.result.ask) / 2;
             let amountUsd = leverage * collateral / positions;
             let size = amountUsd / limit;
             let side = data.rebalanceAmountUsd > 0 ? "buy" : "sell";

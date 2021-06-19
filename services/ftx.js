@@ -1,4 +1,4 @@
-require('dotenv').config({path: '../.env'})
+require('dotenv').config({ path: '../.env' })
 const fs = require('fs')
 const path = require('path');
 const moment = require('moment');
@@ -45,7 +45,14 @@ async function query({ path, url = 'https://ftx.com/api', method = 'GET', body =
     // console.log(options)
 
     let res = await fetch(`${url}${path}`, options);
-    return res.json();
+    let resJson = await res.json();
+    if (resJson.success !== true) {
+        console.log("FTX API ERROR:")
+        console.log(options);
+        console.log(resJson);
+    }
+
+    return resJson;
 }
 
 async function getAccount() {
@@ -148,11 +155,11 @@ async function signalOrder({ market, text, username, scale }) {
         trailPercent = constants.TEST_TRAIL_PERCENT
     } else {
         console.log(market);
-        console.log(scale);    
+        console.log(scale);
         let orderBook = await getOrderBook(market);
         ask = orderBook.result.ask;
         let spread = (ask - orderBook.result.bid) / ask;
-        if(spread > 0.002) {
+        if (spread > 0.002) {
             console.log(`No buy: bid/ask too wide`)
             console.log(orderBook.result);
             return;
@@ -225,6 +232,15 @@ async function signalOrder({ market, text, username, scale }) {
     }
 }
 
+// need at least id and type in order object
+async function cancelOrder(order) { 
+    if(order.type === 'trailing_stop') { // TODO add all conditional types, or flip and have just market and limit the other way?
+        return this.query({ path: `/conditional_orders/${order.id}`, method: 'DELETE', authRoute: true });
+    }
+
+    return this.query({ path: `/orders/${order.id}`, method: 'DELETE', authRoute: true });
+}
+
 async function test() {
     return query({ path: '/time', url: 'https://otc.ftx.com/api' })
 }
@@ -232,7 +248,7 @@ async function test() {
 if (require.main === module) { // called from cli
     let args = process.argv.slice(2);
     if (args.includes('update')) {
-        (async function() {
+        (async function () {
             await getMarkets(true);
             console.log('Markets updated');
         })()
@@ -240,6 +256,7 @@ if (require.main === module) { // called from cli
 }
 
 module.exports = {
+    cancelOrder,
     getAccount,
     getChangesInMarketPrice,
     getData,
