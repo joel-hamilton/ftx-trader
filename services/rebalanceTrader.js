@@ -81,12 +81,16 @@ module.exports = class RebalanceTrader {
     }
 
     async loadAggOrderAmounts() {
+        this.aggOrderAmounts = {};
         for (let token of Object.values(this.tokenData)) {
-            if (!this.aggOrderAmounts[token.underlying])
-                this.aggOrderAmounts[token.underlying] = { underlying: token.underlying, rebalanceAmountUsd: 0 };
+            if (!this.aggOrderAmounts[token.underlying]) {
+                this.aggOrderAmounts[token.underlying] = {
+                    underlying: token.underlying,
+                    rebalanceAmountUsd: 0
+                };
+            }
 
-            this.aggOrderAmounts[token.underlying].rebalanceAmountUsd +=
-                token.rebalanceSize || 0;
+            this.aggOrderAmounts[token.underlying].rebalanceAmountUsd += token.rebalanceSize || 0;
         }
 
         for (let underlying in this.aggOrderAmounts) {
@@ -96,13 +100,15 @@ module.exports = class RebalanceTrader {
                 continue;
             }
 
-            aggData.rebalanceRatio = Math.abs(aggData.rebalanceAmountUsd / this.marketStats[underlying].volumeUsd24h); // rebalance as a percent of past 24h volume 
+            // rebalance as a percent of past 24h volume 
+            aggData.rebalanceRatio = Math.abs(aggData.rebalanceAmountUsd / this.marketStats[underlying].volumeUsd24h);
         }
     }
 
     getAggData(sortProp = "rebalanceRatio") {
         let data = Object.values(this.aggOrderAmounts)
             .filter(aggData => {
+                // remove low volume/rebalance size tokens
                 return this.marketStats[aggData.underlying] &&
                     Math.abs(this.marketStats[aggData.underlying].volumeUsd24h) >= this.minVolume24 &&
                     Math.abs(aggData.rebalanceAmountUsd) >= this.minRebalanceSizeUsd
@@ -124,9 +130,11 @@ module.exports = class RebalanceTrader {
         let bestIdeas = this.getAggData()
             .slice(0, 10)
             .map(rebal => {
-                console.log(rebal)
                 return `${rebal.underlying} - ${rebal.rebalanceAmountUsd > 0 ? 'BUY' : 'SELL'} $${Math.round(rebal.rebalanceAmountUsd)} (${Math.round(rebal.rebalanceRatio * 1000) / 10}%)`
             }).join('\n');
+
+        console.log(bestIdeas);
+        return;
 
         twilio.sendSms(numbers, bestIdeas)
         console.log(`Sent\n\n${bestIdeas}`);

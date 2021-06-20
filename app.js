@@ -7,21 +7,22 @@ var express = require('express');
 var cors = require('cors')
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var morgan = require('morgan');
 var cron = require('node-cron');
 const moment = require('moment');
-const RebalanceTrader = require('./services/rebalanceTrader');
+const RebalanceTrader = require('./services/RebalanceTrader');
 const TimedClose = require('./services/TimedClose');
 const fs = require('fs');
 
 var app = express();
 
 app.use(cors());
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.get('/favico.ico', (req, res) => {
     res.sendStatus(404);
@@ -30,12 +31,12 @@ app.get('/favico.ico', (req, res) => {
 app.use(require('./routes'));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -50,7 +51,7 @@ app.use(function(err, req, res, next) {
 let args = process.argv.slice(2);
 
 if (args.includes('update')) {
-    (async function() {
+    (async function () {
         await ftx.getMarkets(true);
         await twitter.updateRules();
     })()
@@ -61,12 +62,12 @@ if (args.includes('stream')) {
 }
 
 // CRONS
-let rt = new RebalanceTrader();
 
 // message Joel and Christopher a list of high-ratio rebalances
 // (async function() { // TESTING
 cron.schedule("55 19 * * *", async () => {
     console.log('Send relalance SMS cron running...');
+    let rt = new RebalanceTrader();
     await rt.init();
     await rt.sendRebalanceInfo(['15197772459', '12269798530']);
     console.log('Send relalance SMS cron done');
@@ -76,24 +77,25 @@ cron.schedule("55 19 * * *", async () => {
 // TODO today
 // (async function() { // TESTING
 cron.schedule("58 19 * * *", async () => {
+    let rt = new RebalanceTrader();
     await rt.init();
     await rt.placeMidOrders({
-        // leverage: 20,
-        leverage: 0.1,  // TESTING
-        positions: 1,
+        leverage: 20,
+        // leverage: 0.02, // TESTING
+        positions: 5,
         // positions: 2, //TESTING
     });
 
     let offset = 0;
     for (let order of rt.orders) {
-        // console.log(order);
+        console.log(order);
 
         // let rebalanceAmt = Math.abs(rt.getAggDataByMarket(order.market).rebalanceAmountUsd);
         // let usdPerSecond = (4 * 1000 * 1000 / 60); // 4 million/min FTX-stated max
-        let closeTime = moment().add(10 + offset, 'seconds'); // TESTING
-        // let closeTime = moment().hour(20).minute(2).seconds(20 + (offset++));//.seconds(0).add(rebalanceAmt / usdPerSecond, 'seconds');
+        // let closeTime = moment().add((rebalanceAmt / usdPerSecond) + 15, 'seconds'); // TESTING
+        let closeTime = moment().hour(20).minute(2).seconds(25 + (offset++));//.seconds(0).add(rebalanceAmt / usdPerSecond, 'seconds');
         // console.log({ rebalanceAmt })
-        // console.log(`close time: ${closeTime.format("YYYY-MM-DD HH:mm:ss")}`)
+        console.log(`close time: ${closeTime.format("YYYY-MM-DD HH:mm:ss")}`)
         let tc = new TimedClose({ orderId: order.id, trailPct: 0.005, closeTime });
         await tc.initClose();
     }
@@ -102,23 +104,25 @@ cron.schedule("58 19 * * *", async () => {
 
 
 // save predicted rebalances
-let rt2 = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
 cron.schedule('30 01 20 * * *', async () => {
-    await rt2.init();
+    let rt = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
+    await rt.init();
     fs.writeFileSync(`${moment().format("YYYY-MM-DD HH:mm:ss")}-prediction.json`, JSON.stringify(rt.getAggData()));
 });
 
 // save actual rebalances
 cron.schedule('05 20 * * *', async () => {
-    await rt2.init();
-    await rt2.loadRebalanceInfo();
+    let rt = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
+    await rt.init();
+    await rt.loadRebalanceInfo();
     fs.writeFileSync(`${moment().format("YYYY-MM-DD HH:mm:ss")}-actual.json`, rt2.rebalanceInfo);
 });
 
 
 // (async function() { // TESTING
 let sentMessages = [];
-cron.schedule("*/59 * * * * *", async () => {
+cron.schedule("*/1 * * * *", async () => {
+    let rt = new RebalanceTrader();
     await rt.init();
     for (let data of Object.values(rt.tokenData)) {
         if (!data.currentLeverage) continue;
@@ -152,17 +156,5 @@ cron.schedule("*/59 * * * * *", async () => {
     }
 });
 // })(); // TESTING
-
-// TODO save predicitons at 8:01
-// cron.schedule("01 20 * * *", async() => {
-//     console.log('Save rebalance predictions cron running...');
-//     await rt.init();
-
-//     console.log('cron done');
-// });
-
-// TODO save actual rebalance info at 8:10
-
-// TODO save +- 10 mins of 15s data at 8:15
 
 module.exports = app;

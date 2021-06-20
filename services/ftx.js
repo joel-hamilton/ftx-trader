@@ -1,11 +1,18 @@
 require('dotenv').config({ path: '../.env' })
 const fs = require('fs')
 const path = require('path');
-const moment = require('moment');
 const fetch = require('node-fetch');
+const moment = require('moment');
 const constants = require('../data/constants');
-
 const twilio = require('./twilio');
+const rfs = require('rotating-file-stream');
+const { writer } = require('repl');
+
+// LOGGING 
+var logStream = rfs.createStream('ftx.log', {
+    interval: '1d',
+    path: path.join(__dirname, '/../log')
+});
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();
@@ -46,10 +53,13 @@ async function query({ path, url = 'https://ftx.com/api', method = 'GET', body =
 
     let res = await fetch(`${url}${path}`, options);
     let resJson = await res.json();
-    if (resJson.success !== true) {
-        console.log("FTX API ERROR:")
-        console.log(options);
-        console.log(resJson);
+
+    if (!['markets', 'tokens'].includes(path)) {
+        logStream.write(`${moment().format("YYYY-MM-DD HH:mm:ss")} (${url}${path})${options.body ? ' ' + JSON.stringify(options.body) : ''}\n`, null, () => {
+            let jsonString = JSON.stringify(resJson);
+            let str = jsonString.length < 10000 ? jsonString  : 'Long Response';
+            logStream.write(`${str}\n\n`);
+        });
     }
 
     return resJson;
@@ -233,8 +243,8 @@ async function signalOrder({ market, text, username, scale }) {
 }
 
 // need at least id and type in order object
-async function cancelOrder(order) { 
-    if(order.type === 'trailing_stop') { // TODO add all conditional types, or flip and have just market and limit the other way?
+async function cancelOrder(order) {
+    if (order.type === 'trailing_stop') { // TODO add all conditional types, or flip and have just market and limit the other way?
         return this.query({ path: `/conditional_orders/${order.id}`, method: 'DELETE', authRoute: true });
     }
 
