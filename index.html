@@ -7,6 +7,7 @@
 <div class="app" v-cloak>
     <div>
         <input type="text" v-model="getParams" placeholder="get params" @keypress.enter="ftxGet">
+        <label>Auth Route<input type="checkbox" v-model="authRoute"></label>
         <button @click="ftxGet">FTX GET</button>
     </div>
     <button @click='loadOrderBook'>Load Orderbook</button>
@@ -79,6 +80,7 @@
                 },
                 analyzeRes: [],
                 getParams: '',
+                authRoute: false,
                 search: {
                     query: '',
                     start: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -96,9 +98,14 @@
         methods: {
             moment: moment,
             async ftxGet() {
-                let url = `http://localhost:3000/ftx/get/${encodeURIComponent(this.getParams)}`;
+                let url;
+                if (this.authRoute) {
+                    url = `http://localhost:3000/ftx/getAuth/${encodeURIComponent(this.getParams)}`;
+                } else {
+                    url = `http://localhost:3000/ftx/get/${encodeURIComponent(this.getParams)}`;
+                }
                 let res = await axios.get(url);
-                this.searchRes = this.syntaxHighlight(res.data); 
+                this.searchRes = this.syntaxHighlight(res.data);
             },
             async loadOrderBook() {
                 let url = "http://localhost:3000/analyze";

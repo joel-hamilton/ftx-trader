@@ -2,17 +2,9 @@ require('dotenv').config({ path: '../.env' })
 const fs = require('fs')
 const path = require('path');
 const fetch = require('node-fetch');
-const moment = require('moment');
 const constants = require('../data/constants');
 const twilio = require('./twilio');
-const rfs = require('rotating-file-stream');
-const { writer } = require('repl');
-
-// LOGGING 
-var logStream = rfs.createStream('ftx.log', {
-    interval: '1d',
-    path: path.join(__dirname, '/../log')
-});
+const utils = require('./utils');
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();
@@ -48,25 +40,22 @@ async function query({ path, url = 'https://ftx.com/api', method = 'GET', body =
 
     if (body) options.body = JSON.stringify(body);
 
-    console.log(`${url}${path}`)
-    // console.log(options)
-
     let res = await fetch(`${url}${path}`, options);
     let resJson = await res.json();
 
-    if (!['markets', 'tokens'].includes(path)) {
-        logStream.write(`${moment().format("YYYY-MM-DD HH:mm:ss")} (${url}${path})${options.body ? ' ' + JSON.stringify(options.body) : ''}\n`, null, () => {
-            let jsonString = JSON.stringify(resJson);
-            let str = jsonString.length < 10000 ? jsonString  : 'Long Response';
-            logStream.write(`${str}\n\n`);
-        });
-    }
+    // log req/res
+    utils.write(`(${url}${path})${options.body ? ' ' + options.body : ''}`, () => {
+        let jsonString = JSON.stringify(resJson);
+        let str = jsonString.length < 10000 ? jsonString : 'Long Response';
+        utils.write(str);
+    });
 
     return resJson;
 }
 
 async function getAccount() {
-    return query({ path: '/account', authRoute: true })
+    let res = await query({ path: '/account', authRoute: true });
+    return res.result;
 }
 
 async function getMarkets(save = false) {
@@ -258,7 +247,7 @@ async function test() {
 if (require.main === module) { // called from cli
     let args = process.argv.slice(2);
     if (args.includes('update')) {
-        (async function () {
+        (async function() {
             await getMarkets(true);
             console.log('Markets updated');
         })()

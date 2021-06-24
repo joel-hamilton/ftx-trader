@@ -48,12 +48,9 @@ module.exports = class RebalanceTrader {
             // modify the object in place
             let data = this.tokenData[name];
 
-            data.desiredPosition =
-                (data.leverage * data.totalNav) / data.underlyingMark;
-            data.currentPosition =
-                data.positionsPerShare[data.underlying] * data.outstanding; // data.pricePerShare; // ie: data.basket.USD + data.positionPerShare * data.underlyingMark;
-            data.rebalanceSize =
-                (data.desiredPosition - data.currentPosition) * data.underlyingMark;
+            data.desiredPosition = (data.leverage * data.totalNav) / data.underlyingMark;
+            data.currentPosition = data.positionsPerShare[data.underlying] * data.outstanding;
+            data.rebalanceSize = (data.desiredPosition - data.currentPosition) * data.underlyingMark;
         }
     }
 
@@ -77,7 +74,7 @@ module.exports = class RebalanceTrader {
 
     async loadRebalanceInfo() {
         let data = await ftx.query({ path: `/lt/rebalance_info` });
-        this.rebalanceInfo = data.result;
+        this.rebalanceInfo = JSON.parse(data.result);
     }
 
     async loadAggOrderAmounts() {
@@ -118,7 +115,7 @@ module.exports = class RebalanceTrader {
             });
 
         // console.log(data);
-        // fs.writeFileSync('rebalanceAmounts.json', JSON.stringify(data));
+        // fs.writeFileSync('rebalanceAmounts.json', JSON.stringify(data)); // DON'T save this anywhere other than /data
         return data.reverse();
     }
 
@@ -133,16 +130,13 @@ module.exports = class RebalanceTrader {
                 return `${rebal.underlying} - ${rebal.rebalanceAmountUsd > 0 ? 'BUY' : 'SELL'} $${Math.round(rebal.rebalanceAmountUsd)} (${Math.round(rebal.rebalanceRatio * 1000) / 10}%)`
             }).join('\n');
 
-        console.log(bestIdeas);
-        return;
-
         twilio.sendSms(numbers, bestIdeas)
         console.log(`Sent\n\n${bestIdeas}`);
     };
 
     async placeMidOrders({ leverage = 1, positions = 10, trailPct = 0.01 }) {
         let account = await ftx.getAccount();
-        let collateral = account.result.freeCollateral;
+        let collateral = account.freeCollateral;
 
         let rebalanceData = this.getAggData().slice(0, positions);
         for (let data of rebalanceData) {

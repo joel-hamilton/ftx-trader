@@ -52,6 +52,17 @@ router.get('/ftx/get/:path', async (req, res, next) => {
     } catch (e) {
         next(e);
     }
+});
+
+// eg 'lt/BULL' in frontend
+router.get('/ftx/getAuth/:path', async (req, res, next) => {
+    try {
+        console.log(req.params.path)
+        let result = await ftx.query({path: '/' + req.params.path, authRoute: true});
+        res.json(result);
+    } catch (e) {
+        next(e);
+    }
 })
 
 router.post('/analyze', async (req, res, next) => {

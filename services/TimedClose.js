@@ -1,3 +1,7 @@
+// TODO crons didn't fire last night...anf again!
+// close positions earlier, start scaling out at 8:02:10
+// float trailing stop higher if not filled initially, had to do it manually
+
 const ftx = require('./ftx');
 const utils = require('./utils');
 const moment = require('moment');
@@ -14,14 +18,13 @@ module.exports = class TimedClose {
         this.order = { id: orderId };
         this.trailOrder;
         this.closeOrder;
-        this.cron;
     }
 
     async initClose() {
         this.order = await this.updateOrder(this.order);
         await this.setTrailingStop();
-        await this.setCronOrder();
         await utils.wait(100);
+        this.setCronOrder();
     }
 
     async setTrailingStop() {
@@ -37,17 +40,19 @@ module.exports = class TimedClose {
         let res = await ftx.query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authRoute: true });
         console.log(res);
         this.trailOrder = res.result;
-        console.log(this.trailOrder);
     }
 
-    async setCronOrder() {
-        // TODO check original order for fill, too; might not need to do this
+    setCronOrder() {
         console.log(`Setting cron for ${this.closeTime.format("HH:mm:ss")}`);
-        this.cron = cron.schedule(this.closeTime.format("s m H D M *"), async () => {
+        cron.schedule(this.closeTime.format("s m H D M *"), async () => {
             console.log(`Cron order for ${this.order.market} firing`);
             console.log(this.closeTime.format("HH:mm:ss"));
 
+            // TODO wait until order confirmed cancelled
             await this.cancelUnfilledInitialOrder();
+
+            // TODO after cancelled, reload initial order and get filled size so we can cencel correct amount. Will probably fail if only partially filled and we try t ocancel extra size.
+
 
             // this.trailOrder = await this.updateOrder(this.trailOrder);
             // console.log(this.trailOrder);
@@ -65,18 +70,30 @@ module.exports = class TimedClose {
             };
 
             let res = await ftx.query({ method: 'POST', path: '/orders', body: order, authRoute: true });
+            console.log(`\ncron close order placed`);
             console.log(res);
-            if (res.sucess) { // if initial order not filled at all, this won't succeed
+            if (res.success) { // if initial order not filled at all, this won't succeed
+                // TODO handle casse where initial order is unfilled/partially filled. This currently returns:
+                // { success: false, error: 'Invalid reduce-only order' }
                 this.closeOrder = res.result;
+                console.log('\nCancelling trail order');
+                console.log(this.trailOrder);
+                let cancelRes = await ftx.cancelOrder(this.trailOrder);
+                console.log(cancelRes);
             }
 
-            this.safeCancelUnusedOrders();
+            // this.safeCancelUnusedOrders();
         });
     }
 
+    // cancel original order if not completely filled
     async cancelUnfilledInitialOrder() {
+        let res = await ftx.cancelOrder(this.order);
+        console.log(res);
+        await utils.wait(100);
+        return;
+
         this.order = await this.updateOrder(this.order);
-        // cancel original order if not completely filled
         if (parseInt(this.order.remainingSize) !== 0) {
             console.log('Cancelling unfilled initial order');
             let res = await ftx.cancelOrder(this.order);
