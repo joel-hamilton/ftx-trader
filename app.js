@@ -84,7 +84,7 @@ cron.schedule("30 00 20 * * *", async () => {
     await rt.placeMidOrders({
         leverage: 20,
         // leverage: 0.01, // TESTING
-        positions: 5,
+        positions: 2,
         // positions: 1, //TESTING
     });
 
