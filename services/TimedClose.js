@@ -1,7 +1,3 @@
-// TODO crons didn't fire last night...anf again!
-// close positions earlier, start scaling out at 8:02:10
-// float trailing stop higher if not filled initially, had to do it manually
-
 const ftx = require('./ftx');
 const utils = require('./utils');
 const moment = require('moment');
@@ -18,12 +14,13 @@ module.exports = class TimedClose {
         this.order = { id: orderId };
         this.trailOrder;
         this.closeOrder;
+        this.takeProfitOrders = [];
     }
 
     async initClose() {
         this.order = await this.updateOrder(this.order);
         await this.setTrailingStop();
-        await utils.wait(100);
+        await this.setTakeProfits();
         this.setCronOrder();
     }
 
@@ -39,7 +36,34 @@ module.exports = class TimedClose {
 
         let res = await ftx.query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authRoute: true });
         console.log(res);
+        await utils.wait(100);
         this.trailOrder = res.result;
+    }
+
+    async setTakeProfits() {
+        let profitPcts = [0.0025, 0.005, 0.0075];
+        for (let pct of profitPcts) {
+            if (this.order.side === 'sell') pct *= -1;
+
+            let triggerPrice = this.order.price * (1 + pct * 0.5);
+            let orderPrice = this.order.price * (1 + pct); // ie: limit, set beyond trigger to try for maker
+
+            let triggerOrder = {
+                market: this.order.market,
+                side: this.order.side === 'buy' ? 'sell' : 'buy',
+                size: this.order.size / profitPcts.length,
+                type: "takeProfit",
+                triggerPrice,
+                orderPrice,
+                reduceOnly: true,
+            };
+
+            console.log(triggerOrder);
+            let res = await ftx.query({ method: 'POST', path: '/conditional_orders', body: triggerOrder, authRoute: true });
+            console.log(res);
+            this.takeProfitOrders.push(res.result);
+            await utils.wait(100);
+        }
     }
 
     setCronOrder() {
@@ -112,6 +136,11 @@ module.exports = class TimedClose {
         }
 
         console.log('cancelling unused orders');
+
+        // cancel take profits
+        for(let order of this.takeProfitOrders) {
+            await ftx.cancelOrder(order);
+        }
 
         if (this.closeOrder) {
             this.closeOrder = await this.updateOrder(this.closeOrder);

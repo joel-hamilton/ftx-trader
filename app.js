@@ -77,12 +77,12 @@ cron.schedule("55 19 * * *", async () => {
 // TODO today
 // (async function() { // TESTING
 let accountStart;
-cron.schedule("30 00 20 * * *", async () => {
+cron.schedule("15 00 20 * * *", async () => {
     accountStart = await ftx.getAccount();
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.placeMidOrders({
-        leverage: 20,
+        leverage: 10,
         // leverage: 0.01, // TESTING
         positions: 2,
         // positions: 1, //TESTING
@@ -98,6 +98,22 @@ cron.schedule("30 00 20 * * *", async () => {
     }
 });
 // })(); // TESTING
+
+// (async function() {
+//     let rt = new RebalanceTrader();
+//     await rt.init();
+//     await rt.placeMidOrders({
+//         leverage: 0.03, // TESTING
+//         positions: 1, //TESTING
+//     });
+
+//     for (let order of rt.orders) {
+//         let closeTime = moment().add(30, 'seconds'); // TESTING
+//         console.log(`close time: ${closeTime.format("YYYY-MM-DD HH:mm:ss")}`);
+//         let tc = new TimedClose({ orderId: order.id, trailPct: 0.01, closeTime });
+//         await tc.initClose();
+//     }
+// }());
 
 // send summary
 cron.schedule("03 20 * * *", async () => {
@@ -154,7 +170,7 @@ cron.schedule("*/15 * * * * *", async () => {
 
         let pctFromDesiredLeverage = Math.abs(data.currentLeverage / data.leverage) - 1;
 
-        if (pctFromDesiredLeverage > 0.3) {
+        if (pctFromDesiredLeverage > 0.28) {
             // TODO calculate price at which rebalance is forced
             let forcedRebalanceAtLeverage = data.leverage * (4 / 3); // 33% higher than desired leverage forces rebalance
             let forcedRebalanceAtPrice = (forcedRebalanceAtLeverage * data.totalNav) / data.currentPosition;
@@ -180,7 +196,7 @@ cron.schedule("*/15 * * * * *", async () => {
 
             let recent = sentMessages[data.name] === undefined || Date.now() - sentMessages[data.name].time > 10 * 60 * 1000;
             let increasingLeverage = sentMessages[data.name] !== undefined && newData.pctFromDesiredLeverage > sentMessages[data.name].pctFromDesiredLeverage;
-            let highLeverage = newData.pctFromDesiredLeverage > 0.3 && newData.rebalanceRatio > 0.01;
+            let highLeverage = newData.pctFromDesiredLeverage > 0.31 && newData.rebalanceRatio > 0.1;
             let acceptableSize = newData.rebalanceSize > 100000;
 
             if (highLeverage && acceptableSize && (recent || increasingLeverage)) {

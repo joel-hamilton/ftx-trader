@@ -233,11 +233,11 @@ async function signalOrder({ market, text, username, scale }) {
 
 // need at least id and type in order object
 async function cancelOrder(order) {
-    if (order.type === 'trailing_stop') { // TODO add all conditional types, or flip and have just market and limit the other way?
+    if(order.type === 'market' || order.type === 'limit') {
+        return this.query({ path: `/orders/${order.id}`, method: 'DELETE', authRoute: true });
+    } else {
         return this.query({ path: `/conditional_orders/${order.id}`, method: 'DELETE', authRoute: true });
     }
-
-    return this.query({ path: `/orders/${order.id}`, method: 'DELETE', authRoute: true });
 }
 
 async function test() {

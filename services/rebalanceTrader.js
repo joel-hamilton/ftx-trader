@@ -109,6 +109,7 @@ module.exports = class RebalanceTrader {
                 return this.marketStats[aggData.underlying] &&
                     Math.abs(this.marketStats[aggData.underlying].volumeUsd24h) >= this.minVolume24 &&
                     Math.abs(aggData.rebalanceAmountUsd) >= this.minRebalanceSizeUsd
+    
             })
             .sort((a, b) => {
                 return a[sortProp] > b[sortProp] ? 1 : -1;
