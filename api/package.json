@@ -1,0 +1,43 @@
+{
+    "name": "trader",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "app:up": "docker-compose up",
+        "app:build": "docker-compose up --build",
+        "start": "nodemon --ignore 'data/' ./bin/www",
+        "start:frontend": "npx serve -p 3333",
+        "start:pg": "docker run --rm --name frontrunner -e POSTGRES_PASSWORD=postgres -p 5453:5432 -v $HOME/Sites/trader/data/postgres:/var/lib/postgresql/data postgres",
+        "update:tweets": "node services/storageService.js update",
+        "update:rules": "node services/twitter.js update",
+        "update:markets": "node services/ftx.js update",
+        "test": "jest"
+    },
+    "dependencies": {
+        "cookie-parser": "~1.4.4",
+        "cors": "^2.8.5",
+        "debug": "~2.6.9",
+        "dotenv": "^8.2.0",
+        "express": "~4.16.1",
+        "http-errors": "~1.6.3",
+        "jade": "~1.11.0",
+        "jest": "^26.6.3",
+        "kill-port": "^1.6.1",
+        "lodash": "^4.17.21",
+        "moment": "^2.29.1",
+        "moment-round": "^1.0.1",
+        "morgan": "~1.9.1",
+        "node-cron": "^3.0.0",
+        "node-fetch": "^2.6.1",
+        "pg": "^8.6.0",
+        "query-string": "^7.0.0",
+        "rotating-file-stream": "^2.1.5",
+        "twilio": "^3.62.0",
+        "wink-eng-lite-model": "https://github.com/winkjs/wink-eng-lite-model/releases/download/1.1.0/wink-eng-lite-model-1.1.0.tgz",
+        "wink-nlp": "^1.2.0",
+        "wink-porter2-stemmer": "^2.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    }
+}

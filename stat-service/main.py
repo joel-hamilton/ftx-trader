@@ -1,8 +1,12 @@
+from .crunch import crunchData
 import datetime
 import json
 import pandas as pd
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Any, Dict
+
 # from .fetchData import fetch
 # from .makeCharts import make
 app = FastAPI()
@@ -15,14 +19,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def response():
-    return "hi"
+@app.get('/')
+def test():
+    pass
 
-@app.get("/data/{ticker}")
-async def getData(ticker):
-    start = datetime.date.today() - pd.Timedelta(weeks=52 * 100)
-    df = fetch([ticker], start, datetime.date.today())
-    df.reset_index(inplace=True)
-    df.drop('Ticker', axis=1, inplace=True)
-    return json.loads(df.to_json())
+@app.post("/getStats")
+async def get_body(request: Request):
+    jsonObj = await request.json()
+    crunchedData = crunchData(jsonObj["data"])
+    return json.loads(crunchedData)
