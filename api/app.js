@@ -12,6 +12,8 @@ var cron = require('node-cron');
 const moment = require('moment');
 const RebalanceTrader = require('./services/RebalanceTrader');
 const TimedClose = require('./services/TimedClose');
+const storageService = require('./services/storageService');
+const rfs = require('rotating-file-stream');
 const fs = require('fs');
 
 var app = express();
@@ -36,6 +38,11 @@ app.use(function(req, res, next) {
 });
 
 // error handler
+var logStream = rfs.createStream('error.log', {
+    interval: '1d',
+    path: path.join(__dirname, '/data')
+});
+
 app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -44,39 +51,22 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.json(err)
+    console.log('EWRROR CAUGHT!!!!!!')
     console.log(err);
+    logStream.write(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${err.stack}\n`, next);
 });
 
-
-let args = process.argv.slice(2);
-
-if (args.includes('update')) {
-    (async function() {
-        await ftx.getMarkets(true);
-        await twitter.updateRules();
-    })()
-}
-
-if (args.includes('stream')) {
-    twitter.beginStream();
-}
-
 // CRONS
-
 // message Joel and Christopher a list of high-ratio rebalances
-// (async function() { // TESTING
 cron.schedule("55 23 * * *", async () => {
     console.log('Send relalance SMS cron running...');
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.sendRebalanceInfo(['15197772459', '12269798530']);
-    console.log('Send relalance SMS cron done');
 });
-// })(); // TESTING
 
 
-// TODO today
-// (async function() { // TESTING
+// TODO PLACE ORDERS IS DISABLED
 let accountStart;
 cron.schedule("15 00 00 * * *", async () => {
     return;
@@ -84,15 +74,12 @@ cron.schedule("15 00 00 * * *", async () => {
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.placeMidOrders({
-        leverage: 10,
-        // leverage: 0.01, // TESTING
-        positions: 2,
-        // positions: 1, //TESTING
+        leverage: 15,
+        positions: 3,
     });
 
     let offset = 0;
     for (let order of rt.orders) {
-        // let closeTime = moment().add(30, 'seconds'); // TESTING
         // TODO error-prone, if this cron ever fires before midnight, won't automatically close
         let closeTime = moment().hour(0).minute(2).seconds(10 + (offset++));
         console.log(`close time: ${closeTime.format("YYYY-MM-DD HH:mm:ss")}`);
@@ -100,8 +87,8 @@ cron.schedule("15 00 00 * * *", async () => {
         await tc.initClose();
     }
 });
-// })(); // TESTING
 
+// PLACE ORDERS TESTING
 // (async function() {
 //     let rt = new RebalanceTrader();
 //     await rt.init();
@@ -128,40 +115,21 @@ cron.schedule("03 00 * * *", async () => {
 });
 
 
-// save predicted rebalances
 cron.schedule('30 01 00 * * *', async () => {
-    let rt = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
-    await rt.init();
-    fs.writeFileSync(`data/${moment().format("YYYY-MM-DD HH:mm:ss")}-prediction.json`, JSON.stringify(rt.getAggData()));
+    try {
+        await storageService.saveRebalanceSnapshot();
+    } catch (e) {
+        console.log(e);
+    }
 });
 
-// save actual rebalances
-cron.schedule('05 00 * * *', async () => {
-    let rt = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
-    await rt.init();
-    await rt.loadRebalanceInfo();
-
-    let info = Object.keys(rt.rebalanceInfo).reduce((acc, token) => {
-        let i = rt.rebalanceInfo[token];
-
-        // TODO continue if rebalance not at expected time
-        // if(!moment(i.time).format('YYYYMMDDHH') !== moment().subtract(1, 'day').hour(20).format('YYYYMMDDHH')) return acc;
-
-        if (!rt.tokenData[token]) return acc; // one weird token
-        let underlying = rt.tokenData[token].underlying;
-
-        if (!rt.marketStats[underlying]) return acc;
-        let market = rt.marketStats[underlying];
-        let orderSize = i.orderSizeList.reduce((total, osl) => total + parseFloat(osl), 0);
-
-        if (acc[underlying] === undefined) acc[underlying] = 0;
-        acc[underlying] += orderSize * market.last * (i.side === 'buy' ? 1 : -1);
-        return acc;
-    }, {});
-
-    fs.writeFileSync(`data/${moment().format("YYYY-MM-DD HH:mm:ss")}-actual.json`, JSON.stringify(info));
+cron.schedule('04 00 * * *', async () => {
+    try {
+        await storageService.saveActualRebalanceInfo();
+    } catch (e) {
+        console.log(e);
+    }
 });
-
 
 // (async function() { // TESTING
 let sentMessages = {};

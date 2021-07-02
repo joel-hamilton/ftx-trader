@@ -7,6 +7,9 @@ services:
             - 3000:3000
         volumes:
             - .:/app/api:delegated
+        depends_on:
+            postgresdb:
+                condition: service_healthy
     stat-service:
         build:
             context: ../stat-service
@@ -26,3 +29,23 @@ services:
             - /app/frontend/node_modules
         environment:
             - npm_config_unsafe_perm=true
+    postgresdb:
+        image: postgres:10
+        restart: always
+        ports:
+            - 3222:5432
+        expose:
+            - 5432
+        volumes:
+            - ${APP_ROOT}/postgres-data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: trader
+        command: -p 5432
+        healthcheck:
+            test: pg_isready -U postgres -h 127.0.0.1 -p 5432
+            interval: 5s
+# volumes:
+#     pgdata-global: {}
+#     pgdata-regional: {}

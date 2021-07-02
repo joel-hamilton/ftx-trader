@@ -5,6 +5,9 @@
     "scripts": {
         "app:up": "docker-compose up | grep -v 'webpack.Progress'",
         "app:build": "docker-compose up --build | grep -v 'webpack.Progress'",
+        "bash:api": "docker-compose exec api /bin/bash",
+        "bash:stats-service": "docker-compose exec stats-service /bin/bash",
+        "bash:frontend": "docker-compose exec frontend /bin/bash",
         "start": "nodemon --ignore 'data/' ./bin/www",
         "start:frontend": "npx serve -p 3333",
         "start:pg": "docker run --rm --name frontrunner -e POSTGRES_PASSWORD=postgres -p 5453:5432 -v $HOME/Sites/trader/data/postgres:/var/lib/postgresql/data postgres",

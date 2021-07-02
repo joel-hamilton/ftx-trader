@@ -59,6 +59,11 @@ async function getAccount() {
     return res.result;
 }
 
+async function getMarket(market) {
+    let data = await query({ path: `/markets/${market}` });
+    return data.result;
+}
+
 async function getMarkets(save = false) {
     let data = await query({ path: `/markets` });
     let markets = data.result.filter(m => {
@@ -267,6 +272,7 @@ module.exports = {
     getAccount,
     getChangesInMarketPrice,
     getData,
+    getMarket,
     getMarkets,
     getOrderBook,
     getOrderbookFixed,

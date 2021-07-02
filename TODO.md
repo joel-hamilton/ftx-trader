@@ -1,5 +1,19 @@
 ### On vacation 19-23
+Handle all errors with custom class, write to log
+Allow passing in indicators to the rebalanceData query
+    - make POST request
+    - separate the addStats call from the data fetching?
 Postgres DB setup again, store predictions/actual rebalance data
+    - Important. Can use this data to get lists of top ratio/amt rebalances each night
+Backtesting
+    - in & out on EMA crossover
+    - when ration high
+    - maybe out on schedule, or on shorter EMA crossover?
+    - sell when shortest-period EMA reverses direction
+    - start with running the backtest on single timeSeries
+        - backtest params in inputs section dropdown
+        - put visual indicators on chart, output a summary of all trades
+        - after adding backtesting of multiple timeSeries, should still be able to pull up the backtest on individual charts (maybe have a 'show backtest trades' checkbox that lets you toggle the current backtest - don't clear it when chart loads)
 Figure out unscheduled rebalance points
 Float mid for entry
 Float mid for exit (w. timed market order override)
@@ -13,11 +27,6 @@ Refactor
 Improve frontend, different page/Vue component for each thing (need to get CLI Vue if doing this)
 Python running on parallel server?
     - probably should set Docker up if going this route
-Backtesting
-    - in & out on EMA crossover
-    - when ration high
-    - maybe out on schedule, or on shorter EMA crossover?
-    - sell when shortest-period EMA reverses direction
 
 ### Predicting
 6/20 15s interval EMA

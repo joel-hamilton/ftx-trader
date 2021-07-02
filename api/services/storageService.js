@@ -1,61 +1,28 @@
 const db = require('./db');
 const twitter = require('./twitter');
 const ftx = require('./ftx');
-const usersList = require('../data/usersList')
+const RT = require('./RebalanceTrader');
 const moment = require('moment')
 
-async function saveTweets(username, start, end) {
-    // api limit of 100 results, so query 1 day at a time, should be enough in almost all cases
-    while (start.isBefore(end)) {
-        let tempEnd = moment(start).add(1, 'day');
-        if (tempEnd.isAfter(end)) tempEnd = moment(end);
-
-        console.log(`Searching from ${start} to ${tempEnd}`)
-        let res = await twitter.searchTweets({ q: `from:${username}`, start, end: tempEnd });
-        for (let tweet of res) {
-            await db.pool.query("INSERT INTO tweets (username, date, text, market) VALUES ($1, $2, $3, $4)", [username, tweet.created_at, tweet.text, tweet.market])
-        }
-
-        start.add(1, 'day');
+async function saveRebalanceSnapshot() {
+    let rt = new RT({ minVolume24: 0, minRebalanceSizeUsd: 0 });
+    await rt.init();
+    let data = rt.getAggData();
+    let marketsData = await ftx.getMarkets();
+    for(let item of data) {
+        let marketData = marketsData.find(d => d.name === item.underlying) || null;
+        await db.pool.query("INSERT INTO rebalance_snapshots (market, amount, ratio, market_data) VALUES ($1, $2, $3, $4)", [item.underlying, item.rebalanceAmountUsd, item.rebalanceRatio, marketData]);
     }
 }
 
-async function updateTweets() {
-    for (let username in usersList) {
-        let start = moment().subtract(7, 'days');
-
-        // update from last tweet, if existing
-        let { rows } = await db.pool.query("SELECT MAX(date) as date FROM tweets where username = $1", [username]);
-        if (rows.length && moment(rows[0].date).isAfter(start)) {
-            start = moment(rows[0].date).add(1, 'second')
-        }
-
-        await saveTweets(username, start, moment().subtract(30, 'seconds'));
-    }
+async function saveActualRebalanceInfo() {
+    let rt = new RT({ minVolume24: 0, minRebalanceSizeUsd: 0 });
+    await rt.init();
+    await rt.loadRebalanceInfo();
+    await db.pool.query("INSERT INTO rebalance_info_requests (data, fetched_at) VALUES ($1, NOW())", [rt.rebalanceInfo]);
 }
 
-async function updateEmptyMarketHistories() {
-    let { rows } = await db.pool.query("SELECT * FROM tweets WHERE market IS NOT NULL AND market_history = '[]'");
-
-    for (let row of rows) {
-        let data = await ftx.getData({ market: row.market, start: moment(row.date).subtract(1, 'hour'), end: moment(row.date).add(1, 'hour') });
-        await db.pool.query('UPDATE tweets SET market_history = $1 WHERE id = $2', [JSON.stringify(data), row.id]);
-    }
-}
-
-if (require.main === module) { // called from cli
-    let args = process.argv.slice(2);
-    if (args.includes('update')) {
-        (async function() {
-            await updateTweets();
-            await updateEmptyMarketHistories();
-        })();
-    }
-} else {
-
-
-
-    module.exports = {
-        saveTweets,
-    }
+module.exports = {
+    saveRebalanceSnapshot,
+    saveActualRebalanceInfo,
 }
