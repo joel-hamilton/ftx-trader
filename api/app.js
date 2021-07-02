@@ -65,19 +65,21 @@ if (args.includes('stream')) {
 
 // message Joel and Christopher a list of high-ratio rebalances
 // (async function() { // TESTING
-cron.schedule("55 19 * * *", async () => {
+cron.schedule("55 23 * * *", async () => {
     console.log('Send relalance SMS cron running...');
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.sendRebalanceInfo(['15197772459', '12269798530']);
     console.log('Send relalance SMS cron done');
 });
-// })(); // TESTINg
+// })(); // TESTING
+
 
 // TODO today
 // (async function() { // TESTING
 let accountStart;
-cron.schedule("15 00 20 * * *", async () => {
+cron.schedule("15 00 00 * * *", async () => {
+    return;
     accountStart = await ftx.getAccount();
     let rt = new RebalanceTrader();
     await rt.init();
@@ -91,7 +93,8 @@ cron.schedule("15 00 20 * * *", async () => {
     let offset = 0;
     for (let order of rt.orders) {
         // let closeTime = moment().add(30, 'seconds'); // TESTING
-        let closeTime = moment().hour(20).minute(2).seconds(10 + (offset++));
+        // TODO error-prone, if this cron ever fires before midnight, won't automatically close
+        let closeTime = moment().hour(0).minute(2).seconds(10 + (offset++));
         console.log(`close time: ${closeTime.format("YYYY-MM-DD HH:mm:ss")}`);
         let tc = new TimedClose({ orderId: order.id, trailPct: 0.01, closeTime });
         await tc.initClose();
@@ -116,7 +119,7 @@ cron.schedule("15 00 20 * * *", async () => {
 // }());
 
 // send summary
-cron.schedule("03 20 * * *", async () => {
+cron.schedule("03 00 * * *", async () => {
     let accountEnd = await ftx.getAccount();
     let pl = Math.round((accountEnd.totalAccountValue - accountStart.totalAccountValue) * 100) / 100;
     let openPositions = accountEnd.positions.filter(p => !!p.openSize);
@@ -126,14 +129,14 @@ cron.schedule("03 20 * * *", async () => {
 
 
 // save predicted rebalances
-cron.schedule('30 01 20 * * *', async () => {
+cron.schedule('30 01 00 * * *', async () => {
     let rt = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
     await rt.init();
     fs.writeFileSync(`data/${moment().format("YYYY-MM-DD HH:mm:ss")}-prediction.json`, JSON.stringify(rt.getAggData()));
 });
 
 // save actual rebalances
-cron.schedule('05 20 * * *', async () => {
+cron.schedule('05 00 * * *', async () => {
     let rt = new RebalanceTrader({ minVolume24: 0, minRebalanceSizeUsd: 0 }); // don't interfere with trading stuff!
     await rt.init();
     await rt.loadRebalanceInfo();

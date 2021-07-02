@@ -6,6 +6,7 @@ let twilio = require('./services/twilio');
 let { Analyzer } = require('./services/Analyzer');
 let stats = require('./services/stats');
 let moment = require('moment');
+let fs = require('fs');
 
 // router.get('/', async (req, res, next) => {
 //     try {
@@ -19,9 +20,47 @@ let moment = require('moment');
 //     }
 // });
 
-router.get('/test', async (req, res, next) => {
+router.get('/rebalanceData/:market/:date', async (req, res, next) => {
     try {
-        let data = await ftx.getData({ market: "BTC-PERP", resolution: 60, start: moment().subtract(2, 'hour').valueOf(), end: moment().subtract(1, 'minute').valueOf(), getStats: true });
+        let date = moment(req.params.date);
+        let data = { rebalanceInfo: null };
+        data.timeSeries = await ftx.getData({ market: req.params.market, resolution: 15, start: moment(date).subtract(10, 'minutes').valueOf(), end: moment(date).add(10, 'minutes').valueOf(), getStats: true });
+
+        // lol. Move this to a database
+        try {
+            let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 20:01:31-prediction.json`);
+            fileData = JSON.parse(fileData);
+            let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
+            if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
+            // console.log(JSON.parse(data));
+        } catch (e) {
+            try {
+                let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 20:01:30-prediction.json`);
+                fileData = JSON.parse(fileData);
+                let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
+                if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
+                // console.log(JSON.parse(data));
+            } catch (e) {
+                try {
+                    let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 00:01:31-prediction.json`);
+                    fileData = JSON.parse(fileData);
+                    let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
+                    if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
+                    // console.log(JSON.parse(data));
+                } catch (e) {
+                    try {
+                        let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 00:01:30-prediction.json`);
+                        fileData = JSON.parse(fileData);
+                        let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
+                        if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
+                        // console.log(JSON.parse(data));
+                    } catch (e) {
+                        console.log(`No data for ${date.format("YYYY-MM-DD")}`);
+                    }
+                }
+            }
+        }
+
         res.json(data);
     } catch (e) {
         next(e);

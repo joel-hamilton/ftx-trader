@@ -1,5 +1,5 @@
 ### On vacation 19-23
-API data fetch/display data
+Postgres DB setup again, store predictions/actual rebalance data
 Figure out unscheduled rebalance points
 Float mid for entry
 Float mid for exit (w. timed market order override)
@@ -13,6 +13,17 @@ Refactor
 Improve frontend, different page/Vue component for each thing (need to get CLI Vue if doing this)
 Python running on parallel server?
     - probably should set Docker up if going this route
+Backtesting
+    - in & out on EMA crossover
+    - when ration high
+    - maybe out on schedule, or on shorter EMA crossover?
+    - sell when shortest-period EMA reverses direction
+
+### Predicting
+6/20 15s interval EMA
+    - ZEC, XLM works well
+    - BTC doesn't work as well (lower ratio?)
+    - EXCH sporadic (it's low vol, maybe steer clear anyway)
 
 ### Unscheduled rebalances
 Make this automatic, poll every 1m to refresh basket/NAV. 

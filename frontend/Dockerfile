@@ -1,5 +1,11 @@
 FROM node:12.18.0-slim AS base
-EXPOSE 5000
+EXPOSE 8080
 WORKDIR /app/frontend
-RUN yarn global add serve
-CMD ["serve"]
+
+ENV NODE_ENV development
+
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+CMD ["npm", "run", "serve"]

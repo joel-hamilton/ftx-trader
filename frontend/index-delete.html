@@ -1,0 +1,141 @@
+<html>
+<style>
+    [v-cloak] {
+        display: none
+    }
+</style>
+<div class="app" v-cloak>
+    <div>
+        <input type="text" v-model="getParams" placeholder="get params" @keypress.enter="ftxGet">
+        <label>Auth Route<input type="checkbox" v-model="authRoute"></label>
+        <button @click="ftxGet">FTX GET</button>
+    </div>
+    <button @click='loadOrderBook'>Load Orderbook</button>
+    <div class="search" @keypress.enter="doSearch">
+        <h3>Search</h3>
+        <input placeholder="query" v-model="search.query">
+        <input placeholder="start" v-model="search.start">
+        <input placeholder="end" v-model="search.end">
+        <label>Only with markets
+            <input type="checkbox" v-model="search.onlyWithMarkets">
+        </label>
+        <label>Only Buys
+            <input type="checkbox" v-model="search.onlyBuys">
+        </label>
+        <!-- <label>Use Twitter Rules
+            <input type="checkbox" v-model="search.useRules">
+        </label> -->
+        <button @click="doSearch">Search</button>
+    </div>
+
+    <div class="search-res" v-html="searchRes" v-if="searchRes"></div>
+    <div class="analyze-res" v-if="analyzeRes">
+        <div v-for="item in analyzeRes" :key="item.id" class="analyze-result">
+            <div class="info">
+                <div>{{ moment(item.date).format('MMM DD HH:mm:ss') }}</div>
+                <div>{{ item.username }} - {{item.text}}</div>
+                <div class='diff' v-html="item.diffs"></div>
+            </div>
+            <div :id="`chart${item.id}`"></div>
+        </div>
+    </div>
+</div>
+
+</html>
+
+
+
+<script>
+    window.app = new Vue({
+        el: '.app',
+        data() {
+            return {
+                analyzeRes: [],
+                search: {
+                    query: '',
+                    start: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    end: '',
+                    onlyWithMarkets: false,
+                    onlyBuys: false,
+                    useRules: false,
+                },
+                searchRes: ''
+            }
+        },
+        computed: {
+
+        },
+        methods: {
+            moment: moment,
+            async loadOrderBook() {
+                let url = "http://localhost:3000/analyze";
+                let res = await axios.post(url, { orderBook: true });
+                let data = res.data.map(r => {
+                    let mkt = r.result;
+                    console.log(mkt)
+                    return {
+                        name: mkt.name,
+                        bid: mkt.bid,
+                        ask: mkt.ask,
+                        spread: (mkt.ask - mkt.bid) / mkt.ask,
+                        volumeUsd24h: mkt.volumeUsd24h
+                    }
+                });
+
+                data.sort((a, b) => a.spread > b.spread ? 1 : -1);
+                this.searchRes = this.syntaxHighlight(data);
+            },
+            async doSearch() {
+                let url = `http://localhost:3000/search/${encodeURIComponent(this.search.query) || '*'}/${this.search.onlyWithMarkets ? 1 : 0}/${this.search.onlyBuys ? 1 : 0}/${this.search.useRules ? 1 : 0}/${this.search.start}`;
+                if (this.search.end) url += `/${this.search.end}`;
+                let res = await axios.get(url)
+                this.searchRes = this.syntaxHighlight(res.data);
+            },
+        }
+    })
+</script>
+<style>
+    html {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .search-res,
+    .diff {
+        white-space: pre-wrap;
+        font-family: 'Courier New', Courier, monospace;
+        outline: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    .analyze-res {
+        display: grid;
+        grid-template-columns: 50% 50%;
+    }
+
+    .analyze-result {
+        margin-top: 2em;
+        padding: 2em;
+        box-sizing: border-box;
+    }
+
+    .string {
+        color: green;
+    }
+
+    .number {
+        color: darkorange;
+    }
+
+    .boolean {
+        color: blue;
+    }
+
+    .null {
+        color: magenta;
+    }
+
+    .key {
+        color: red;
+    }
+</style>

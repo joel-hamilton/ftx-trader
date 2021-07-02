@@ -75,17 +75,16 @@ async function getMarkets(save = false) {
 
 async function getData({ market, resolution = 15, start, end, getStats = false }) {
     let data = await query({ path: `/markets/${market}/candles?resolution=${resolution}&start_time=${start / 1000}&end_time=${end / 1000}` })
-    if (!data.result) {
-        console.log(`Error ${row.market}: ${row.date}. ID: ${row.id}`);
-        return;
-    }
+
+    if (data.error) throw new Error(data.error);
+    if (!data.result || !data.result.length) throw new Error(`No data`)
 
     let res = data.result;
 
     if (getStats) {
         res = await stats.addStats(data.result);
     }
-    
+
     return res;
 }
 
