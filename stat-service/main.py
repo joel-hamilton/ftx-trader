@@ -26,5 +26,5 @@ def test():
 @app.post("/getStats")
 async def get_body(request: Request):
     jsonObj = await request.json()
-    crunchedData = crunchData(jsonObj["data"])
+    crunchedData = crunchData(jsonObj["data"], jsonObj["indicators"], jsonObj["backtestParams"])
     return json.loads(crunchedData)

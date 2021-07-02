@@ -96,8 +96,4 @@
     .key {
         color: red;
     }
-
-    label {
-        margin: 0.25em 0.5em;
-    }
 </style>

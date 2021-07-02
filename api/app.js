@@ -51,7 +51,6 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.json(err)
-    console.log('EWRROR CAUGHT!!!!!!')
     console.log(err);
     logStream.write(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${err.stack}\n`, next);
 });

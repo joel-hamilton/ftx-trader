@@ -7,59 +7,28 @@ let { Analyzer } = require('./services/Analyzer');
 let stats = require('./services/stats');
 let moment = require('moment');
 let fs = require('fs');
+let db = require('./services/db');
 
-// router.get('/', async (req, res, next) => {
-//     try {
-//         // let test = await twilio.sendSms('testing!');
-//         let test = await twitter.getTweetSample();
-//         // let test = await ftx.getMarkets();
-//         // let test = await ftx.signalOrder({market: 'BTC-PERP'})
-//         res.json(test);
-//     } catch (e) {
-//         next(e);
-//     }
-// });
-
-router.get('/rebalanceData/:market/:date', async (req, res, next) => {
+router.post('/rebalanceData', async (req, res, next) => {
     try {
-        let date = moment(req.params.date);
+        let date = moment(req.body.date);
         let data = { rebalanceInfo: null };
-        data.timeSeries = await ftx.getData({ market: req.params.market, resolution: 15, start: moment(date).subtract(10, 'minutes').valueOf(), end: moment(date).add(10, 'minutes').valueOf(), getStats: true });
+        // want 500 candles
+        // 500 = secondsPerCandle * seconds(end - start)
+        // 500 / secondsPerCandle = seconds(end - start)
+        // delta = 500 * req.body.period * 2;
+        let seconds = 50 * req.body.resolution;
+        
 
-        // lol. Move this to a database
-        try {
-            let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 20:01:31-prediction.json`);
-            fileData = JSON.parse(fileData);
-            let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
-            if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
-            // console.log(JSON.parse(data));
-        } catch (e) {
-            try {
-                let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 20:01:30-prediction.json`);
-                fileData = JSON.parse(fileData);
-                let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
-                if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
-                // console.log(JSON.parse(data));
-            } catch (e) {
-                try {
-                    let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 00:01:31-prediction.json`);
-                    fileData = JSON.parse(fileData);
-                    let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
-                    if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
-                    // console.log(JSON.parse(data));
-                } catch (e) {
-                    try {
-                        let fileData = fs.readFileSync(`data/${date.format('YYYY-MM-DD')} 00:01:30-prediction.json`);
-                        fileData = JSON.parse(fileData);
-                        let rebalanceInfo = fileData.find(d => d.underlying === req.params.market);
-                        if (rebalanceInfo) data.rebalanceInfo = rebalanceInfo;
-                        // console.log(JSON.parse(data));
-                    } catch (e) {
-                        console.log(`No data for ${date.format("YYYY-MM-DD")}`);
-                    }
-                }
-            }
-        }
+        data.timeSeries = await ftx.getData({ market: req.body.market, resolution: req.body.resolution, start: moment(date).subtract(seconds, 'seconds').valueOf(), end: moment(date).add(seconds, 'seconds').valueOf() });
+
+        // add stats from Python
+        data.timeSeries = await stats.addStats(data.timeSeries, req.body.indicators, req.body.backtestParams);
+
+        // add rebalance snapshot
+        let query = await db.pool.query("SELECT * FROM rebalance_snapshots WHERE market = $1 AND date = $2", [req.body.market, date.format('YYYY-MM-DD')]);
+        if (query.rows.length) data.rebalanceInfo = query.rows[0];
+
 
         res.json(data);
     } catch (e) {
