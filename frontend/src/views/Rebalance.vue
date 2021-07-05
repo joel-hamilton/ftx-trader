@@ -96,15 +96,20 @@
                 resolution: 15,
                 indicatorsStr: 'EMA9, EMA20',
                 doBacktest: true,
-                backtestParams: {
-                    startAmt: 10000,
-                    maCross: ['EMA9', 'EMA20'],
+                backtestOptions: {
+                    // set these in inputs div
                 },
                 date: moment().format('YYYY-MM-DD'),
                 wrapperHeight: 0,
             };
         },
         computed: {
+            backtestParams() {
+                return {
+                    startAmt: 10000,
+                    maCross: ['EMA9', 'EMA20'],
+                };
+            },
             rebalanceAmt() {
                 return this.rebalanceInfo ? numberWithCommas(Math.round(this.rebalanceInfo.amount)) : '';
 
@@ -212,40 +217,40 @@
                 }
 
                 if (this.doBacktest) {
-                    let totalYAxis =
-                        options.yAxis.push({
-                            opposite: true,
-                            title: {
-                                text: 'Total',
-                            },
-                            height: '60%',
-                            lineWidth: 2,
-                        }) - 1;
+                    // let totalYAxis =
+                    //     options.yAxis.push({
+                    //         opposite: true,
+                    //         title: {
+                    //             text: 'Total',
+                    //         },
+                    //         height: '60%',
+                    //         lineWidth: 2,
+                    //     }) - 1;
                     options.series.push(
-                        {
-                            type: 'line',
-                            name: 'Total',
-                            data: this.timeSeries.map((data) => {
-                                return {
-                                    x: data.time,
-                                    y: data.total,
-                                };
-                            }),
-                            yAxis: totalYAxis,
-                        },
+                        // {
+                        //     type: 'line',
+                        //     name: 'Total',
+                        //     data: this.timeSeries.map((data) => {
+                        //         return {
+                        //             x: data.time,
+                        //             y: data.total,
+                        //         };
+                        //     }),
+                        //     yAxis: totalYAxis,
+                        // },
                         {
                             type: 'scatter',
                             name: 'Positions',
                             data: this.timeSeries
-                                .filter((data) => data.positions !== 0)
+                                .filter((data) => data.signal !== 0)
                                 .map((data) => {
                                     return {
                                         x: data.time,
                                         y: data.close,
                                         marker: {
                                             enabled: true,
-                                            symbol: data.positions === 1 ? 'triangle' : 'triangle-down',
-                                            fillColor: data.positions === 1 ? '#00c77a' : '#FF3B69',
+                                            symbol: data.signal === 1 ? 'triangle' : 'triangle-down',
+                                            fillColor: data.signal === 1 ? '#00c77a' : '#FF3B69',
                                             radius: 10,
                                         },
                                     };

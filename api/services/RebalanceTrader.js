@@ -135,11 +135,20 @@ module.exports = class RebalanceTrader {
         console.log(`Sent\n\n${bestIdeas}`);
     };
 
-    async placeMidOrders({ leverage = 1, positions = 10, trailPct = 0.01 }) {
+    async placeMidOrders({ leverage = 1, positions = 10, trailPct = 0.01, markets = [] }) {
         let account = await ftx.getAccount();
         let collateral = account.freeCollateral;
 
-        let rebalanceData = this.getAggData().slice(0, positions);
+        let rebalanceData;
+        if(markets.length) {
+            rebalanceData = this.getAggData().filter(d => markets.includes(d.underlying));
+        } else {
+            rebalanceData = this.getAggData().slice(0, positions);
+        }
+
+        console.log(rebalanceData);
+        return;
+
         for (let data of rebalanceData) {
             let orderbook = await ftx.getOrderBook(data.underlying);
             let limit = (orderbook.result.bid + orderbook.result.ask) / 2;

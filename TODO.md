@@ -1,10 +1,5 @@
 ### On vacation 19-23
 Handle all errors with custom class, write to log
-Allow passing in indicators to the rebalanceData query
-    - make POST request
-    - separate the addStats call from the data fetching?
-Postgres DB setup again, store predictions/actual rebalance data
-    - Important. Can use this data to get lists of top ratio/amt rebalances each night
 Backtesting
     - in & out on EMA crossover
     - when ration high
@@ -24,9 +19,6 @@ Smarter entries/sizing
     - Only trade when chances are good (high % moves, and with the trend)
     - More risk with better setups
 Refactor
-Improve frontend, different page/Vue component for each thing (need to get CLI Vue if doing this)
-Python running on parallel server?
-    - probably should set Docker up if going this route
 
 ### Predicting
 6/20 15s interval EMA

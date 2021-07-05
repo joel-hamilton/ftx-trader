@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "app:up": "docker-compose up | grep -v 'webpack.Progress'",
+        "app:down": "docker-compose down",
         "app:build": "docker-compose up --build | grep -v 'webpack.Progress'",
         "bash:api": "docker-compose exec api /bin/bash",
         "bash:stats-service": "docker-compose exec stats-service /bin/bash",

@@ -18,16 +18,20 @@ router.post('/rebalanceData', async (req, res, next) => {
         // 500 / secondsPerCandle = seconds(end - start)
         // delta = 500 * req.body.period * 2;
         let seconds = 50 * req.body.resolution;
-        
+
 
         data.timeSeries = await ftx.getData({ market: req.body.market, resolution: req.body.resolution, start: moment(date).subtract(seconds, 'seconds').valueOf(), end: moment(date).add(seconds, 'seconds').valueOf() });
-
-        // add stats from Python
-        data.timeSeries = await stats.addStats(data.timeSeries, req.body.indicators, req.body.backtestParams);
 
         // add rebalance snapshot
         let query = await db.pool.query("SELECT * FROM rebalance_snapshots WHERE market = $1 AND date = $2", [req.body.market, date.format('YYYY-MM-DD')]);
         if (query.rows.length) data.rebalanceInfo = query.rows[0];
+
+        // add stats/backtest from Python
+        if (data.rebalanceInfo) {
+            req.body.backtestParams.side = data.rebalanceInfo.amount > 0 ? 'buy' : 'sell';
+        }
+
+        data.timeSeries = await stats.addStats(data.timeSeries, req.body.indicators, req.body.backtestParams);
 
 
         res.json(data);

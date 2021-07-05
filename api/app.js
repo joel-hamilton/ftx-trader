@@ -68,12 +68,12 @@ cron.schedule("55 23 * * *", async () => {
 // TODO PLACE ORDERS IS DISABLED
 let accountStart;
 cron.schedule("15 00 00 * * *", async () => {
-    return;
     accountStart = await ftx.getAccount();
+    // return;
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.placeMidOrders({
-        leverage: 15,
+        leverage: 10,
         positions: 3,
     });
 
@@ -93,7 +93,8 @@ cron.schedule("15 00 00 * * *", async () => {
 //     await rt.init();
 //     await rt.placeMidOrders({
 //         leverage: 0.03, // TESTING
-//         positions: 1, //TESTING
+//         positions: 5, //TESTING
+//         // markets: ['BTC-PERP']
 //     });
 
 //     for (let order of rt.orders) {
