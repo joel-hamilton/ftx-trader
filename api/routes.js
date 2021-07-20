@@ -31,7 +31,7 @@ router.post('/rebalanceData', async (req, res, next) => {
             req.body.backtestParams.side = data.rebalanceInfo.amount > 0 ? 'buy' : 'sell';
         }
 
-        data.timeSeries = await stats.addStats(data.timeSeries, req.body.indicators, req.body.backtestParams);
+        data.timeSeries = await stats.addStats(data.timeSeries, req.body.backtestParams);
 
 
         res.json(data);

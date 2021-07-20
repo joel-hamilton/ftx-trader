@@ -6,7 +6,7 @@ const moment = require('moment');
 let url = `${process.env.STAT_SERVICE_HOST}:${process.env.STAT_SERVICE_PORT}`;
 
 async function addStats(data, backtestParams) {
-    let indicators = backtestParams.inSignal.concat(backtestParams.outSignal);
+    let indicators = backtestParams.inSignal.concat(backtestParams.outSignal || []);
     let res = await fetch(`${url}/getStats`, {
         method: 'post',
         body: JSON.stringify({ data, indicators, backtestParams })

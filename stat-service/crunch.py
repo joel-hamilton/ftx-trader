@@ -53,6 +53,8 @@ def addBacktest(params, df):
     side = params['side']
     short_param = params["inSignal"][0]
     long_param = params["inSignal"][1]
+    out_signal = params["outSignal"][0]
+    
     short_window = int(short_param[3:]) # TODO will break if not 'SMA9', etc.
     min_h = 23 # don't open a position prior to this
     min_m = 55
@@ -87,36 +89,43 @@ def addBacktest(params, df):
         maxDateTime = datetime.fromisoformat(signals.tail(1).iloc[0]['startTime']).replace(hour=max_h, minute=max_m)
         if(rowDateTime < minDateTime): # don't do anything before min time
             return finish()
+
+        # if distinct 'out' signal, and position is opened, use that and finish
+        if(open_signalled and out_signal):
+
+            return finish()
         
-        if(row['ma_x'] == 1.0):
-            # no change from prev row
-            if (index  > 0 and prev_row['ma_x'] == 1.0):
-                row['position'] = prev_row['position']
-                return finish()
+        else:
+            # add moving average signals for 'in' (and 'out', if not defined separately)
+            if(row['ma_x'] == 1.0):
+                # no change from prev row
+                if (index  > 0 and prev_row['ma_x'] == 1.0):
+                    row['position'] = prev_row['position']
+                    return finish()
 
-            if(side == 'buy' and not open_signalled and rowDateTime <= maxDateTime):
-                row['signal'] = 1.0
-                row['position'] = pos_size
-                open_signalled = True
-            if(side == 'sell' and (open_signalled and not close_signalled)):
-                row['signal'] = 1.0
-                row['position'] = 0.0
-                close_signalled = True
+                if(side == 'buy' and not open_signalled and rowDateTime <= maxDateTime):
+                    row['signal'] = 1.0
+                    row['position'] = pos_size
+                    open_signalled = True
+                if(side == 'sell' and (open_signalled and not close_signalled)):
+                    row['signal'] = 1.0
+                    row['position'] = 0.0
+                    close_signalled = True
 
-        if(row['ma_x'] == -1.0):
-            # no change from prev row
-            if (index  > 0 and prev_row['ma_x'] == -1.0):
-                row['position'] = prev_row['position']
-                return finish()
+            if(row['ma_x'] == -1.0):
+                # no change from prev row
+                if (index  > 0 and prev_row['ma_x'] == -1.0):
+                    row['position'] = prev_row['position']
+                    return finish()
 
-            if(side == 'sell' and not open_signalled and rowDateTime <= maxDateTime):
-                row['signal'] = -1.0
-                row['position'] = -1 * pos_size
-                open_signalled = True
-            if(side == 'buy' and (open_signalled and not close_signalled)):
-                row['signal'] = -1.0
-                row['position'] = 0.0
-                close_signalled = True
+                if(side == 'sell' and not open_signalled and rowDateTime <= maxDateTime):
+                    row['signal'] = -1.0
+                    row['position'] = -1 * pos_size
+                    open_signalled = True
+                if(side == 'buy' and (open_signalled and not close_signalled)):
+                    row['signal'] = -1.0
+                    row['position'] = 0.0
+                    close_signalled = True
 
         return finish()
 

@@ -405,7 +405,6 @@
                     market: this.market,
                     date: this.date,
                     resolution: this.resolution,
-                    indicators: this.indicators,
                     backtestParams: this.backtestParams,
                 };
                 let data = (await axios.post('http://localhost:3000/rebalanceData', body)).data;
