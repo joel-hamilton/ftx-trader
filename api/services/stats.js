@@ -5,7 +5,8 @@ const fetch = require('node-fetch');
 const moment = require('moment');
 let url = `${process.env.STAT_SERVICE_HOST}:${process.env.STAT_SERVICE_PORT}`;
 
-async function addStats(data, indicators, backtestParams) {
+async function addStats(data, backtestParams) {
+    let indicators = backtestParams.inSignal.concat(backtestParams.outSignal);
     let res = await fetch(`${url}/getStats`, {
         method: 'post',
         body: JSON.stringify({ data, indicators, backtestParams })
@@ -14,7 +15,7 @@ async function addStats(data, indicators, backtestParams) {
     return await res.json();
 }
 
-async function backtest({ maCross, startAmt, limit = 3, minRatio = 0.05, minRebalanceAmt = 200000, from = moment('2021-06-21'), to = moment() }) {
+async function backtest({ inSignal, outSignal, startAmt, limit = 3, minRatio = 0.05, minRebalanceAmt = 200000, from = moment('2021-06-21'), to = moment() }) {
     // let rebalanceInfos = await getTopRatios({ limit, minRatio, minRebalanceAmt, from, excludeMarkets: ['EXCH-PERP'] });
     let endAmt = startAmt;
     let allStats = [];
@@ -47,9 +48,9 @@ async function backtest({ maCross, startAmt, limit = 3, minRatio = 0.05, minReba
 
             let stats = await addStats(
                 data,
-                maCross,
                 {
-                    maCross,
+                    inSignal,
+                    outSignal,
                     side: trade.amount > 0 ? 'buy' : 'sell',
                     startAmt: tradeAmt,
                 }

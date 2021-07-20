@@ -44,12 +44,13 @@
                         >Indicators
                         <input type="text" class="indicators" v-model="indicatorsStr" @keypress.enter="doAction" />
                     </label>
-                    <label v-if="mode === 'backtest'">Limit<input v-model="backtestOptions.limit" /></label>
-                    <label v-if="mode === 'backtest'">Min. Ratio<input v-model="backtestOptions.minRatio" /></label>
-                    <label v-if="mode === 'backtest'"
-                        >Min. Reblance Amt<input v-model="backtestOptions.minRebalanceAmt"
-                    /></label>
-                    <label v-if="mode === 'backtest'">From <input v-model="backtestOptions.from" /></label>
+                    <label>Out Signal (optional) <input v-model="outSignalStr"></label>
+                    <template v-if="mode === 'backtest'">
+                        <label>Limit<input v-model="backtestOptions.limit" /></label>
+                        <label>Min. Ratio<input v-model="backtestOptions.minRatio" /></label>
+                        <label>Min. Reblance Amt<input v-model="backtestOptions.minRebalanceAmt" /></label>
+                        <label>From <input v-model="backtestOptions.from" /></label>
+                    </template>
                     <label>
                         Resolution
                         <select v-model="resolution" @change="doAction">
@@ -133,6 +134,7 @@
                 market: 'BTC-PERP',
                 resolution: 15,
                 indicatorsStr: 'EMA9, EMA20',
+                outSignalStr: '',
                 doBacktest: true,
                 backtestOptions: {
                     limit: 1,
@@ -151,7 +153,8 @@
             backtestParams() {
                 return {
                     startAmt: 10000,
-                    maCross: this.indicators,
+                    inSignal: this.indicators,
+                    outSignal: this.outSignal,
                     ...this.backtestOptions,
                 };
             },
@@ -167,6 +170,9 @@
             },
             indicators() {
                 return this.indicatorsStr.split(/\s*,\s*/).map((s) => s.toUpperCase());
+            },
+            outSignal() {
+                return this.outSignalStr.split(/\s*,\s*/).map((s) => s.toUpperCase());
             },
             backtestReturns() {
                 let endAmt = this.timeSeries[this.timeSeries.length - 1].total;
@@ -190,7 +196,7 @@
             totalChartOptions() {
                 let currentDate = this.backtestResults.allStats[this.currentBacktestChartItem].date;
                 console.log(currentDate);
-                console.log(this.backtestResults.dateAmts.find(a => a.date === currentDate).endAmt);
+                console.log(this.backtestResults.dateAmts.find((a) => a.date === currentDate).endAmt);
                 return {
                     title: 'Backtest Results',
                     chart: {
@@ -234,7 +240,7 @@
                             data: [
                                 {
                                     x: moment(currentDate).valueOf(),
-                                    y: this.backtestResults.dateAmts.find(a => a.date === currentDate).endAmt + 10,
+                                    y: this.backtestResults.dateAmts.find((a) => a.date === currentDate).endAmt + 10,
                                     marker: {
                                         enabled: true,
                                         symbol: 'triangle-down',

@@ -11,13 +11,13 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', -1)
 
-def crunchData(data, indicators, backtestParams):
+def crunchData(data, indicators, backtest_params):
     df = pd.DataFrame.from_records(data, index="startTime")
 
     for indicator in indicators:
         df[indicator] = getIndicator(indicator, df)
 
-    addBacktest(backtestParams, df)
+    addBacktest(backtest_params, df)
     return df.to_json(orient='records')
 
 def getIndicator(indicator, df):
@@ -51,8 +51,8 @@ def addBacktest(params, df):
 
     start_amt = params['startAmt']
     side = params['side']
-    short_param = params["maCross"][0]
-    long_param = params["maCross"][1]
+    short_param = params["inSignal"][0]
+    long_param = params["inSignal"][1]
     short_window = int(short_param[3:]) # TODO will break if not 'SMA9', etc.
     min_h = 23 # don't open a position prior to this
     min_m = 55
