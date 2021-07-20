@@ -1,8 +1,12 @@
 ### On vacation 19-23
+More than Moving Averages
+    - Enter position on MA cross, exit on trailing stop
+    - 
 Handle all errors with custom class, write to log
+Don't commit all the logs, maybe just the non-latest? Latest one always has changes, making commits hard
 Backtesting
     - in & out on EMA crossover
-    - when ration high
+    - when ratio high
     - maybe out on schedule, or on shorter EMA crossover?
     - sell when shortest-period EMA reverses direction
     - start with running the backtest on single timeSeries

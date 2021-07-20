@@ -1,125 +1,28 @@
-[2021-07-05 00:23:30] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
+[2021-07-20 13:00:47] ReferenceError: to is not defined
+    at Object.backtest (/app/api/services/stats.js:25:17)
+    at /app/api/routes.js:45:32
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/api/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/app/api/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at /app/api/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/app/api/node_modules/express/lib/router/index.js:335:12)
+    at next (/app/api/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/app/api/node_modules/express/lib/router/index.js:174:3)
+[2021-07-20 13:01:36] TypeError: from.hour is not a function
+    at Object.backtest (/app/api/services/stats.js:23:17)
+    at /app/api/routes.js:45:32
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/api/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/app/api/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at /app/api/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/app/api/node_modules/express/lib/router/index.js:335:12)
+    at next (/app/api/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/app/api/node_modules/express/lib/router/index.js:174:3)
+[2021-07-20 13:04:33] TypeError: ri.map is not a function
+    at /app/api/services/stats.js:32:44
+    at Array.map (<anonymous>)
+    at Object.backtest (/app/api/services/stats.js:32:31)
     at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:26:27
-[2021-07-05 00:40:47] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:31:27
-[2021-07-05 00:40:51] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:31:27
-[2021-07-05 00:44:14] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:33:27
-[2021-07-05 00:44:41] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:30:27
-[2021-07-05 00:44:42] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:30:27
-[2021-07-05 00:49:39] Error: No data
-    at Object.getData (/app/api/services/ftx.js:85:52)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async /app/api/routes.js:23:27
-[2021-07-05 00:53:13] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:55:01] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:55:55] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:57:45] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:57:45] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:57:45] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:57:45] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:57:46] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:58:18] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:58:51] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:59:56] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 00:59:58] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 01:00:03] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 01:00:05] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
-[2021-07-05 01:00:06] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
-    at /app/api/node_modules/node-fetch/lib/index.js:272:32
-    at runMicrotasks (<anonymous>)
-    at processTicksAndRejections (internal/process/task_queues.js:97:5)
-    at async Object.addStats (/app/api/services/stats.js:10:12)
-    at async /app/api/routes.js:34:27
+    at async /app/api/routes.js:45:20

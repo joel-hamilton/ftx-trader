@@ -1,16 +1,19 @@
 <template>
     <div>
-        <h2>Rebalance Data</h2>
         <div class="header">
             <div class="inputs">
-                <div>
+                <div class="mode">
+                    <label>Fetch<input type="radio" v-model="mode" name="mode" value="fetch" checked /></label>
+                    <label>Backtest<input type="radio" v-model="mode" name="mode" value="backtest" /></label>
+                </div>
+                <div v-if="mode === 'fetch'">
                     <label
                         >Market
                         <input
                             v-model="market"
                             class="market"
                             @focus="(e) => e.target.select()"
-                            @keypress.enter="fetch"
+                            @keypress.enter="doAction"
                         />
                     </label>
                     <label class="date"
@@ -19,7 +22,7 @@
                             class="move-date"
                             @click="
                                 date = moment(date).subtract(1, 'day').format('YYYY-MM-DD');
-                                fetch();
+                                doAction();
                             "
                         >
                             &lt;
@@ -29,21 +32,27 @@
                             class="move-date"
                             @click="
                                 date = moment(date).add(1, 'day').format('YYYY-MM-DD');
-                                fetch();
+                                doAction();
                             "
                         >
                             &gt;
                         </div>
                     </label>
                 </div>
-                <div>
+                <div class="params">
                     <label
                         >Indicators
-                        <input type="text" class="indicators" v-model="indicatorsStr" @keypress.enter="fetch" />
+                        <input type="text" class="indicators" v-model="indicatorsStr" @keypress.enter="doAction" />
                     </label>
+                    <label v-if="mode === 'backtest'">Limit<input v-model="backtestOptions.limit" /></label>
+                    <label v-if="mode === 'backtest'">Min. Ratio<input v-model="backtestOptions.minRatio" /></label>
+                    <label v-if="mode === 'backtest'"
+                        >Min. Reblance Amt<input v-model="backtestOptions.minRebalanceAmt"
+                    /></label>
+                    <label v-if="mode === 'backtest'">From <input v-model="backtestOptions.from" /></label>
                     <label>
                         Resolution
-                        <select v-model="resolution" @change="fetch">
+                        <select v-model="resolution" @change="doAction">
                             <option value="15">15s</option>
                             <option value="60">1m</option>
                             <option value="300">5m</option>
@@ -52,30 +61,58 @@
                     </label>
                 </div>
                 <div>
-                    <button @click.stop="fetch">Fetch</button>
+                    <button @click.stop="fetch" v-if="mode === 'fetch'">Fetch</button>
+                    <button @click.stop="backtest" v-if="mode === 'backtest'">Backtest</button>
                 </div>
             </div>
-            <div class="backtest-info" v-if="timeSeries && doBacktest">
-                <div>
-                    <h4>Backtest Returns</h4>
+            <template class="backtest-info" v-if="timeSeries && doBacktest">
+                <div v-if="mode === 'backtest' && Object.keys(backtestResults).length">
+                    <h4>
+                        {{ backtestResults.allStats[currentBacktestChartItem].market }}
+                        {{ moment(backtestResults.allStats[currentBacktestChartItem].date).format('YYYY-MM-DD') }}
+                        Returns
+                    </h4>
+                    <p v-for="(signal, index) in signals" :key="index">
+                        {{ signal }}
+                    </p>
                     <p>{{ backtestReturns }}%</p>
                 </div>
                 <div>
-                    <h4>Rebalance Ratio</h4>
-                    <p>{{ rebalanceRatio }}%</p>
+                    <div>
+                        <h4>Rebalance Amount</h4>
+                        <p>${{ rebalanceAmt }}</p>
+                    </div>
+                    <div>
+                        <h4>Rebalance Ratio</h4>
+                        <p>{{ rebalanceRatio }}%</p>
+                    </div>
                 </div>
+            </template>
+        </div>
+        <div v-if="mode === 'backtest' && Object.keys(backtestResults).length">
+            <div class="chart-wrapper" ref="chart-wrapper">
+                <highcharts constructorType="stockChart" :options="totalChartOptions" ref="total-chart" />
             </div>
-            <div class="rabalance-info" v-if="rebalanceInfo">
-                <div>
-                    <h4>Rebalance Amount</h4>
-                    <p>${{ rebalanceAmt }}</p>
+
+            <div class="backtest-results-nav">
+                {{ `${currentBacktestChartItem + 1}/${backtestResults.allStats.length}` }}
+                <div
+                    class="move-date"
+                    :class="{ disabled: currentBacktestChartItem <= 0 }"
+                    @click="() => changeBacktestChartItem(-1)"
+                >
+                    &lt;
                 </div>
-                <div>
-                    <h4>Rebalance Ratio</h4>
-                    <p>{{ rebalanceRatio }}%</p>
+                <div
+                    class="move-date"
+                    :class="{ disabled: currentBacktestChartItem + 1 >= backtestResults.allStats.length }"
+                    @click="() => changeBacktestChartItem(1)"
+                >
+                    &gt;
                 </div>
             </div>
         </div>
+
         <div v-if="timeSeries" class="chart-wrapper" ref="chart-wrapper">
             <highcharts constructorType="stockChart" :options="chartOptions" ref="chart" />
         </div>
@@ -90,6 +127,7 @@
         name: 'Rebalance',
         data() {
             return {
+                mode: 'backtest',
                 timeSeries: null,
                 rebalanceInfo: null,
                 market: 'BTC-PERP',
@@ -97,17 +135,24 @@
                 indicatorsStr: 'EMA9, EMA20',
                 doBacktest: true,
                 backtestOptions: {
-                    // set these in inputs div
+                    limit: 1,
+                    minRatio: 0.075,
+                    minRebalanceAmt: 200000,
+                    from: '2021-07-15',
+                    to: moment().format('YYYY-MM-DD'),
                 },
                 date: moment().format('YYYY-MM-DD'),
                 wrapperHeight: 0,
+                backtestResults: {},
+                currentBacktestChartItem: 0,
             };
         },
         computed: {
             backtestParams() {
                 return {
                     startAmt: 10000,
-                    maCross: ['EMA9', 'EMA20'],
+                    maCross: this.indicators,
+                    ...this.backtestOptions,
                 };
             },
             rebalanceAmt() {
@@ -125,7 +170,81 @@
             },
             backtestReturns() {
                 let endAmt = this.timeSeries[this.timeSeries.length - 1].total;
-                return Math.round(((endAmt - this.backtestParams.startAmt) / this.backtestParams.startAmt) * 10000) / 100;
+                return Math.round(((endAmt - this.timeSeries[0].total) / this.timeSeries[0].total) * 10000) / 100;
+            },
+            signals() {
+                return this.timeSeries.reduce((signals, candle, index, originalArr) => {
+                    // if this is the close order, there
+                    let size = candle.size || (index > 0 ? originalArr[index - 1].size : 0);
+
+                    if (candle.signal === -1) {
+                        signals.push(`Sell ${Math.round(size * 100) / 100} @ $${candle.open}`);
+                    }
+                    if (candle.signal === 1) {
+                        signals.push(`Buy ${Math.round(size * 100) / 100} @ $${candle.open}`);
+                    }
+
+                    return signals;
+                }, []);
+            },
+            totalChartOptions() {
+                let currentDate = this.backtestResults.allStats[this.currentBacktestChartItem].date;
+                console.log(currentDate);
+                console.log(this.backtestResults.dateAmts.find(a => a.date === currentDate).endAmt);
+                return {
+                    title: 'Backtest Results',
+                    chart: {
+                        height: '200px',
+                    },
+                    navigator: {
+                        enabled: false,
+                    },
+                    rangeSelector: {
+                        enabled: false,
+                        // selected: 1,
+                    },
+                    xAxis: {
+                        crosshair: true,
+                        labels: {
+                            format: '{value:%Y-%m-%d}',
+                        },
+                    },
+                    yAxis: [
+                        {
+                            crosshair: true,
+                            title: {
+                                text: 'Total',
+                            },
+                            height: '100%',
+                            lineWidth: 2,
+                        },
+                    ],
+                    series: [
+                        {
+                            type: 'line',
+                            name: 'Total',
+                            data: this.backtestResults.dateAmts.map((da) => {
+                                let date = moment(da.date).valueOf();
+                                return [date, da.endAmt];
+                            }),
+                            // yAxis,
+                        },
+                        {
+                            type: 'scatter',
+                            data: [
+                                {
+                                    x: moment(currentDate).valueOf(),
+                                    y: this.backtestResults.dateAmts.find(a => a.date === currentDate).endAmt + 10,
+                                    marker: {
+                                        enabled: true,
+                                        symbol: 'triangle-down',
+                                        radius: 10,
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                };
             },
             chartOptions() {
                 let options = {
@@ -135,8 +254,12 @@
                     chart: {
                         height: this.wrapperHeight,
                     },
+                    navigator: {
+                        enabled: false,
+                    },
                     rangeSelector: {
-                        selected: 1,
+                        enabled: false,
+                        // selected: 1,
                     },
                     xAxis: {
                         crosshair: true,
@@ -264,6 +387,10 @@
         },
         methods: {
             moment: moment,
+            doAction() {
+                if (this.mode === 'fetch') this.fetch();
+                if (this.mode === 'backtest') this.backtest();
+            },
             async fetch() {
                 this.market = this.market.toUpperCase();
                 if (this.market.substr(-5) !== '-PERP') this.market += '-PERP';
@@ -281,10 +408,31 @@
                 await this.$nextTick();
                 this.$refs.chart.chart.zoomOut();
             },
+            async backtest() {
+                let body = {
+                    backtestParams: this.backtestParams,
+                };
+                this.backtestResults = (await axios.post('http://localhost:3000/backtest', body)).data;
+                this.currentBacktestChartItem = 0;
+                this.changeBacktestChartItem();
+
+                await this.$nextTick();
+                this.$refs['total-chart'].chart.zoomOut();
+            },
+            async changeBacktestChartItem(delta = 0) {
+                // no delta to reload current
+                let index = this.currentBacktestChartItem + delta;
+                this.market = this.backtestResults.allStats[index].market;
+                this.timeSeries = this.backtestResults.allStats[index].timeSeries;
+                this.rebalanceInfo = this.backtestResults.allStats[index].rebalanceInfo;
+                await this.$nextTick();
+                this.$refs.chart.chart.zoomOut();
+                this.currentBacktestChartItem = index;
+            },
         },
         async mounted() {
             await this.$nextTick();
-            this.wrapperHeight = document.body.offsetHeight - 300 + 'px'; //window.this.$refs['chart-wrapper'].offsetHeight + 'px';
+            this.wrapperHeight = document.body.offsetHeight - 470 + 'px'; //window.this.$refs['chart-wrapper'].offsetHeight + 'px';
         },
     };
 </script>
@@ -293,6 +441,12 @@
     button,
     .move-date {
         height: 30px;
+    }
+
+    .mode,
+    .backtest-results-nav {
+        display: flex;
+        align-items: center;
     }
 
     label:not(:last-of-type) {
@@ -316,6 +470,19 @@
         }
     }
 
+    .params {
+        flex-direction: column;
+        align-items: flex-start !important;
+
+        > label {
+            margin-top: 5px;
+        }
+
+        input {
+            margin-left: 10px;
+        }
+    }
+
     .market,
     .indicators {
         text-transform: uppercase;
@@ -324,21 +491,25 @@
     .date {
         display: inline-flex;
         align-items: center;
+    }
+    .move-date {
+        padding: 0 0.5em;
+        margin: 0.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        cursor: pointer;
 
-        .move-date {
-            padding: 0 0.5em;
-            margin: 0.5em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 3px;
-            border: 1px solid #ccc;
-            cursor: pointer;
+        &:hover {
+            background: #ddd;
+            border-color: #aaa;
+        }
 
-            &:hover {
-                background: #ddd;
-                border-color: #aaa;
-            }
+        &.disabled {
+            background: #eee;
+            pointer-events: none;
         }
     }
 

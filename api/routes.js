@@ -40,6 +40,15 @@ router.post('/rebalanceData', async (req, res, next) => {
     }
 });
 
+router.post('/backtest', async (req, res, next) => {
+    try {
+        let data = await stats.backtest(req.body.backtestParams);
+        res.json(data);
+    } catch (e) {
+        next(e);
+    }
+})
+
 router.get('/search/:query/:onlyWithMarkets/:onlyBuys/:useRules/:start/:end?', async (req, res, next) => {
     try {
         let data = await twitter.searchTweets({

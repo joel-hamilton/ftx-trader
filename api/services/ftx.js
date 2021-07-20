@@ -5,7 +5,6 @@ const fetch = require('node-fetch');
 const constants = require('../data/constants');
 const twilio = require('./twilio');
 const utils = require('./utils');
-const stats = require('./stats');
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();

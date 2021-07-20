@@ -135,7 +135,7 @@ module.exports = class RebalanceTrader {
         console.log(`Sent\n\n${bestIdeas}`);
     };
 
-    async placeMidOrders({ leverage = 1, positions = 10, trailPct = 0.01, markets = [] }) {
+    async placeMidOrders({ leverage = 1, positions = 10, markets = [] }) {
         let account = await ftx.getAccount();
         let collateral = account.freeCollateral;
 
@@ -145,9 +145,6 @@ module.exports = class RebalanceTrader {
         } else {
             rebalanceData = this.getAggData().slice(0, positions);
         }
-
-        console.log(rebalanceData);
-        return;
 
         for (let data of rebalanceData) {
             let orderbook = await ftx.getOrderBook(data.underlying);

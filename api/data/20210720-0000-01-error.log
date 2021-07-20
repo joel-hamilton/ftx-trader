@@ -1,0 +1,115 @@
+[2021-07-19 12:57:24] NotFoundError: Not Found
+    at /app/api/app.js:37:10
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/app/api/node_modules/express/lib/router/index.js:317:13)
+    at /app/api/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/app/api/node_modules/express/lib/router/index.js:335:12)
+    at next (/app/api/node_modules/express/lib/router/index.js:275:10)
+    at /app/api/node_modules/express/lib/router/index.js:635:15
+    at next (/app/api/node_modules/express/lib/router/index.js:260:14)
+    at Function.handle (/app/api/node_modules/express/lib/router/index.js:174:3)
+    at router (/app/api/node_modules/express/lib/router/index.js:47:12)
+[2021-07-19 12:57:24] NotFoundError: Not Found
+    at /app/api/app.js:37:10
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/app/api/node_modules/express/lib/router/index.js:317:13)
+    at /app/api/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/app/api/node_modules/express/lib/router/index.js:335:12)
+    at next (/app/api/node_modules/express/lib/router/index.js:275:10)
+    at /app/api/node_modules/express/lib/router/index.js:635:15
+    at next (/app/api/node_modules/express/lib/router/index.js:260:14)
+    at Function.handle (/app/api/node_modules/express/lib/router/index.js:174:3)
+    at router (/app/api/node_modules/express/lib/router/index.js:47:12)
+[2021-07-19 13:27:31] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async Object.addStats (/app/api/services/stats.js:10:12)
+    at async /app/api/routes.js:34:27
+[2021-07-19 15:09:39] NotFoundError: Not Found
+    at /app/api/app.js:37:10
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/app/api/node_modules/express/lib/router/index.js:317:13)
+    at /app/api/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/app/api/node_modules/express/lib/router/index.js:335:12)
+    at next (/app/api/node_modules/express/lib/router/index.js:275:10)
+    at /app/api/node_modules/express/lib/router/index.js:635:15
+    at next (/app/api/node_modules/express/lib/router/index.js:260:14)
+    at Function.handle (/app/api/node_modules/express/lib/router/index.js:174:3)
+    at router (/app/api/node_modules/express/lib/router/index.js:47:12)
+[2021-07-19 15:16:46] TypeError: Cannot read property 'limit' of undefined
+    at getTopRatios (/app/api/services/stats.js:20:31)
+    at Object.backtest (/app/api/services/stats.js:16:27)
+    at /app/api/routes.js:45:21
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/api/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/app/api/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/app/api/node_modules/express/lib/router/layer.js:95:5)
+    at /app/api/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/app/api/node_modules/express/lib/router/index.js:335:12)
+    at next (/app/api/node_modules/express/lib/router/index.js:275:10)
+[2021-07-19 15:19:45] TypeError: marketsDates.push is not a function
+    at getTopRatios (/app/api/services/stats.js:28:41)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async Object.backtest (/app/api/services/stats.js:16:21)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:31:30] TypeError: ftx.getData is not a function
+    at Object.backtest (/app/api/services/stats.js:23:34)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:31:54] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async addStats (/app/api/services/stats.js:14:12)
+    at async Object.backtest (/app/api/services/stats.js:31:25)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:32:21] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async addStats (/app/api/services/stats.js:14:12)
+    at async Object.backtest (/app/api/services/stats.js:33:25)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:53:25] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async addStats (/app/api/services/stats.js:15:12)
+    at async Object.backtest (/app/api/services/stats.js:34:25)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:55:24] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async addStats (/app/api/services/stats.js:15:12)
+    at async Object.backtest (/app/api/services/stats.js:34:25)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:55:47] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async addStats (/app/api/services/stats.js:15:12)
+    at async Object.backtest (/app/api/services/stats.js:34:25)
+    at async /app/api/routes.js:45:9
+[2021-07-19 15:55:49] FetchError: invalid json response body at http://stat-service:3111/getStats reason: Unexpected token I in JSON at position 0
+    at /app/api/node_modules/node-fetch/lib/index.js:272:32
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async addStats (/app/api/services/stats.js:15:12)
+    at async Object.backtest (/app/api/services/stats.js:34:25)
+    at async /app/api/routes.js:45:9
+[2021-07-19 16:03:30] ReferenceError: trade is not defined
+    at Object.backtest (/app/api/services/stats.js:50:24)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async /app/api/routes.js:45:9
+[2021-07-19 16:09:50] ReferenceError: dateindex is not defined
+    at Object.backtest (/app/api/services/stats.js:25:41)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async /app/api/routes.js:45:9
+[2021-07-19 16:57:14] ReferenceError: rebalanceInfos is not defined
+    at Object.backtest (/app/api/services/stats.js:51:72)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async /app/api/routes.js:45:20
+[2021-07-19 16:57:16] ReferenceError: rebalanceInfos is not defined
+    at Object.backtest (/app/api/services/stats.js:51:72)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async /app/api/routes.js:45:20
+[2021-07-19 17:18:17] TypeError: dateAmts.push is not a function
+    at Object.backtest (/app/api/services/stats.js:54:18)
+    at processTicksAndRejections (internal/process/task_queues.js:97:5)
+    at async /app/api/routes.js:45:20

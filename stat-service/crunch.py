@@ -45,15 +45,19 @@ def getRSI(periods, df):
 
 
 def addBacktest(params, df):
-    print(params)
     open_signalled = False
     close_signalled = False
     prev_row = {}
 
+    start_amt = params['startAmt']
     side = params['side']
     short_param = params["maCross"][0]
     long_param = params["maCross"][1]
     short_window = int(short_param[3:]) # TODO will break if not 'SMA9', etc.
+    min_h = 23 # don't open a position prior to this
+    min_m = 55
+    max_h = 0 # don't open a position after this
+    max_m = 2
 
     signals = pd.DataFrame(index=df.index)
     signals['startTime'] = df.index # TODO just get the row label?
@@ -75,11 +79,12 @@ def addBacktest(params, df):
 
         index = signals.index.get_loc(row[0])
 
+        pos_size = start_amt / df.iloc[index]['close']
         row['ma_x'] = 1.0 if df.iloc[index][short_param] > df.iloc[index][long_param] else -1.0
 
         rowDateTime = datetime.fromisoformat(row['startTime'])
-        minDateTime = datetime.fromisoformat(signals.iloc[0]['startTime']).replace(hour=23, minute=55)
-        maxDateTime = datetime.fromisoformat(signals.tail(1).iloc[0]['startTime']).replace(hour=00, minute=2)
+        minDateTime = datetime.fromisoformat(signals.iloc[0]['startTime']).replace(hour=min_h, minute=min_m)
+        maxDateTime = datetime.fromisoformat(signals.tail(1).iloc[0]['startTime']).replace(hour=max_h, minute=max_m)
         if(rowDateTime < minDateTime): # don't do anything before min time
             return finish()
         
@@ -91,7 +96,7 @@ def addBacktest(params, df):
 
             if(side == 'buy' and not open_signalled and rowDateTime <= maxDateTime):
                 row['signal'] = 1.0
-                row['position'] = 100.0
+                row['position'] = pos_size
                 open_signalled = True
             if(side == 'sell' and (open_signalled and not close_signalled)):
                 row['signal'] = 1.0
@@ -106,7 +111,7 @@ def addBacktest(params, df):
 
             if(side == 'sell' and not open_signalled and rowDateTime <= maxDateTime):
                 row['signal'] = -1.0
-                row['position'] = -100.0
+                row['position'] = -1 * pos_size
                 open_signalled = True
             if(side == 'buy' and (open_signalled and not close_signalled)):
                 row['signal'] = -1.0
@@ -116,7 +121,9 @@ def addBacktest(params, df):
         return finish()
 
     signals = signals.apply(addSignals, axis=1)
-    signals = signals[['position', 'signal']].shift(1).fillna(0.0) # prevent look-ahead bias
+
+    # look-ahead bias...prevent by getting close of current crossover period, rather than shifting?
+    # signals = signals[['position', 'signal']].shift(1).fillna(0.0) # prevent look-ahead bias
 
     # print(signals[['signal', 'position', 'ma_x']].head(70))
     # signals['signal'][short_window:] = np.where(signals['signal'][short_window - 1] and signals['short_mavg'][short_window:] > signals['long_mavg'][short_window:], 1.0, -1.0)
@@ -149,5 +156,9 @@ def addBacktest(params, df):
     portfolio['returns'] = portfolio['total'].pct_change()
     
     # update original dataframe
+    df['size'] = positions['size']
     df['signal'] = signals['signal']
     df['total'] = portfolio['total']
+    df['holdings'] = portfolio['holdings']
+    df['cash'] = portfolio['cash']
+    df['returns'] = portfolio['returns']

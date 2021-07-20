@@ -65,7 +65,6 @@ cron.schedule("55 23 * * *", async () => {
 });
 
 
-// TODO PLACE ORDERS IS DISABLED
 let accountStart;
 cron.schedule("15 00 00 * * *", async () => {
     accountStart = await ftx.getAccount();
