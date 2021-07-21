@@ -1,22 +1,18 @@
 ### On vacation 19-23
-More than Moving Averages
-    - Enter position on MA cross, exit on trailing stop
-    - 
+#### Build trading
+PARAMS
+Limit: 1
+MinRatio: 0.9
+MinRebalanceAmt: 500000
+inSignal: ["SMA9", "SMA20"]
+outSignal: ["TRL0.0075"] (diminish after 8:02)
+
+Ensemble of strategies in different subaccounts, manual rebalance at end of each week
 Handle all errors with custom class, write to log
 Don't commit all the logs, maybe just the non-latest? Latest one always has changes, making commits hard
-Backtesting
-    - in & out on EMA crossover
-    - when ratio high
-    - maybe out on schedule, or on shorter EMA crossover?
-    - sell when shortest-period EMA reverses direction
-    - start with running the backtest on single timeSeries
-        - backtest params in inputs section dropdown
-        - put visual indicators on chart, output a summary of all trades
-        - after adding backtesting of multiple timeSeries, should still be able to pull up the backtest on individual charts (maybe have a 'show backtest trades' checkbox that lets you toggle the current backtest - don't clear it when chart loads)
 Figure out unscheduled rebalance points
 Float mid for entry
 Float mid for exit (w. timed market order override)
-Ensemble of strategies in different subaccounts?
 Smarter entries/sizing
     - Only trade with trend (Short-term moving average crossover-based?)
     - Set stops based on volatility, scale position size according to vol-based stop * max $ loss
@@ -36,7 +32,56 @@ Figure out rebalance price.
 For tokens that are close to rebalance price, refetch every 1s while close. Buy when very close to rebalance price, with take profits and tight stop-loss.
 Send SMS after.
 
+### Backtest Results
+Balls to the wall (50-100x leverage)
+- $1.5m buying, > 15% ratio, EMA Cross in, 0.75%TRL out
 
+```sql
+-- BY WIN PCT
+-- consistently around 0.11-0.125
+-- SELECT AVG((args->>'minRatio')::FLOAT) FROM backtest_results WHERE all_stats != '[]' AND win_pct > 0.7
+
+-- all win pcts > 0.7 have $1m+ rebal size
+-- SELECT AVG((args->>'minRebalanceAmt')::FLOAT) FROM backtest_results WHERE all_stats != '[]' AND win_pct > 0.7
+
+-- at 0.7 win pct, 60% 0.005, 40% 0.0075
+-- at 0.9 win pct, 100% 0.0075 (small sample though)
+-- SELECT args->>'outSignal' AS signal FROM backtest_results WHERE all_stats != '[]' AND win_pct > 0.7 ORDER BY signal
+
+-- limit random
+-- SELECT args->>'limit' AS signal FROM backtest_results WHERE all_stats != '[]' AND win_pct > 0.8 ORDER BY signal
+
+
+-- BY PROFIT PCT
+-- wide range, 0.08-0.1, no pattern
+-- SELECT AVG((args->>'minRatio')::FLOAT) FROM backtest_results WHERE all_stats != '[]' AND profit_pct > 0.75
+
+-- profit_pct increaseswith amt, 700000 -> $1m+
+-- SELECT AVG((args->>'minRebalanceAmt')::FLOAT) FROM backtest_results WHERE all_stats != '[]' AND profit_pct > 0.3
+
+-- 0.0075 clear winner
+-- SELECT args->>'outSignal' AS signal FROM backtest_results WHERE all_stats != '[]' AND profit_pct > 0.3 ORDER BY signal
+
+-- limit 1 clear winner for all profits > 40%
+-- SELECT args->>'limit' AS signal FROM backtest_results WHERE all_stats != '[]' AND profit_pct > 0.5 ORDER BY signal
+
+
+-- robustness across permutations of:
+	-- limit 1
+	-- minRebalance > 700k
+	-- ratio > 0.08 && ratio < 0.12
+	-- outSignal of 0.005 or 0.0075
+	
+-- SELECT * FROM backtest_results WHERE
+-- num_trades > 0 
+-- AND (args->>'minRatio')::FLOAT > 0.09
+-- AND (args->>'limit')::INT = 1
+-- AND (args->>'minRebalanceAmt')::FLOAT > 250000
+-- AND (
+-- 	(args->>'outSignal') = '["TRL0.005"]'
+-- 	OR (args->>'outSignal') = '["TRL0.0075"]'
+-- )
+```
 
 /**
 STRATEGY

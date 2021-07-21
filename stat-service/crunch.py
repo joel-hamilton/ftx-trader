@@ -60,12 +60,14 @@ def addBacktest(params, df):
     min_m = 55
     max_h = 0 # don't open a position after this
     max_m = 2
+    close_at_m = 15 # close any open positions at this time
 
     signals = pd.DataFrame(index=df.index)
     signals['startTime'] = df.index # TODO just get the row label?
     signals['signal'] = 0.0
     signals['position'] = 0.0
     signals['ma_x'] = 0.0
+    signals['max_touch'] = None
 
     def addSignals(row):
         nonlocal prev_row
@@ -77,6 +79,7 @@ def addBacktest(params, df):
             prev_row['startTime'] = row['startTime']
             prev_row['position'] = row['position']
             prev_row['ma_x'] = row['ma_x']
+            prev_row['max_touch'] = row['max_touch']
             return row
 
         index = signals.index.get_loc(row[0])
@@ -87,11 +90,63 @@ def addBacktest(params, df):
         rowDateTime = datetime.fromisoformat(row['startTime'])
         minDateTime = datetime.fromisoformat(signals.iloc[0]['startTime']).replace(hour=min_h, minute=min_m)
         maxDateTime = datetime.fromisoformat(signals.tail(1).iloc[0]['startTime']).replace(hour=max_h, minute=max_m)
+        closeAtDateTime = datetime.fromisoformat(signals.tail(1).iloc[0]['startTime']).replace(hour=0, minute=close_at_m)
         if(rowDateTime < minDateTime): # don't do anything before min time
             return finish()
 
+        # force a close at this time
+        if(rowDateTime >= closeAtDateTime):
+            if(open_signalled and not close_signalled) :
+                if(side == 'buy'):
+                    row['signal'] = -1
+                    row['position'] = 0.0
+                    close_signalled = True
+                elif (side == 'sell'):
+                    row['signal'] = 1
+                    row['position'] = 0.0
+                    close_signalled = True
+
+            return finish()
+
         # if distinct 'out' signal, and position is opened, use that and finish
-        if(open_signalled and out_signal):
+        if((open_signalled and not close_signalled) and out_signal):
+            if(out_signal[:3] == 'TRL'):
+                row['position'] = prev_row['position']
+                trl_amt = float(out_signal[3:])
+
+                delta_s = (rowDateTime - maxDateTime).total_seconds()
+                # by 8:05, stop approx 1/4 of original
+                if(delta_s > 120):
+                    trl_amt /= 2
+                if(delta_s > 60):
+                    trl_amt /= 1.5
+                if(delta_s > 30):
+                    trl_amt /= 1.25
+                if(delta_s > 0):
+                    trl_amt /= 1.125
+                
+                
+                if(side == 'buy'):
+                    row['max_touch'] = df.iloc[index]['high'] if (not prev_row['max_touch']) else max(prev_row['max_touch'], df.iloc[index]['high'])
+                    max_touch = row['max_touch'] if (index == 0) else prev_row['max_touch'] # use max touch from prev row, because no guarantee that low came after high
+                    delta = (row['max_touch'] - df.iloc[index]['low']) / row['max_touch']
+
+                    if(delta >= trl_amt):
+                        row['signal'] = -1
+                        row['position'] = 0.0
+                        close_signalled = True
+                
+
+                elif(side == 'sell'):
+                    trl_amt *= -1
+                    row['max_touch'] = df.iloc[index]['low'] if (not prev_row['max_touch']) else min(prev_row['max_touch'], df.iloc[index]['low'])
+                    max_touch = row['max_touch'] if (index == 0) else prev_row['max_touch'] # use max touch from prev row, because no guarantee that low came after high
+                    delta = (row['max_touch'] - df.iloc[index]['high']) / row['max_touch']
+
+                    if(delta <= trl_amt):
+                        row['signal'] = 1
+                        row['position'] = 0.0
+                        close_signalled = True
 
             return finish()
         
@@ -161,7 +216,7 @@ def addBacktest(params, df):
 
     portfolio['holdings'] = (positions.multiply(df['close'], axis=0)).sum(axis=1)
     portfolio['cash'] = initial_capital - (pos_diff.multiply(df['close'], axis=0)).sum(axis=1).cumsum()
-    portfolio['total'] = portfolio['cash'] + portfolio['holdings']
+    portfolio['total'] = portfolio['cash'] + (portfolio['holdings'])
     portfolio['returns'] = portfolio['total'].pct_change()
     
     # update original dataframe

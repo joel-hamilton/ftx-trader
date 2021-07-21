@@ -39,19 +39,23 @@
                         </div>
                     </label>
                 </div>
-                <div class="params">
+                <div class="params" @keypress.enter="doAction">
                     <label
                         >Indicators
-                        <input type="text" class="indicators" v-model="indicatorsStr" @keypress.enter="doAction" />
+                        <input type="text" class="indicators" v-model="indicatorsStr" />
                     </label>
-                    <label>Out Signal (optional) <input v-model="outSignalStr"></label>
                     <template v-if="mode === 'backtest'">
+                        <label>Out Signal (optional) <input v-model="outSignalStr" /></label>
                         <label>Limit<input v-model="backtestOptions.limit" /></label>
-                        <label>Min. Ratio<input v-model="backtestOptions.minRatio" /></label>
-                        <label>Min. Reblance Amt<input v-model="backtestOptions.minRebalanceAmt" /></label>
+                        <label>Min. Ratio (%)<input v-model="backtestOptions.minRatio" /></label>
+                        <label>Min. Reblance Amt ($)<input v-model="backtestOptions.minRebalanceAmt" /></label>
                         <label>From <input v-model="backtestOptions.from" /></label>
+                        <label>Start Amount ($)<input v-model="backtestOptions.startAmt" /></label>
+                        <label>Max Amount ($)<input v-model="backtestOptions.maxAmt" /></label>
+                        <label>Leverage (x)<input v-model="backtestOptions.leverage" /></label>
+                        <label>Fees (%)<input v-model="backtestOptions.fees" /></label>
                     </template>
-                    <label>
+                    <label v-if="mode === 'fetch'">
                         Resolution
                         <select v-model="resolution" @change="doAction">
                             <option value="15">15s</option>
@@ -62,8 +66,12 @@
                     </label>
                 </div>
                 <div>
-                    <button @click.stop="fetch" v-if="mode === 'fetch'">Fetch</button>
-                    <button @click.stop="backtest" v-if="mode === 'backtest'">Backtest</button>
+                    <button @click.stop="fetch" v-if="mode === 'fetch'" :class="{ disabled: queryRunning }">
+                        Fetch
+                    </button>
+                    <button @click.stop="backtest" v-if="mode === 'backtest'" :class="{ disabled: queryRunning }">
+                        Backtest
+                    </button>
                 </div>
             </div>
             <template class="backtest-info" v-if="timeSeries && doBacktest">
@@ -128,20 +136,25 @@
         name: 'Rebalance',
         data() {
             return {
+                queryRunning: false,
                 mode: 'backtest',
                 timeSeries: null,
                 rebalanceInfo: null,
                 market: 'BTC-PERP',
                 resolution: 15,
                 indicatorsStr: 'EMA9, EMA20',
-                outSignalStr: '',
+                outSignalStr: 'TRL0.0075',
                 doBacktest: true,
                 backtestOptions: {
+                    fees: 0.0019, // assumes 0.02% maker in, 0.07% taker out, and 0.01% for bad backtesting stuff
                     limit: 1,
-                    minRatio: 0.075,
+                    minRatio: 0.1,
                     minRebalanceAmt: 200000,
-                    from: '2021-07-15',
+                    from: '2021-07-01',
                     to: moment().format('YYYY-MM-DD'),
+                    leverage: 10,
+                    startAmt: 1000,
+                    maxAmt: 10000,
                 },
                 date: moment().format('YYYY-MM-DD'),
                 wrapperHeight: 0,
@@ -152,7 +165,6 @@
         computed: {
             backtestParams() {
                 return {
-                    startAmt: 10000,
                     inSignal: this.indicators,
                     outSignal: this.outSignal,
                     ...this.backtestOptions,
@@ -175,19 +187,18 @@
                 return this.outSignalStr.split(/\s*,\s*/).map((s) => s.toUpperCase());
             },
             backtestReturns() {
-                let endAmt = this.timeSeries[this.timeSeries.length - 1].total;
+                let endAmt = this.timeSeries[this.timeSeries.length - 1].total * (1 - this.backtestOptions.fees); // Estimate of 0.1% in/out combined fees, 0.1% for slippage and bugs
                 return Math.round(((endAmt - this.timeSeries[0].total) / this.timeSeries[0].total) * 10000) / 100;
             },
             signals() {
                 return this.timeSeries.reduce((signals, candle, index, originalArr) => {
-                    // if this is the close order, there
                     let size = candle.size || (index > 0 ? originalArr[index - 1].size : 0);
 
                     if (candle.signal === -1) {
-                        signals.push(`Sell ${Math.round(size * 100) / 100} @ $${candle.open}`);
+                        signals.push(`Sell ${Math.round(size * 100) / 100} @ $${candle.close}`);
                     }
                     if (candle.signal === 1) {
-                        signals.push(`Buy ${Math.round(size * 100) / 100} @ $${candle.open}`);
+                        signals.push(`Buy ${Math.round(size * 100) / 100} @ $${candle.close}`);
                     }
 
                     return signals;
@@ -195,8 +206,6 @@
             },
             totalChartOptions() {
                 let currentDate = this.backtestResults.allStats[this.currentBacktestChartItem].date;
-                console.log(currentDate);
-                console.log(this.backtestResults.dateAmts.find((a) => a.date === currentDate).endAmt);
                 return {
                     title: 'Backtest Results',
                     chart: {
@@ -240,7 +249,7 @@
                             data: [
                                 {
                                     x: moment(currentDate).valueOf(),
-                                    y: this.backtestResults.dateAmts.find((a) => a.date === currentDate).endAmt + 10,
+                                    y: this.backtestResults.dateAmts.find((a) => a.date === currentDate).endAmt * 1.005,
                                     marker: {
                                         enabled: true,
                                         symbol: 'triangle-down',
@@ -375,7 +384,7 @@
                                 .map((data) => {
                                     return {
                                         x: data.time,
-                                        y: data.close,
+                                        y: data.signal === 1 ? data.close * 0.995 : data.close * 1.005,
                                         marker: {
                                             enabled: true,
                                             symbol: data.signal === 1 ? 'triangle' : 'triangle-down',
@@ -407,7 +416,10 @@
                     resolution: this.resolution,
                     backtestParams: this.backtestParams,
                 };
+
+                this.queryRunning = true;
                 let data = (await axios.post('http://localhost:3000/rebalanceData', body)).data;
+                this.queryRunning = false;
                 this.timeSeries = data.timeSeries;
                 this.rebalanceInfo = data.rebalanceInfo;
                 await this.$nextTick();
@@ -417,7 +429,10 @@
                 let body = {
                     backtestParams: this.backtestParams,
                 };
+
+                this.queryRunning = true;
                 this.backtestResults = (await axios.post('http://localhost:3000/backtest', body)).data;
+                this.queryRunning = false;
                 this.currentBacktestChartItem = 0;
                 this.changeBacktestChartItem();
 
@@ -438,6 +453,18 @@
         async mounted() {
             await this.$nextTick();
             this.wrapperHeight = document.body.offsetHeight - 470 + 'px'; //window.this.$refs['chart-wrapper'].offsetHeight + 'px';
+        },
+        watch: {
+            'backtestOptions.leverage': function(leverage) {
+                let fees = 0.0009 + 0.001;
+                if (leverage >= 100) {
+                    fees += 0.0006;
+                } else if (leverage >= 50) {
+                    fees += 0.0004;
+                }
+
+                this.backtestOptions.fees = fees;
+            },
         },
     };
 </script>
