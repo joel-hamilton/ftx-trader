@@ -15,6 +15,15 @@ async function addStats(data, backtestParams) {
     return await res.json();
 }
 
+async function getMaCross(data, ma1, ma2) {
+    let res = await fetch(`${url}/getMaCross`, {
+        method: 'post',
+        body: JSON.stringify({ data, ma1, ma2 })
+    });
+
+    return await res.json();
+}
+
 // run suite of backtests, save results
 async function test() {
     let limits = [1, 2, 3];
@@ -70,7 +79,6 @@ async function backtest({ fees = 0.0019, startAmt = 1000, maxAmt = 10000, levera
 
     from = moment(from).hour(0).minute(0);
     to = moment(to);
-    to = moment('2021-07-21'); //TODO
     let rebalanceInfo = [];
 
     do {
@@ -136,6 +144,7 @@ async function getTopRatios({ minRatio = 0.05, minRebalanceAmt = 200000, exclude
 
 module.exports = {
     addStats,
+    getMaCross,
     backtest,
     test,
 }

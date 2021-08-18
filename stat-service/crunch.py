@@ -20,6 +20,13 @@ def crunchData(data, indicators, backtest_params):
     addBacktest(backtest_params, df)
     return df.to_json(orient='records')
 
+def getMaCross(data, ma1, ma2):
+    df = pd.DataFrame.from_records(data, index="startTime")
+    df[ma1] = getIndicator(ma1, df)
+    df[ma2] = getIndicator(ma2, df)
+    df['ma_x'] = np.where(df[ma1] > df[ma2], 1.0, -1.0)   
+    return df.to_json(orient='records')
+
 def getIndicator(indicator, df):
     if indicator[:3] == 'SMA':
         return getSMA(int(indicator[3:]), df)

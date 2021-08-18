@@ -1,10 +1,14 @@
-### On vacation 19-23
+get Postgres DB running on DigitalOcean
+migrate app to raspberry pi
+
+If trailing stop is triggered, should stop the loop and exit StrategyOne
+
 #### Build trading
 PARAMS
 Limit: 1
 MinRatio: 0.9
 MinRebalanceAmt: 500000
-inSignal: ["SMA9", "SMA20"]
+inSignal: ["EMA9", "EMA20"]
 outSignal: ["TRL0.0075"] (diminish after 8:02)
 
 Ensemble of strategies in different subaccounts, manual rebalance at end of each week

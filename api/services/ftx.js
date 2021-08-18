@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const constants = require('../data/constants');
 const twilio = require('./twilio');
 const utils = require('./utils');
+const moment = require('moment');
+const cron = require('node-cron');
 
 async function query({ path, url = 'https://ftx.com/api', method = 'GET', body = null, authRoute = false }) {
     let ts = Date.now();
@@ -77,7 +79,16 @@ async function getMarkets(save = false) {
     return markets;
 }
 
-async function getData({ market, resolution = 15, start, end}) {
+async function testData() {
+    // ever 15 seconds
+    cron.schedule("2,17,32,47 * * * * *", async () => {
+        let res = await getData({ market: 'BTC-PERP', start: moment().subtract(30, 'seconds'), end: moment() });
+        console.log(moment().format("HH:mm:ss"));
+        console.log(res);
+    });
+}
+
+async function getData({ market, resolution = 15, start, end }) {
     let data = await query({ path: `/markets/${market}/candles?resolution=${resolution}&start_time=${start / 1000}&end_time=${end / 1000}` })
 
     if (data.error) throw new Error(data.error);
@@ -85,12 +96,12 @@ async function getData({ market, resolution = 15, start, end}) {
     return data.result;
 }
 
-async function getOrderBook(market) { // this just gets the market, rename this and `getOrderbookFixed`
+async function getOrderBook(market) { // this just gets the market, rename this and `getOrderBookFixed`
     return query({ path: `/markets/${market}` });
 }
 
-async function getOrderbookFixed(market) {
-    let res = query({ path: `/markets/${market}/orderbook` });
+async function getOrderBookFixed(market) {
+    let res = await query({ path: `/markets/${market}/orderbook` });
     return res.result;
 }
 
@@ -237,6 +248,18 @@ async function signalOrder({ market, text, username, scale }) {
 }
 
 // need at least id and type in order object
+async function getOrder(order) {
+    let res = {};
+    if (order.type === 'market' || order.type === 'limit') {
+        res = await this.query({ path: `/orders/${order.id}`, authRoute: true });
+    } else {
+        res =  await this.query({ path: `/conditional_orders/${order.id}`, authRoute: true });
+    }
+
+    return res.result;
+}
+
+// need at least id and type in order object
 async function cancelOrder(order) {
     if (order.type === 'market' || order.type === 'limit') {
         return this.query({ path: `/orders/${order.id}`, method: 'DELETE', authRoute: true });
@@ -266,11 +289,13 @@ module.exports = {
     getData,
     getMarket,
     getMarkets,
+    getOrder,
     getOrderBook,
-    getOrderbookFixed,
+    getOrderBookFixed,
     getOrderHistory,
     getLastOrderTime,
     query,
     signalOrder,
-    test
+    test,
+    testData,
 }

@@ -115,8 +115,6 @@ module.exports = class RebalanceTrader {
                 return a[sortProp] > b[sortProp] ? 1 : -1;
             });
 
-        // console.log(data);
-        // fs.writeFileSync('rebalanceAmounts.json', JSON.stringify(data)); // DON'T save this anywhere other than /data
         return data.reverse();
     }
 

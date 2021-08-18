@@ -1,4 +1,4 @@
-from .crunch import crunchData
+from .crunch import crunchData, getMaCross
 import datetime
 import json
 import pandas as pd
@@ -27,4 +27,10 @@ def test():
 async def get_body(request: Request):
     jsonObj = await request.json()
     crunchedData = crunchData(jsonObj["data"], jsonObj["indicators"], jsonObj["backtestParams"])
+    return json.loads(crunchedData)
+
+@app.post("/getMaCross")
+async def get_cross(request: Request):
+    jsonObj = await request.json()
+    crunchedData = getMaCross(jsonObj["data"], jsonObj["ma1"], jsonObj["ma2"])
     return json.loads(crunchedData)

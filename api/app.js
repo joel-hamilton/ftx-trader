@@ -12,6 +12,7 @@ var cron = require('node-cron');
 const moment = require('moment');
 const RebalanceTrader = require('./services/RebalanceTrader');
 const TimedClose = require('./services/TimedClose');
+const StrategyOne = require('./services/StrategyOne');
 const storageService = require('./services/storageService');
 const rfs = require('rotating-file-stream');
 const fs = require('fs');
@@ -57,18 +58,38 @@ app.use(function(err, req, res, next) {
 
 // CRONS
 // message Joel and Christopher a list of high-ratio rebalances
-cron.schedule("55 23 * * *", async () => {
+cron.schedule("50 23 * * *", async () => {
     console.log('Send relalance SMS cron running...');
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.sendRebalanceInfo(['15197772459', '12269798530']);
 });
 
-
+// SCHEDULE ONE AND UPDATE ACCOUNT
 let accountStart;
-cron.schedule("15 00 00 * * *", async () => {
+cron.schedule("50 54 23 * * *", async () => {
     accountStart = await ftx.getAccount();
-    // return;
+    let rebalanceTime = moment().add(1, 'day').hour(0).minute(2).second(0);
+    let reduceTrailAtMoment = rebalanceTime; // 8:02
+    let closePositionAtMoment = moment(rebalanceTime).minute(15); // 8:15
+    let so = new StrategyOne(reduceTrailAtMoment, closePositionAtMoment, true);
+
+    // TESTING
+    // so.reduceTrailAtMoment = moment().add(2, 'minutes');
+    // so.closePositionAtMoment = moment().add(5, 'minutes');
+    so.leverage = 0.1;
+    so.minRatio = 0.013;
+    so.minRebalanceAmt = 200000;
+    // so.trailPct = 0.0075;
+    // so.initialTrailPct = so.trailPct;
+    // TESTING
+
+    await so.run();
+});
+
+// OLD TRADER
+cron.schedule("15 00 00 * * *", async () => {
+    return;
     let rt = new RebalanceTrader();
     await rt.init();
     await rt.placeMidOrders({
@@ -104,8 +125,8 @@ cron.schedule("15 00 00 * * *", async () => {
 //     }
 // }());
 
-// send summary
-cron.schedule("03 00 * * *", async () => {
+// SEND SUMMARY
+cron.schedule("16 00 * * *", async () => {
     let accountEnd = await ftx.getAccount();
     let pl = Math.round((accountEnd.totalAccountValue - accountStart.totalAccountValue) * 100) / 100;
     let openPositions = accountEnd.positions.filter(p => !!p.openSize);

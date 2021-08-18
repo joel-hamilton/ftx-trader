@@ -148,9 +148,9 @@
                 backtestOptions: {
                     fees: 0.0019, // assumes 0.02% maker in, 0.07% taker out, and 0.01% for bad backtesting stuff
                     limit: 1,
-                    minRatio: 0.1,
-                    minRebalanceAmt: 200000,
-                    from: '2021-07-01',
+                    minRatio: 0.09,
+                    minRebalanceAmt: 1000 * 1000,
+                    from: '2021-06-21',
                     to: moment().format('YYYY-MM-DD'),
                     leverage: 10,
                     startAmt: 1000,

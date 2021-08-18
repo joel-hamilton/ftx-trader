@@ -1,0 +1,896 @@
+[2021-08-01 00:00:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:00:00] Long Response
+[2021-08-01 00:00:01] (https://ftx.com/api/markets)
+[2021-08-01 00:00:01] Long Response
+[2021-08-01 00:00:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:00:16] Long Response
+[2021-08-01 00:00:16] (https://ftx.com/api/markets)
+[2021-08-01 00:00:16] Long Response
+[2021-08-01 00:00:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:00:31] Long Response
+[2021-08-01 00:00:31] (https://ftx.com/api/markets)
+[2021-08-01 00:00:31] Long Response
+[2021-08-01 00:00:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:00:46] Long Response
+[2021-08-01 00:00:46] (https://ftx.com/api/markets)
+[2021-08-01 00:00:46] Long Response
+[2021-08-01 00:01:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:01:01] Long Response
+[2021-08-01 00:01:01] (https://ftx.com/api/markets)
+[2021-08-01 00:01:01] Long Response
+[2021-08-01 00:01:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:01:16] Long Response
+[2021-08-01 00:01:16] (https://ftx.com/api/markets)
+[2021-08-01 00:01:16] Long Response
+[2021-08-01 00:01:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:01:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:01:31] Long Response
+[2021-08-01 00:01:31] Long Response
+[2021-08-01 00:01:31] (https://ftx.com/api/markets)
+[2021-08-01 00:01:31] Long Response
+[2021-08-01 00:01:31] (https://ftx.com/api/markets)
+[2021-08-01 00:01:31] Long Response
+[2021-08-01 00:01:31] (https://ftx.com/api/markets)
+[2021-08-01 00:01:31] Long Response
+[2021-08-01 00:01:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:01:46] Long Response
+[2021-08-01 00:01:46] (https://ftx.com/api/markets)
+[2021-08-01 00:01:46] Long Response
+[2021-08-01 00:02:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:02:01] Long Response
+[2021-08-01 00:02:01] (https://ftx.com/api/markets)
+[2021-08-01 00:02:01] Long Response
+[2021-08-01 00:02:01] (https://ftx.com/api/conditional_orders/63346128/modify) {"trailValue":-54.65933333333333,"size":0.01}
+[2021-08-01 00:02:01] {"success":true,"result":{"id":63347474,"market":"DEFI-PERP","future":"DEFI-PERP","side":"sell","type":"trailing_stop","orderPrice":null,"triggerPrice":8089.34066667,"size":0.01,"status":"open","createdAt":"2021-08-01T00:02:01.776650+00:00","triggeredAt":null,"orderId":null,"error":null,"reduceOnly":true,"trailValue":-54.65933333,"trailStart":8144,"cancelledAt":null,"cancelReason":null,"retryUntilFilled":true,"orderType":"market"}}
+[2021-08-01 00:02:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:02:16] Long Response
+[2021-08-01 00:02:16] (https://ftx.com/api/markets)
+[2021-08-01 00:02:16] Long Response
+[2021-08-01 00:02:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:02:31] Long Response
+[2021-08-01 00:02:31] (https://ftx.com/api/markets)
+[2021-08-01 00:02:31] Long Response
+[2021-08-01 00:02:32] (https://ftx.com/api/conditional_orders/63347474/modify) {"trailValue":-43.727466666666665,"size":0.01}
+[2021-08-01 00:02:32] {"success":true,"result":{"id":63347692,"market":"DEFI-PERP","future":"DEFI-PERP","side":"sell","type":"trailing_stop","orderPrice":null,"triggerPrice":8070.17253333,"size":0.01,"status":"open","createdAt":"2021-08-01T00:02:32.140169+00:00","triggeredAt":null,"orderId":null,"error":null,"reduceOnly":true,"trailValue":-43.72746667,"trailStart":8113.9,"cancelledAt":null,"cancelReason":null,"retryUntilFilled":true,"orderType":"market"}}
+[2021-08-01 00:02:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:02:45] Long Response
+[2021-08-01 00:02:45] (https://ftx.com/api/markets)
+[2021-08-01 00:02:45] Long Response
+[2021-08-01 00:03:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:03:00] Long Response
+[2021-08-01 00:03:00] (https://ftx.com/api/markets)
+[2021-08-01 00:03:00] Long Response
+[2021-08-01 00:03:01] (https://ftx.com/api/conditional_orders/63347692/modify) {"trailValue":-29.15164444444444,"size":0.01}
+[2021-08-01 00:03:01] {"success":true,"result":{"id":63347867,"market":"DEFI-PERP","future":"DEFI-PERP","side":"sell","type":"trailing_stop","orderPrice":null,"triggerPrice":8074.74835556,"size":0.01,"status":"open","createdAt":"2021-08-01T00:03:01.717968+00:00","triggeredAt":null,"orderId":null,"error":null,"reduceOnly":true,"trailValue":-29.15164444,"trailStart":8103.9,"cancelledAt":null,"cancelReason":null,"retryUntilFilled":true,"orderType":"market"}}
+[2021-08-01 00:03:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:03:15] Long Response
+[2021-08-01 00:03:15] (https://ftx.com/api/markets)
+[2021-08-01 00:03:15] Long Response
+[2021-08-01 00:03:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:03:30] Long Response
+[2021-08-01 00:03:30] (https://ftx.com/api/markets)
+[2021-08-01 00:03:30] Long Response
+[2021-08-01 00:03:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:03:45] Long Response
+[2021-08-01 00:03:45] (https://ftx.com/api/markets)
+[2021-08-01 00:03:45] Long Response
+[2021-08-01 00:04:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:04:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:04:00] Long Response
+[2021-08-01 00:04:00] Long Response
+[2021-08-01 00:04:00] (https://ftx.com/api/markets)
+[2021-08-01 00:04:00] Long Response
+[2021-08-01 00:04:00] (https://ftx.com/api/markets)
+[2021-08-01 00:04:00] Long Response
+[2021-08-01 00:04:01] (https://ftx.com/api/lt/rebalance_info)
+[2021-08-01 00:04:01] Long Response
+[2021-08-01 00:04:01] (https://ftx.com/api/conditional_orders/63347867/modify) {"trailValue":-14.57582222222222,"size":0.01}
+[2021-08-01 00:04:01] {"success":false,"error":"Order already triggered"}
+[2021-08-01 00:04:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:04:15] Long Response
+[2021-08-01 00:04:15] (https://ftx.com/api/markets)
+[2021-08-01 00:04:15] Long Response
+[2021-08-01 00:04:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:04:30] Long Response
+[2021-08-01 00:04:30] (https://ftx.com/api/markets)
+[2021-08-01 00:04:30] Long Response
+[2021-08-01 00:04:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:04:45] Long Response
+[2021-08-01 00:04:45] (https://ftx.com/api/markets)
+[2021-08-01 00:04:45] Long Response
+[2021-08-01 00:05:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:05:00] Long Response
+[2021-08-01 00:05:00] (https://ftx.com/api/markets)
+[2021-08-01 00:05:00] Long Response
+[2021-08-01 00:05:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:05:15] Long Response
+[2021-08-01 00:05:15] (https://ftx.com/api/markets)
+[2021-08-01 00:05:15] Long Response
+[2021-08-01 00:05:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:05:30] Long Response
+[2021-08-01 00:05:30] (https://ftx.com/api/markets)
+[2021-08-01 00:05:30] Long Response
+[2021-08-01 00:05:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:05:45] Long Response
+[2021-08-01 00:05:45] (https://ftx.com/api/markets)
+[2021-08-01 00:05:45] Long Response
+[2021-08-01 00:06:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:06:00] Long Response
+[2021-08-01 00:06:00] (https://ftx.com/api/markets)
+[2021-08-01 00:06:00] Long Response
+[2021-08-01 00:06:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:06:15] Long Response
+[2021-08-01 00:06:15] (https://ftx.com/api/markets)
+[2021-08-01 00:06:16] Long Response
+[2021-08-01 00:06:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:06:30] Long Response
+[2021-08-01 00:06:30] (https://ftx.com/api/markets)
+[2021-08-01 00:06:30] Long Response
+[2021-08-01 00:06:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:06:45] Long Response
+[2021-08-01 00:06:45] (https://ftx.com/api/markets)
+[2021-08-01 00:06:45] Long Response
+[2021-08-01 00:07:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:07:00] Long Response
+[2021-08-01 00:07:00] (https://ftx.com/api/markets)
+[2021-08-01 00:07:00] Long Response
+[2021-08-01 00:07:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:07:15] Long Response
+[2021-08-01 00:07:15] (https://ftx.com/api/markets)
+[2021-08-01 00:07:15] Long Response
+[2021-08-01 00:07:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:07:31] Long Response
+[2021-08-01 00:07:31] (https://ftx.com/api/markets)
+[2021-08-01 00:07:31] Long Response
+[2021-08-01 00:07:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:07:46] Long Response
+[2021-08-01 00:07:46] (https://ftx.com/api/markets)
+[2021-08-01 00:07:46] Long Response
+[2021-08-01 00:08:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:08:01] Long Response
+[2021-08-01 00:08:01] (https://ftx.com/api/markets)
+[2021-08-01 00:08:01] Long Response
+[2021-08-01 00:08:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:08:16] Long Response
+[2021-08-01 00:08:16] (https://ftx.com/api/markets)
+[2021-08-01 00:08:16] Long Response
+[2021-08-01 00:08:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:08:31] Long Response
+[2021-08-01 00:08:31] (https://ftx.com/api/markets)
+[2021-08-01 00:08:31] Long Response
+[2021-08-01 00:08:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:08:46] Long Response
+[2021-08-01 00:08:46] (https://ftx.com/api/markets)
+[2021-08-01 00:08:46] Long Response
+[2021-08-01 00:09:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:09:01] Long Response
+[2021-08-01 00:09:01] (https://ftx.com/api/markets)
+[2021-08-01 00:09:01] Long Response
+[2021-08-01 00:09:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:09:16] Long Response
+[2021-08-01 00:09:16] (https://ftx.com/api/markets)
+[2021-08-01 00:09:16] Long Response
+[2021-08-01 00:09:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:09:31] Long Response
+[2021-08-01 00:09:31] (https://ftx.com/api/markets)
+[2021-08-01 00:09:31] Long Response
+[2021-08-01 00:09:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:09:46] Long Response
+[2021-08-01 00:09:46] (https://ftx.com/api/markets)
+[2021-08-01 00:09:46] Long Response
+[2021-08-01 00:10:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:10:01] Long Response
+[2021-08-01 00:10:01] (https://ftx.com/api/markets)
+[2021-08-01 00:10:01] Long Response
+[2021-08-01 00:10:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:10:16] Long Response
+[2021-08-01 00:10:16] (https://ftx.com/api/markets)
+[2021-08-01 00:10:16] Long Response
+[2021-08-01 00:10:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:10:31] Long Response
+[2021-08-01 00:10:31] (https://ftx.com/api/markets)
+[2021-08-01 00:10:31] Long Response
+[2021-08-01 00:10:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:10:45] Long Response
+[2021-08-01 00:10:45] (https://ftx.com/api/markets)
+[2021-08-01 00:10:45] Long Response
+[2021-08-01 00:11:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:11:00] Long Response
+[2021-08-01 00:11:00] (https://ftx.com/api/markets)
+[2021-08-01 00:11:00] Long Response
+[2021-08-01 00:11:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:11:15] Long Response
+[2021-08-01 00:11:15] (https://ftx.com/api/markets)
+[2021-08-01 00:11:15] Long Response
+[2021-08-01 00:11:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:11:30] Long Response
+[2021-08-01 00:11:30] (https://ftx.com/api/markets)
+[2021-08-01 00:11:30] Long Response
+[2021-08-01 00:11:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:11:45] Long Response
+[2021-08-01 00:11:45] (https://ftx.com/api/markets)
+[2021-08-01 00:11:45] Long Response
+[2021-08-01 00:12:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:12:00] Long Response
+[2021-08-01 00:12:00] (https://ftx.com/api/markets)
+[2021-08-01 00:12:00] Long Response
+[2021-08-01 00:12:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:12:15] Long Response
+[2021-08-01 00:12:15] (https://ftx.com/api/markets)
+[2021-08-01 00:12:15] Long Response
+[2021-08-01 00:12:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:12:30] Long Response
+[2021-08-01 00:12:30] (https://ftx.com/api/markets)
+[2021-08-01 00:12:30] Long Response
+[2021-08-01 00:12:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:12:45] Long Response
+[2021-08-01 00:12:45] (https://ftx.com/api/markets)
+[2021-08-01 00:12:45] Long Response
+[2021-08-01 00:13:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:13:00] Long Response
+[2021-08-01 00:13:00] (https://ftx.com/api/markets)
+[2021-08-01 00:13:00] Long Response
+[2021-08-01 00:13:18] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:13:19] Long Response
+[2021-08-01 00:13:19] (https://ftx.com/api/markets)
+[2021-08-01 00:13:19] Long Response
+[2021-08-01 00:13:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:13:30] Long Response
+[2021-08-01 00:13:30] (https://ftx.com/api/markets)
+[2021-08-01 00:13:30] Long Response
+[2021-08-01 00:13:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:13:45] Long Response
+[2021-08-01 00:13:45] (https://ftx.com/api/markets)
+[2021-08-01 00:13:45] Long Response
+[2021-08-01 00:14:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:14:00] Long Response
+[2021-08-01 00:14:00] (https://ftx.com/api/markets)
+[2021-08-01 00:14:00] Long Response
+[2021-08-01 00:14:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:14:15] Long Response
+[2021-08-01 00:14:16] (https://ftx.com/api/markets)
+[2021-08-01 00:14:16] Long Response
+[2021-08-01 00:14:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:14:30] Long Response
+[2021-08-01 00:14:30] (https://ftx.com/api/markets)
+[2021-08-01 00:14:31] Long Response
+[2021-08-01 00:14:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:14:45] Long Response
+[2021-08-01 00:14:46] (https://ftx.com/api/markets)
+[2021-08-01 00:14:46] Long Response
+[2021-08-01 00:15:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:15:00] Long Response
+[2021-08-01 00:15:01] (https://ftx.com/api/markets)
+[2021-08-01 00:15:01] Long Response
+[2021-08-01 00:15:01] (https://ftx.com/api/orders/67618635763)
+[2021-08-01 00:15:01] {"success":false,"error":"Order already closed"}
+[2021-08-01 00:15:01] (https://ftx.com/api/orders) {"market":"DEFI-PERP","side":"sell","price":null,"type":"market","size":0.01}
+[2021-08-01 00:15:01] {"success":true,"result":{"id":67622609062,"clientId":null,"market":"DEFI-PERP","type":"market","side":"sell","price":null,"size":0.01,"status":"new","filledSize":0,"remainingSize":0.01,"reduceOnly":false,"liquidation":null,"avgFillPrice":null,"postOnly":false,"ioc":true,"createdAt":"2021-08-01T00:15:01.529293+00:00","future":"DEFI-PERP"}}
+[2021-08-01 00:15:02] (https://ftx.com/api/conditional_orders/63347867)
+[2021-08-01 00:15:02] {"success":false,"error":"Order already closed"}
+[2021-08-01 00:15:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:15:16] Long Response
+[2021-08-01 00:15:16] (https://ftx.com/api/markets)
+[2021-08-01 00:15:16] Long Response
+[2021-08-01 00:15:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:15:31] Long Response
+[2021-08-01 00:15:31] (https://ftx.com/api/markets)
+[2021-08-01 00:15:31] Long Response
+[2021-08-01 00:15:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:15:46] Long Response
+[2021-08-01 00:15:46] (https://ftx.com/api/markets)
+[2021-08-01 00:15:46] Long Response
+[2021-08-01 00:16:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:16:01] Long Response
+[2021-08-01 00:16:01] (https://ftx.com/api/markets)
+[2021-08-01 00:16:01] Long Response
+[2021-08-01 00:16:01] (https://ftx.com/api/account)
+[2021-08-01 00:16:01] Long Response
+[2021-08-01 00:16:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:16:16] Long Response
+[2021-08-01 00:16:16] (https://ftx.com/api/markets)
+[2021-08-01 00:16:16] Long Response
+[2021-08-01 00:16:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:16:31] Long Response
+[2021-08-01 00:16:31] (https://ftx.com/api/markets)
+[2021-08-01 00:16:31] Long Response
+[2021-08-01 00:16:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:16:46] Long Response
+[2021-08-01 00:16:46] (https://ftx.com/api/markets)
+[2021-08-01 00:16:46] Long Response
+[2021-08-01 00:17:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:17:01] Long Response
+[2021-08-01 00:17:01] (https://ftx.com/api/markets)
+[2021-08-01 00:17:01] Long Response
+[2021-08-01 00:17:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:17:16] Long Response
+[2021-08-01 00:17:16] (https://ftx.com/api/markets)
+[2021-08-01 00:17:16] Long Response
+[2021-08-01 00:17:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:17:31] Long Response
+[2021-08-01 00:17:31] (https://ftx.com/api/markets)
+[2021-08-01 00:17:31] Long Response
+[2021-08-01 00:17:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:17:46] Long Response
+[2021-08-01 00:17:46] (https://ftx.com/api/markets)
+[2021-08-01 00:17:46] Long Response
+[2021-08-01 00:18:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:18:00] Long Response
+[2021-08-01 00:18:00] (https://ftx.com/api/markets)
+[2021-08-01 00:18:00] Long Response
+[2021-08-01 00:18:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:18:15] Long Response
+[2021-08-01 00:18:15] (https://ftx.com/api/markets)
+[2021-08-01 00:18:15] Long Response
+[2021-08-01 00:18:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:18:30] Long Response
+[2021-08-01 00:18:30] (https://ftx.com/api/markets)
+[2021-08-01 00:18:30] Long Response
+[2021-08-01 00:18:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:18:45] Long Response
+[2021-08-01 00:18:45] (https://ftx.com/api/markets)
+[2021-08-01 00:18:45] Long Response
+[2021-08-01 00:19:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:19:00] Long Response
+[2021-08-01 00:19:00] (https://ftx.com/api/markets)
+[2021-08-01 00:19:00] Long Response
+[2021-08-01 00:19:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:19:15] Long Response
+[2021-08-01 00:19:15] (https://ftx.com/api/markets)
+[2021-08-01 00:19:15] Long Response
+[2021-08-01 00:19:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:19:30] Long Response
+[2021-08-01 00:19:30] (https://ftx.com/api/markets)
+[2021-08-01 00:19:30] Long Response
+[2021-08-01 00:19:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:19:45] Long Response
+[2021-08-01 00:19:45] (https://ftx.com/api/markets)
+[2021-08-01 00:19:45] Long Response
+[2021-08-01 00:20:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:20:00] Long Response
+[2021-08-01 00:20:00] (https://ftx.com/api/markets)
+[2021-08-01 00:20:00] Long Response
+[2021-08-01 00:20:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:20:15] Long Response
+[2021-08-01 00:20:15] (https://ftx.com/api/markets)
+[2021-08-01 00:20:15] Long Response
+[2021-08-01 00:20:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:20:30] Long Response
+[2021-08-01 00:20:30] (https://ftx.com/api/markets)
+[2021-08-01 00:20:30] Long Response
+[2021-08-01 00:20:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:20:45] Long Response
+[2021-08-01 00:20:45] (https://ftx.com/api/markets)
+[2021-08-01 00:20:45] Long Response
+[2021-08-01 00:21:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:21:00] Long Response
+[2021-08-01 00:21:01] (https://ftx.com/api/markets)
+[2021-08-01 00:21:01] Long Response
+[2021-08-01 00:21:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:21:16] Long Response
+[2021-08-01 00:21:16] (https://ftx.com/api/markets)
+[2021-08-01 00:21:16] Long Response
+[2021-08-01 00:21:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:21:31] Long Response
+[2021-08-01 00:21:31] (https://ftx.com/api/markets)
+[2021-08-01 00:21:31] Long Response
+[2021-08-01 00:21:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:21:46] Long Response
+[2021-08-01 00:21:46] (https://ftx.com/api/markets)
+[2021-08-01 00:21:46] Long Response
+[2021-08-01 00:22:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:22:01] Long Response
+[2021-08-01 00:22:01] (https://ftx.com/api/markets)
+[2021-08-01 00:22:01] Long Response
+[2021-08-01 00:22:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:22:16] Long Response
+[2021-08-01 00:22:16] (https://ftx.com/api/markets)
+[2021-08-01 00:22:16] Long Response
+[2021-08-01 00:22:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:22:31] Long Response
+[2021-08-01 00:22:31] (https://ftx.com/api/markets)
+[2021-08-01 00:22:31] Long Response
+[2021-08-01 00:22:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:22:45] Long Response
+[2021-08-01 00:22:45] (https://ftx.com/api/markets)
+[2021-08-01 00:22:45] Long Response
+[2021-08-01 00:23:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:23:00] Long Response
+[2021-08-01 00:23:00] (https://ftx.com/api/markets)
+[2021-08-01 00:23:00] Long Response
+[2021-08-01 00:23:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:23:15] Long Response
+[2021-08-01 00:23:15] (https://ftx.com/api/markets)
+[2021-08-01 00:23:15] Long Response
+[2021-08-01 00:23:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:23:30] Long Response
+[2021-08-01 00:23:30] (https://ftx.com/api/markets)
+[2021-08-01 00:23:30] Long Response
+[2021-08-01 00:23:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:23:46] Long Response
+[2021-08-01 00:23:46] (https://ftx.com/api/markets)
+[2021-08-01 00:23:46] Long Response
+[2021-08-01 00:24:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:24:00] Long Response
+[2021-08-01 00:24:00] (https://ftx.com/api/markets)
+[2021-08-01 00:24:00] Long Response
+[2021-08-01 00:24:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:24:15] Long Response
+[2021-08-01 00:24:15] (https://ftx.com/api/markets)
+[2021-08-01 00:24:15] Long Response
+[2021-08-01 00:24:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:24:30] Long Response
+[2021-08-01 00:24:30] (https://ftx.com/api/markets)
+[2021-08-01 00:24:30] Long Response
+[2021-08-01 00:24:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:24:45] Long Response
+[2021-08-01 00:24:45] (https://ftx.com/api/markets)
+[2021-08-01 00:24:45] Long Response
+[2021-08-01 00:25:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:25:00] Long Response
+[2021-08-01 00:25:01] (https://ftx.com/api/markets)
+[2021-08-01 00:25:01] Long Response
+[2021-08-01 00:25:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:25:16] Long Response
+[2021-08-01 00:25:16] (https://ftx.com/api/markets)
+[2021-08-01 00:25:16] Long Response
+[2021-08-01 00:25:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:25:31] Long Response
+[2021-08-01 00:25:31] (https://ftx.com/api/markets)
+[2021-08-01 00:25:31] Long Response
+[2021-08-01 00:25:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:25:46] Long Response
+[2021-08-01 00:25:46] (https://ftx.com/api/markets)
+[2021-08-01 00:25:46] Long Response
+[2021-08-01 00:26:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:26:01] Long Response
+[2021-08-01 00:26:01] (https://ftx.com/api/markets)
+[2021-08-01 00:26:01] Long Response
+[2021-08-01 00:26:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:26:16] Long Response
+[2021-08-01 00:26:16] (https://ftx.com/api/markets)
+[2021-08-01 00:26:16] Long Response
+[2021-08-01 00:26:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:26:31] Long Response
+[2021-08-01 00:26:31] (https://ftx.com/api/markets)
+[2021-08-01 00:26:31] Long Response
+[2021-08-01 00:26:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:26:45] Long Response
+[2021-08-01 00:26:45] (https://ftx.com/api/markets)
+[2021-08-01 00:26:45] Long Response
+[2021-08-01 00:27:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:27:00] Long Response
+[2021-08-01 00:27:00] (https://ftx.com/api/markets)
+[2021-08-01 00:27:00] Long Response
+[2021-08-01 00:27:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:27:15] Long Response
+[2021-08-01 00:27:15] (https://ftx.com/api/markets)
+[2021-08-01 00:27:15] Long Response
+[2021-08-01 00:27:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:27:30] Long Response
+[2021-08-01 00:27:30] (https://ftx.com/api/markets)
+[2021-08-01 00:27:30] Long Response
+[2021-08-01 00:27:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:27:45] Long Response
+[2021-08-01 00:27:45] (https://ftx.com/api/markets)
+[2021-08-01 00:27:45] Long Response
+[2021-08-01 00:28:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:28:00] Long Response
+[2021-08-01 00:28:00] (https://ftx.com/api/markets)
+[2021-08-01 00:28:00] Long Response
+[2021-08-01 00:28:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:28:15] Long Response
+[2021-08-01 00:28:15] (https://ftx.com/api/markets)
+[2021-08-01 00:28:15] Long Response
+[2021-08-01 00:28:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:28:30] Long Response
+[2021-08-01 00:28:30] (https://ftx.com/api/markets)
+[2021-08-01 00:28:30] Long Response
+[2021-08-01 00:28:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:28:45] Long Response
+[2021-08-01 00:28:45] (https://ftx.com/api/markets)
+[2021-08-01 00:28:45] Long Response
+[2021-08-01 00:29:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:29:00] Long Response
+[2021-08-01 00:29:00] (https://ftx.com/api/markets)
+[2021-08-01 00:29:00] Long Response
+[2021-08-01 00:29:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:29:15] Long Response
+[2021-08-01 00:29:15] (https://ftx.com/api/markets)
+[2021-08-01 00:29:15] Long Response
+[2021-08-01 00:29:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:29:30] Long Response
+[2021-08-01 00:29:30] (https://ftx.com/api/markets)
+[2021-08-01 00:29:30] Long Response
+[2021-08-01 00:29:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:29:45] Long Response
+[2021-08-01 00:29:45] (https://ftx.com/api/markets)
+[2021-08-01 00:29:45] Long Response
+[2021-08-01 00:30:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:30:00] Long Response
+[2021-08-01 00:30:00] (https://ftx.com/api/markets)
+[2021-08-01 00:30:01] Long Response
+[2021-08-01 00:30:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:30:15] Long Response
+[2021-08-01 00:30:15] (https://ftx.com/api/markets)
+[2021-08-01 00:30:15] Long Response
+[2021-08-01 00:30:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:30:30] Long Response
+[2021-08-01 00:30:31] (https://ftx.com/api/markets)
+[2021-08-01 00:30:31] Long Response
+[2021-08-01 00:30:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:30:45] Long Response
+[2021-08-01 00:30:46] (https://ftx.com/api/markets)
+[2021-08-01 00:30:46] Long Response
+[2021-08-01 00:31:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:31:01] Long Response
+[2021-08-01 00:31:01] (https://ftx.com/api/markets)
+[2021-08-01 00:31:01] Long Response
+[2021-08-01 00:31:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:31:16] Long Response
+[2021-08-01 00:31:16] (https://ftx.com/api/markets)
+[2021-08-01 00:31:16] Long Response
+[2021-08-01 00:31:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:31:31] Long Response
+[2021-08-01 00:31:31] (https://ftx.com/api/markets)
+[2021-08-01 00:31:31] Long Response
+[2021-08-01 00:31:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:31:46] Long Response
+[2021-08-01 00:31:46] (https://ftx.com/api/markets)
+[2021-08-01 00:31:46] Long Response
+[2021-08-01 00:32:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:32:01] Long Response
+[2021-08-01 00:32:01] (https://ftx.com/api/markets)
+[2021-08-01 00:32:01] Long Response
+[2021-08-01 00:32:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:32:16] Long Response
+[2021-08-01 00:32:16] (https://ftx.com/api/markets)
+[2021-08-01 00:32:16] Long Response
+[2021-08-01 00:32:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:32:31] Long Response
+[2021-08-01 00:32:31] (https://ftx.com/api/markets)
+[2021-08-01 00:32:31] Long Response
+[2021-08-01 00:32:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:32:46] Long Response
+[2021-08-01 00:32:46] (https://ftx.com/api/markets)
+[2021-08-01 00:32:46] Long Response
+[2021-08-01 00:33:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:33:01] Long Response
+[2021-08-01 00:33:01] (https://ftx.com/api/markets)
+[2021-08-01 00:33:01] Long Response
+[2021-08-01 00:33:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:33:16] Long Response
+[2021-08-01 00:33:16] (https://ftx.com/api/markets)
+[2021-08-01 00:33:16] Long Response
+[2021-08-01 00:33:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:33:31] Long Response
+[2021-08-01 00:33:31] (https://ftx.com/api/markets)
+[2021-08-01 00:33:31] Long Response
+[2021-08-01 00:33:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:33:46] Long Response
+[2021-08-01 00:33:46] (https://ftx.com/api/markets)
+[2021-08-01 00:33:46] Long Response
+[2021-08-01 00:34:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:34:01] Long Response
+[2021-08-01 00:34:01] (https://ftx.com/api/markets)
+[2021-08-01 00:34:01] Long Response
+[2021-08-01 00:34:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:34:15] Long Response
+[2021-08-01 00:34:15] (https://ftx.com/api/markets)
+[2021-08-01 00:34:15] Long Response
+[2021-08-01 00:34:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:34:30] Long Response
+[2021-08-01 00:34:30] (https://ftx.com/api/markets)
+[2021-08-01 00:34:30] Long Response
+[2021-08-01 00:34:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:34:45] Long Response
+[2021-08-01 00:34:45] (https://ftx.com/api/markets)
+[2021-08-01 00:34:45] Long Response
+[2021-08-01 00:35:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:35:00] Long Response
+[2021-08-01 00:35:00] (https://ftx.com/api/markets)
+[2021-08-01 00:35:00] Long Response
+[2021-08-01 00:35:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:35:15] Long Response
+[2021-08-01 00:35:15] (https://ftx.com/api/markets)
+[2021-08-01 00:35:15] Long Response
+[2021-08-01 00:35:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:35:30] Long Response
+[2021-08-01 00:35:30] (https://ftx.com/api/markets)
+[2021-08-01 00:35:30] Long Response
+[2021-08-01 00:35:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:35:45] Long Response
+[2021-08-01 00:35:45] (https://ftx.com/api/markets)
+[2021-08-01 00:35:45] Long Response
+[2021-08-01 00:36:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:36:00] Long Response
+[2021-08-01 00:36:00] (https://ftx.com/api/markets)
+[2021-08-01 00:36:00] Long Response
+[2021-08-01 00:36:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:36:15] Long Response
+[2021-08-01 00:36:15] (https://ftx.com/api/markets)
+[2021-08-01 00:36:15] Long Response
+[2021-08-01 00:36:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:36:30] Long Response
+[2021-08-01 00:36:30] (https://ftx.com/api/markets)
+[2021-08-01 00:36:30] Long Response
+[2021-08-01 00:36:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:36:45] Long Response
+[2021-08-01 00:36:45] (https://ftx.com/api/markets)
+[2021-08-01 00:36:45] Long Response
+[2021-08-01 00:37:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:37:00] Long Response
+[2021-08-01 00:37:00] (https://ftx.com/api/markets)
+[2021-08-01 00:37:00] Long Response
+[2021-08-01 00:37:18] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:37:18] Long Response
+[2021-08-01 00:37:19] (https://ftx.com/api/markets)
+[2021-08-01 00:37:19] Long Response
+[2021-08-01 00:37:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:37:30] Long Response
+[2021-08-01 00:37:30] (https://ftx.com/api/markets)
+[2021-08-01 00:37:30] Long Response
+[2021-08-01 00:37:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:37:45] Long Response
+[2021-08-01 00:37:46] (https://ftx.com/api/markets)
+[2021-08-01 00:37:46] Long Response
+[2021-08-01 00:38:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:38:00] Long Response
+[2021-08-01 00:38:00] (https://ftx.com/api/markets)
+[2021-08-01 00:38:01] Long Response
+[2021-08-01 00:38:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:38:15] Long Response
+[2021-08-01 00:38:16] (https://ftx.com/api/markets)
+[2021-08-01 00:38:16] Long Response
+[2021-08-01 00:38:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:38:31] Long Response
+[2021-08-01 00:38:31] (https://ftx.com/api/markets)
+[2021-08-01 00:38:31] Long Response
+[2021-08-01 00:38:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:38:46] Long Response
+[2021-08-01 00:38:46] (https://ftx.com/api/markets)
+[2021-08-01 00:38:46] Long Response
+[2021-08-01 00:39:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:39:01] Long Response
+[2021-08-01 00:39:01] (https://ftx.com/api/markets)
+[2021-08-01 00:39:01] Long Response
+[2021-08-01 00:39:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:39:16] Long Response
+[2021-08-01 00:39:16] (https://ftx.com/api/markets)
+[2021-08-01 00:39:16] Long Response
+[2021-08-01 00:39:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:39:31] Long Response
+[2021-08-01 00:39:31] (https://ftx.com/api/markets)
+[2021-08-01 00:39:31] Long Response
+[2021-08-01 00:39:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:39:46] Long Response
+[2021-08-01 00:39:46] (https://ftx.com/api/markets)
+[2021-08-01 00:39:46] Long Response
+[2021-08-01 00:40:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:40:01] Long Response
+[2021-08-01 00:40:01] (https://ftx.com/api/markets)
+[2021-08-01 00:40:01] Long Response
+[2021-08-01 00:40:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:40:16] Long Response
+[2021-08-01 00:40:16] (https://ftx.com/api/markets)
+[2021-08-01 00:40:16] Long Response
+[2021-08-01 00:40:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:40:31] Long Response
+[2021-08-01 00:40:31] (https://ftx.com/api/markets)
+[2021-08-01 00:40:31] Long Response
+[2021-08-01 00:40:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:40:45] Long Response
+[2021-08-01 00:40:45] (https://ftx.com/api/markets)
+[2021-08-01 00:40:45] Long Response
+[2021-08-01 00:41:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:41:00] Long Response
+[2021-08-01 00:41:00] (https://ftx.com/api/markets)
+[2021-08-01 00:41:00] Long Response
+[2021-08-01 00:41:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:41:15] Long Response
+[2021-08-01 00:41:15] (https://ftx.com/api/markets)
+[2021-08-01 00:41:15] Long Response
+[2021-08-01 00:41:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:41:30] Long Response
+[2021-08-01 00:41:30] (https://ftx.com/api/markets)
+[2021-08-01 00:41:30] Long Response
+[2021-08-01 00:41:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:41:45] Long Response
+[2021-08-01 00:41:45] (https://ftx.com/api/markets)
+[2021-08-01 00:41:45] Long Response
+[2021-08-01 00:42:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:42:00] Long Response
+[2021-08-01 00:42:00] (https://ftx.com/api/markets)
+[2021-08-01 00:42:00] Long Response
+[2021-08-01 00:42:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:42:15] Long Response
+[2021-08-01 00:42:15] (https://ftx.com/api/markets)
+[2021-08-01 00:42:15] Long Response
+[2021-08-01 00:42:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:42:30] Long Response
+[2021-08-01 00:42:30] (https://ftx.com/api/markets)
+[2021-08-01 00:42:30] Long Response
+[2021-08-01 00:42:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:42:45] Long Response
+[2021-08-01 00:42:45] (https://ftx.com/api/markets)
+[2021-08-01 00:42:45] Long Response
+[2021-08-01 00:43:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:43:00] Long Response
+[2021-08-01 00:43:00] (https://ftx.com/api/markets)
+[2021-08-01 00:43:00] Long Response
+[2021-08-01 00:43:18] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:43:18] Long Response
+[2021-08-01 00:43:19] (https://ftx.com/api/markets)
+[2021-08-01 00:43:19] Long Response
+[2021-08-01 00:43:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:43:30] Long Response
+[2021-08-01 00:43:30] (https://ftx.com/api/markets)
+[2021-08-01 00:43:30] Long Response
+[2021-08-01 00:43:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:43:45] Long Response
+[2021-08-01 00:43:46] (https://ftx.com/api/markets)
+[2021-08-01 00:43:46] Long Response
+[2021-08-01 00:44:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:44:00] Long Response
+[2021-08-01 00:44:01] (https://ftx.com/api/markets)
+[2021-08-01 00:44:01] Long Response
+[2021-08-01 00:44:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:44:15] Long Response
+[2021-08-01 00:44:16] (https://ftx.com/api/markets)
+[2021-08-01 00:44:16] Long Response
+[2021-08-01 00:44:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:44:31] Long Response
+[2021-08-01 00:44:31] (https://ftx.com/api/markets)
+[2021-08-01 00:44:31] Long Response
+[2021-08-01 00:44:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:44:46] Long Response
+[2021-08-01 00:44:46] (https://ftx.com/api/markets)
+[2021-08-01 00:44:46] Long Response
+[2021-08-01 00:45:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:45:01] Long Response
+[2021-08-01 00:45:01] (https://ftx.com/api/markets)
+[2021-08-01 00:45:01] Long Response
+[2021-08-01 00:45:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:45:16] Long Response
+[2021-08-01 00:45:16] (https://ftx.com/api/markets)
+[2021-08-01 00:45:16] Long Response
+[2021-08-01 00:45:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:45:31] Long Response
+[2021-08-01 00:45:31] (https://ftx.com/api/markets)
+[2021-08-01 00:45:31] Long Response
+[2021-08-01 00:45:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:45:46] Long Response
+[2021-08-01 00:45:46] (https://ftx.com/api/markets)
+[2021-08-01 00:45:46] Long Response
+[2021-08-01 00:46:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:46:01] Long Response
+[2021-08-01 00:46:01] (https://ftx.com/api/markets)
+[2021-08-01 00:46:01] Long Response
+[2021-08-01 00:46:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:46:15] Long Response
+[2021-08-01 00:46:15] (https://ftx.com/api/markets)
+[2021-08-01 00:46:15] Long Response
+[2021-08-01 00:46:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:46:30] Long Response
+[2021-08-01 00:46:30] (https://ftx.com/api/markets)
+[2021-08-01 00:46:30] Long Response
+[2021-08-01 00:46:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:46:45] Long Response
+[2021-08-01 00:46:45] (https://ftx.com/api/markets)
+[2021-08-01 00:46:45] Long Response
+[2021-08-01 00:47:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:47:00] Long Response
+[2021-08-01 00:47:00] (https://ftx.com/api/markets)
+[2021-08-01 00:47:00] Long Response
+[2021-08-01 00:47:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:47:15] Long Response
+[2021-08-01 00:47:15] (https://ftx.com/api/markets)
+[2021-08-01 00:47:15] Long Response
+[2021-08-01 00:47:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:47:30] Long Response
+[2021-08-01 00:47:30] (https://ftx.com/api/markets)
+[2021-08-01 00:47:30] Long Response
+[2021-08-01 00:47:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:47:45] Long Response
+[2021-08-01 00:47:45] (https://ftx.com/api/markets)
+[2021-08-01 00:47:45] Long Response
+[2021-08-01 00:48:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:48:00] Long Response
+[2021-08-01 00:48:00] (https://ftx.com/api/markets)
+[2021-08-01 00:48:00] Long Response
+[2021-08-01 00:48:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:48:15] Long Response
+[2021-08-01 00:48:15] (https://ftx.com/api/markets)
+[2021-08-01 00:48:15] Long Response
+[2021-08-01 00:48:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:48:30] Long Response
+[2021-08-01 00:48:30] (https://ftx.com/api/markets)
+[2021-08-01 00:48:30] Long Response
+[2021-08-01 00:48:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:48:45] Long Response
+[2021-08-01 00:48:45] (https://ftx.com/api/markets)
+[2021-08-01 00:48:45] Long Response
+[2021-08-01 00:49:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:49:00] Long Response
+[2021-08-01 00:49:00] (https://ftx.com/api/markets)
+[2021-08-01 00:49:00] Long Response
+[2021-08-01 00:49:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:49:15] Long Response
+[2021-08-01 00:49:16] (https://ftx.com/api/markets)
+[2021-08-01 00:49:16] Long Response
+[2021-08-01 00:49:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:49:30] Long Response
+[2021-08-01 00:49:31] (https://ftx.com/api/markets)
+[2021-08-01 00:49:31] Long Response
+[2021-08-01 00:49:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:49:46] Long Response
+[2021-08-01 00:49:46] (https://ftx.com/api/markets)
+[2021-08-01 00:49:46] Long Response
+[2021-08-01 00:50:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:50:01] Long Response
+[2021-08-01 00:50:01] (https://ftx.com/api/markets)
+[2021-08-01 00:50:01] Long Response
+[2021-08-01 00:50:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:50:16] Long Response
+[2021-08-01 00:50:16] (https://ftx.com/api/markets)
+[2021-08-01 00:50:16] Long Response
+[2021-08-01 00:50:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:50:31] Long Response
+[2021-08-01 00:50:31] (https://ftx.com/api/markets)
+[2021-08-01 00:50:31] Long Response
+[2021-08-01 00:50:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:50:46] Long Response
+[2021-08-01 00:50:46] (https://ftx.com/api/markets)
+[2021-08-01 00:50:46] Long Response
+[2021-08-01 00:51:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:51:01] Long Response
+[2021-08-01 00:51:01] (https://ftx.com/api/markets)
+[2021-08-01 00:51:01] Long Response
+[2021-08-01 00:51:16] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:51:16] Long Response
+[2021-08-01 00:51:16] (https://ftx.com/api/markets)
+[2021-08-01 00:51:16] Long Response
+[2021-08-01 00:51:31] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:51:31] Long Response
+[2021-08-01 00:51:31] (https://ftx.com/api/markets)
+[2021-08-01 00:51:31] Long Response
+[2021-08-01 00:51:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:51:46] Long Response
+[2021-08-01 00:51:46] (https://ftx.com/api/markets)
+[2021-08-01 00:51:46] Long Response
+[2021-08-01 00:52:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:52:01] Long Response
+[2021-08-01 00:52:01] (https://ftx.com/api/markets)
+[2021-08-01 00:52:01] Long Response
+[2021-08-01 00:52:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:52:15] Long Response
+[2021-08-01 00:52:15] (https://ftx.com/api/markets)
+[2021-08-01 00:52:15] Long Response
+[2021-08-01 00:52:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:52:30] Long Response
+[2021-08-01 00:52:30] (https://ftx.com/api/markets)
+[2021-08-01 00:52:30] Long Response
+[2021-08-01 00:52:45] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:52:45] Long Response
+[2021-08-01 00:52:45] (https://ftx.com/api/markets)
+[2021-08-01 00:52:45] Long Response
+[2021-08-01 00:53:00] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:53:00] Long Response
+[2021-08-01 00:53:00] (https://ftx.com/api/markets)
+[2021-08-01 00:53:00] Long Response
+[2021-08-01 00:53:15] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:53:15] Long Response
+[2021-08-01 00:53:15] (https://ftx.com/api/markets)
+[2021-08-01 00:53:15] Long Response
+[2021-08-01 00:53:30] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:53:30] Long Response
+[2021-08-01 00:53:30] (https://ftx.com/api/markets)
+[2021-08-01 00:53:30] Long Response
+[2021-08-01 00:53:46] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:53:46] Long Response
+[2021-08-01 00:53:47] (https://ftx.com/api/markets)
+[2021-08-01 00:53:47] Long Response
+[2021-08-01 00:54:01] (https://ftx.com/api/lt/tokens)
+[2021-08-01 00:54:01] Long Response
+[2021-08-01 00:54:01] (https://ftx.com/api/markets)
+[2021-08-01 00:54:01] Long Response
